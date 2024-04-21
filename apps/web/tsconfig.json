@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "react": ["./node_modules/@types/react"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "outDir": "dist",
+  "extends": "tsconfig/react.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

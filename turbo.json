@@ -1,0 +1,27 @@
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build", "lint"],
+      "outputs": ["dist/**"]
+    },
+    "deploy": {
+      "dependsOn": ["build"]
+    },
+    "lint": {},
+    "dev": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "//#root:clean": {
+      "cache": false
+    },
+    "//#root:emulate": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
