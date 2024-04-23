@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { iLikeTurtles } from 'utilities';
-import { FatAuthProvider, useUser, useAuth } from 'fat-auth/react';
+import { FatAuthProvider, useUser, useAuth, LoginButton } from 'fat-auth/react';
 import './App.css';
 
 export const AppContent = () => {
@@ -15,7 +15,7 @@ export const AppContent = () => {
   }, []);
 
   const { isLoading, isLoggedIn, user } = useUser();
-  const { login, logout } = useAuth();
+  const { logout } = useAuth();
 
   return (
     <header className="header">
@@ -35,19 +35,11 @@ export const AppContent = () => {
           </p>
           <pre>{JSON.stringify(iLikeTurtles())}</pre>
         </div>
-        <div style={{ textAlign: 'left' }}>
-          <p style={{ fontWeight: 'bold' }}>GitHub</p>
-          <a
-            style={{ color: 'lightblue' }}
-            href="https://github.com/yamcodes/turborepo-firebase-starter"
-          >
-            https://github.com/yamcodes/turborepo-firebase-starter
-          </a>
-        </div>
         {isLoading ? <p>Loading...</p> : null}
         {isLoggedIn ? (
           <>
-            Hello {user.displayName}
+            <img alt="user" src={user.photoURL ?? undefined} height={32} />
+            Hello {user.displayName}, your email is {user.email}
             <button
               type="button"
               onClick={() => {
@@ -58,14 +50,9 @@ export const AppContent = () => {
             </button>
           </>
         ) : (
-          <button
-            type="button"
-            onClick={() => {
-              void login();
-            }}
-          >
-            Login
-          </button>
+          <LoginButton>
+            <button type="button">Login</button>
+          </LoginButton>
         )}
       </div>
     </header>
