@@ -5,5 +5,7 @@ export const [FatAuthContext, useFatAuth, useFatAuthWithoutGuarantee] =
   createContextAndHook<{
     isLoggedIn: boolean;
     isLoading: boolean;
-    user: User | null;
+    user: User | null | undefined;
+    login: () => Promise<void>;
+    logout: () => Promise<void>;
   }>('FatAuthContext');

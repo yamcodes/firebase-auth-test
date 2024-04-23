@@ -19,6 +19,15 @@ interface Options {
 type ContextOf<T> = React.Context<T | undefined>;
 type UseCtxFn<T> = () => T;
 
+/**
+ * Create and return a Context and two hooks that return the context value.
+ * The Context type is derived from the type passed in by the user.
+ * The first hook returned guarantees that the context exists so the returned value is always CtxValue
+ * The second hook makes no guarantees, so the returned value can be CtxValue | undefined
+ * @param displayName - The display name of the context.
+ * @param options - The options for the context.
+ * @returns The context, the use context function, and the use context function without guarantee.
+ */
 export const createContextAndHook = <CtxVal>(
   displayName: string,
   options?: Options
