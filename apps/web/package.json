@@ -11,16 +11,17 @@
     "clean": "rimraf node_modules dist"
   },
   "dependencies": {
+    "fat-auth": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "utilities": "workspace:*",
-    "fat-auth": "workspace:*"
+    "utilities": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^8.41.0",
+    "typescript": "^5.4.5",
     "vite": "^5.0.0"
   }
 }

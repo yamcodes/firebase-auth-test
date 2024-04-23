@@ -1,5 +1,5 @@
 import {
-  type Auth,
+  type Auth as FirebaseAuth,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
@@ -8,8 +8,8 @@ import {
 import { getFirebase } from '../lib';
 import type { User } from '../types';
 
-export class AuthService {
-  private auth: Auth;
+export class FatAuth {
+  private auth: FirebaseAuth;
   public user: User | null = null;
   private unsubscribeFn: (() => void) | null = null;
 
@@ -18,11 +18,6 @@ export class AuthService {
     this.auth = auth;
   }
 
-  // public subscribe(callback: (user: User | null) => void) {
-  //   return onAuthStateChanged(this.auth, (user) => {
-  //     callback(user);
-  //   });
-  // }
   public subscribe(callback: (user: User | null) => void): void {
     this.unsubscribeFn = onAuthStateChanged(this.auth, (user) => {
       this.user = user;

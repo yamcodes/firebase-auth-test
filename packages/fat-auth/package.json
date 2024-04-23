@@ -2,17 +2,38 @@
   "name": "fat-auth",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "dependencies": {
     "@faker-js/faker": "^8.0.1",
     "firebase": "^10.11.0"
   },
-  "files": [
-    "*"
-  ],
+  "devDependencies": {
+    "@types/react": "^18.2.6",
+    "tsup": "^8.0.2",
+    "utilities": "workspace:*"
+  },
   "scripts": {
-    "clean": "rimraf node_modules"
+    "build": "pnpm typecheck && rm -rf dist && tsup",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build",
+    "lint": "eslint src/",
+    "lint:fix": "pnpm format && eslint . --fix",
+    "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
+  },
+  "type": "module",
+  "files": [
+    "**/dist/**/*"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./core": {
+      "types": "./core/dist/index.d.ts",
+      "require": "./core/dist/index.cjs",
+      "import": "./core/dist/index.js"
+    },
+    "./react": {
+      "types": "./react/dist/index.d.ts",
+      "require": "./react/dist/index.cjs",
+      "import": "./react/dist/index.js"
+    }
   }
 }

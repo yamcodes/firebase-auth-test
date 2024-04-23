@@ -1,8 +1,8 @@
-import { AuthService } from 'fat-auth';
+import { FatAuth } from 'fat-auth/core';
 
-let authService: AuthService | undefined;
+let fatAuth: FatAuth | undefined;
 
-export const getAuthService = (): AuthService => {
-  if (!authService) authService = new AuthService();
-  return authService;
+export const getFatAuth = (): FatAuth => {
+  if (!fatAuth) fatAuth = new FatAuth();
+  return fatAuth;
 };
