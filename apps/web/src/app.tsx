@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { iLikeTurtles } from 'utilities';
+import { hello } from 'fat-auth';
 import './App.css';
 
 export const App = () => {
@@ -41,6 +42,7 @@ export const App = () => {
               https://github.com/yamcodes/turborepo-firebase-starter
             </a>
           </div>
+          <p>Hello {hello}</p>
         </div>
       </header>
     </div>

@@ -17,6 +17,10 @@
       "path": "./packages/utilities",
     },
     {
+      "name": "fat-auth",
+      "path": "./packages/fat-auth",
+    },
+    {
       "name": "tsconfig",
       "path": "./packages/tsconfig",
     },

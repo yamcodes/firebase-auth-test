@@ -87,6 +87,9 @@ importers:
 
   apps/web:
     dependencies:
+      fat-auth:
+        specifier: workspace:*
+        version: link:../../packages/fat-auth
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -136,6 +139,12 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.4.3
+
+  packages/fat-auth:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.0.1
+        version: 8.4.1
 
   packages/tsconfig:
     devDependencies:

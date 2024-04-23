@@ -1,0 +1,17 @@
+{
+  "name": "fat-auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.1"
+  },
+  "files": [
+    "*"
+  ],
+  "scripts": {
+    "clean": "rimraf node_modules"
+  }
+}
