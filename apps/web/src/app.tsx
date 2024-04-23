@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { iLikeTurtles } from 'utilities';
-import { hello } from 'fat-auth';
+import { type User } from 'fat-auth';
+import { getAuthService } from './lib/fat-auth';
 import './App.css';
 
 export const App = () => {
   const [data, setData] = useState({});
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
     void fetch('/api/legacy')
       .then((res) => res.json())
@@ -12,6 +14,24 @@ export const App = () => {
         // TODO: we need a stronger contract with the backend
         setData(res as Record<string, unknown>);
       });
+  }, []);
+
+  // respond to sign in state changes
+  useEffect(() => {
+    const authService = getAuthService();
+
+    // Function to call when the user state changes
+    const onUserChange = (incomingUser: User | null) => {
+      setUser(incomingUser);
+    };
+
+    // Subscribe to user changes
+    authService.subscribe(onUserChange);
+
+    // Unsubscribe on cleanup
+    return () => {
+      authService.unsubscribe();
+    };
   }, []);
 
   return (
@@ -42,7 +62,23 @@ export const App = () => {
               https://github.com/yamcodes/turborepo-firebase-starter
             </a>
           </div>
-          <p>Hello {hello}</p>
+          <p>Hello {user?.displayName}</p>
+          <button
+            type="button"
+            onClick={() => {
+              void getAuthService().login();
+            }}
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void getAuthService().logout();
+            }}
+          >
+            Logout
+          </button>
         </div>
       </header>
     </div>
