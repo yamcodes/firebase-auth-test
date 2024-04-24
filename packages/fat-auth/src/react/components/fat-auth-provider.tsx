@@ -10,15 +10,11 @@ export const FatAuthProvider = ({ children }: PropsWithChildren) => {
   const auth = useMemo(() => new FatAuth(), []);
 
   useEffect(() => {
-    auth.subscribe((incomingUser) => {
+    return auth.subscribe((incomingUser) => {
       setIsLoading(false);
       setIsLoggedIn(Boolean(incomingUser));
       setUser(incomingUser);
     });
-
-    return () => {
-      auth.unsubscribe();
-    };
   }, []);
 
   const login = async () => {

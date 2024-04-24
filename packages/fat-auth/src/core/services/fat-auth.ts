@@ -11,25 +11,25 @@ import type { User } from '../types';
 export class FatAuth {
   private auth: FirebaseAuth;
   public user: User | null = null;
-  private unsubscribeFn: (() => void) | null = null;
 
   constructor() {
     const { auth } = getFirebase();
     this.auth = auth;
-  }
-
-  public subscribe(callback: (user: User | null) => void): void {
-    this.unsubscribeFn = onAuthStateChanged(this.auth, (user) => {
+    this.subscribe((user) => {
       this.user = user;
-      callback(user);
     });
   }
 
-  public unsubscribe(): void {
-    if (this.unsubscribeFn) {
-      this.unsubscribeFn();
-      this.unsubscribeFn = null;
-    }
+  /**
+   * Subscribe to auth state changes
+   * @param callback - Callback function
+   * @returns Unsubscribe function
+   */
+  public subscribe(callback: (user: User | null) => void) {
+    return onAuthStateChanged(this.auth, (user) => {
+      this.user = user;
+      callback(user);
+    });
   }
 
   async login() {
