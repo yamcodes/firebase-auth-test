@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react';
-import { FatAuth } from '../../core';
+import { FatAuth } from '~/core';
 
 export const LoginButton = ({ children }: PropsWithChildren) => {
   const auth = new FatAuth();

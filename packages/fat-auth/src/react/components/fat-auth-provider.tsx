@@ -1,5 +1,5 @@
 import { useState, useEffect, type PropsWithChildren, useMemo } from 'react';
-import { FatAuth, type User } from '../../core';
+import { FatAuth, type User } from '~/core';
 import { FatAuthContext } from '../contexts/fat-auth-context';
 
 export const FatAuthProvider = ({ children }: PropsWithChildren) => {

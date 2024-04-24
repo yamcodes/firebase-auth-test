@@ -1,5 +1,5 @@
 import { createContextAndHook } from 'utilities/react';
-import { type User } from '../../core';
+import { type User } from '~/core';
 
 export const [FatAuthContext, useFatAuth, useFatAuthWithoutGuarantee] =
   createContextAndHook<{

@@ -1,4 +1,4 @@
-import { type User } from '../../core';
+import { type User } from '~/core';
 import { useFatAuth } from '../contexts';
 
 type UseUserReturn =
