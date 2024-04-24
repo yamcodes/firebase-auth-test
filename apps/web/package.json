@@ -11,10 +11,10 @@
     "clean": "rimraf node_modules dist"
   },
   "dependencies": {
-    "fat-auth": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "utilities": "workspace:*"
+    "utilities": "workspace:*",
+    "fat-auth": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.6",

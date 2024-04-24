@@ -9,38 +9,18 @@
   "devDependencies": {
     "@types/react": "^18.2.6",
     "tsup": "^8.0.2",
-    "utilities": "workspace:*"
-  },
-  "scripts": {
-    "build": "pnpm typecheck && rm -rf dist && tsup",
-    "typecheck": "tsc --noEmit",
-    "prepack": "pnpm build",
-    "lint": "eslint .",
-    "lint:fix": "pnpm format && eslint . --fix",
-    "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
+    "utilities": "0.0.0"
   },
   "type": "module",
   "files": [
-    "dist"
+    "**/dist/**/*"
   ],
-  "exports": {
-    "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
-    },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "core": [
-        "dist/core.d.ts"
-      ],
-      "react": [
-        "dist/react.d.ts"
-      ]
-    }
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "pnpm typecheck && rm -rf dist && tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "lint:fix": "pnpm format && eslint . --fix",
+    "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
   }
 }

@@ -4,8 +4,8 @@
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
     "lib": ["dom", "ES2015"],
-    "baseUrl": "src",
-    "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   }
 }
