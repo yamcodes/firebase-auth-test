@@ -1,0 +1,32 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
+        name: Setup Turbo caching
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+      - name: Lint
+        run: pnpm run lint
