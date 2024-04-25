@@ -1,3 +1,5 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { env } from './config';
 import './App.css';
 
 export const AppContent = () => {
@@ -12,8 +14,8 @@ export const AppContent = () => {
 
 export const App = () => {
   return (
-    <div className="App">
+    <GoogleOAuthProvider clientId={env.VITE_GOOGLE_CLIENT_ID}>
       <AppContent />
-    </div>
+    </GoogleOAuthProvider>
   );
 };
