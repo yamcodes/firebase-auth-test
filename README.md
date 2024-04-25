@@ -30,8 +30,11 @@ Often abbreviated as "fat" or "fat-auth", this is a test project for Firebase Au
 ### Develop
 
 ```sh
-  pnpm start
+  pnpm dev
 ```
+
+> [!NOTE]
+> You can also run `pnpm start` to achieve the same result.
 
 ### Deploy
 
