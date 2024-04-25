@@ -2,35 +2,35 @@
   "folders": [
     {
       "name": "~",
-      "path": "./",
+      "path": ".",
     },
     {
       "name": "api",
-      "path": "./apps/api",
+      "path": "apps/api",
     },
     {
       "name": "web",
-      "path": "./apps/web",
+      "path": "apps/web",
     },
     {
       "name": "fat-login",
-      "path": "./apps/fat-login",
-    },
-    {
-      "name": "utilities",
-      "path": "./packages/utilities",
+      "path": "apps/fat-login",
     },
     {
       "name": "fat-auth",
-      "path": "./packages/fat-auth",
+      "path": "packages/fat-auth",
+    },
+    {
+      "name": "utilities",
+      "path": "packages/utilities",
     },
     {
       "name": "tsconfig",
-      "path": "./packages/tsconfig",
+      "path": "packages/tsconfig",
     },
     {
       "name": "eslint-config-custom",
-      "path": "./packages/eslint-config-custom",
+      "path": "packages/eslint-config-custom",
     },
   ],
 }
