@@ -21,6 +21,10 @@
       "path": "./packages/fat-auth",
     },
     {
+      "name": "fat-ui",
+      "path": "./packages/fat-ui",
+    },
+    {
       "name": "tsconfig",
       "path": "./packages/tsconfig",
     },
@@ -29,4 +33,5 @@
       "path": "./packages/eslint-config-custom",
     },
   ],
+  "settings": {},
 }

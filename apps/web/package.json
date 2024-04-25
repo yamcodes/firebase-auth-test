@@ -9,13 +9,16 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "deploy": "firebase deploy --only hosting",
-    "clean": "rimraf node_modules dist"
+    "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
+    "@primer/react": "^36.16.0",
     "fat-auth": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "utilities": "workspace:*"
+    "styled-components": "^6.1.8",
+    "utilities": "workspace:*",
+    "fat-ui": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.6",

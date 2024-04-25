@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { iLikeTurtles } from 'utilities';
 import { FatAuthProvider, useUser, useAuth, LoginButton } from 'fat-auth/react';
+import { hello } from 'fat-ui';
 import './App.css';
 
 export const AppContent = () => {
@@ -14,6 +15,7 @@ export const AppContent = () => {
       });
   }, []);
 
+  // this is a comment.
   const { isLoading, isLoggedIn, user } = useUser();
   const { logout } = useAuth();
 
@@ -23,6 +25,7 @@ export const AppContent = () => {
         <img className="icon-firebase" src="/firebase.svg" alt="firebase" />
         <div className="icon-divider">+</div>
         <img className="icon-turbo" src="/turborepo.svg" alt="turborepo" />
+        <p>{hello}</p>
       </div>
       <div>
         <div style={{ textAlign: 'left' }}>
