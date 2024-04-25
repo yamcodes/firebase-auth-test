@@ -22,6 +22,8 @@
     "root:emulate": "firebase emulators:start"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "changesets-changelog-clean": "^1.3.0",
     "eslint-config-custom": "workspace:*",
     "firebase-tools-with-isolate": "^13.4.0",
     "prettier": "^3.0.0",
