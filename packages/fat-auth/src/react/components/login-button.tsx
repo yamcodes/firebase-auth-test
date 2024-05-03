@@ -4,17 +4,9 @@ import { FatAuth } from '~/core';
 export const LoginButton = ({ children }: PropsWithChildren) => {
   const auth = new FatAuth();
 
-  const handleLogin = async () => {
-    await auth.login();
+  const handleLogin = () => {
+    auth.login();
   };
 
-  return (
-    <div
-      onClick={() => {
-        void handleLogin();
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div onClick={handleLogin}>{children}</div>;
 };

@@ -1,25 +1,52 @@
-import { useState, useEffect, type PropsWithChildren, useMemo } from 'react';
+import { useState, type PropsWithChildren, useMemo, useEffect } from 'react';
+import { useEffectOnce } from 'react-use';
+import { getQueryParams, removeParamsFromUrl } from 'utilities';
 import { FatAuth, type User } from '~/core';
 import { FatAuthContext } from '../contexts/fat-auth-context';
 
-export const FatAuthProvider = ({ children }: PropsWithChildren) => {
+export type FatAuthProviderProps = PropsWithChildren<{
+  autoLogin?: boolean;
+}>;
+
+export const FatAuthProvider = ({
+  children,
+  autoLogin,
+}: FatAuthProviderProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   const auth = useMemo(() => new FatAuth(), []);
 
-  useEffect(() => {
+  /**
+   * Subscribe / unsubscribe to auth state changes
+   */
+  useEffectOnce(() => {
     return auth.subscribe((incomingUser) => {
       setIsLoading(false);
       setIsLoggedIn(Boolean(incomingUser));
       setUser(incomingUser);
     });
-  }, []);
+  });
 
-  const login = async () => {
+  /**
+   * Login if there is an access token in the query params
+   */
+  useEffect(() => {
+    const { access_token: accessToken } = getQueryParams();
+    if (!accessToken) {
+      if (!autoLogin) return;
+      if (isLoading || user) return;
+      auth.login();
+      return;
+    }
+    removeParamsFromUrl(['access_token']);
+    void auth.loginWithAccessToken(accessToken);
+  }, [auth, autoLogin, isLoading, user]);
+
+  const login = () => {
     setIsLoading(true);
-    await auth.login();
+    auth.login();
     setIsLoading(false);
   };
 

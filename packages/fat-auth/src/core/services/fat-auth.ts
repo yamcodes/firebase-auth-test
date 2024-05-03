@@ -3,25 +3,11 @@ import {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithCredential,
 } from 'firebase/auth';
 import { getFirebase } from '../lib';
 import type { User } from '../types';
-
-// custom errors
-
-class NoRedirectResultError extends Error {
-  constructor() {
-    super('No redirect result');
-  }
-}
-
-class NoCredentialError extends Error {
-  constructor() {
-    super('No credential');
-  }
-}
+import { loginRedirectUrl } from '../config';
 
 export class FatAuth {
   private auth: FirebaseAuth;
@@ -47,21 +33,21 @@ export class FatAuth {
     });
   }
 
-  async loginAfterRedirect() {
-    const result = await getRedirectResult(this.auth);
-    if (!result) throw new NoRedirectResultError();
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    if (!credential) throw new NoCredentialError();
-    const token = credential.accessToken;
-    const user = result.user;
-    return { token, user };
+  private redirectToLogin() {
+    const currentUrl = new URL(window.location.href);
+    const targetUrl = new URL(loginRedirectUrl);
+    targetUrl.searchParams.set('redirect', currentUrl.href);
+    window.location.href = targetUrl.href;
   }
 
-  async login() {
-    const provider = new GoogleAuthProvider();
-    // const userCredential = await signInWithPopup(this.auth, provider);
-    // return userCredential.user;
-    await signInWithRedirect(this.auth, provider);
+  async loginWithAccessToken(accessToken: string) {
+    const credential = GoogleAuthProvider.credential(undefined, accessToken);
+    const userCredential = await signInWithCredential(this.auth, credential);
+    return userCredential.user;
+  }
+
+  login() {
+    this.redirectToLogin();
   }
 
   async logout() {

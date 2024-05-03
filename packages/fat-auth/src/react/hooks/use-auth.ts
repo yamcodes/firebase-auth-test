@@ -4,19 +4,19 @@ type UseAuthReturn =
   | {
       isLoggedIn: true;
       isLoading: false;
-      login: () => Promise<void>;
+      login: () => void;
       logout: () => Promise<void>;
     }
   | {
       isLoggedIn: false;
       isLoading: true;
-      login: () => Promise<void>;
+      login: () => void;
       logout: () => Promise<void>;
     }
   | {
       isLoggedIn: false;
       isLoading: false;
-      login: () => Promise<void>;
+      login: () => void;
       logout: () => Promise<void>;
     };
 

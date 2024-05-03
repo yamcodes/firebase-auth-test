@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "@faker-js/faker": "^8.0.1",
-    "firebase": "^10.11.0"
+    "firebase": "^10.11.0",
+    "react-use": "^17.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.6",
     "eslint": "^8.0.0",
+    "hooks": "workspace:*",
     "tsup": "^8.0.2",
     "utilities": "workspace:*"
   },

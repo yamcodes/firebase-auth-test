@@ -12,3 +12,5 @@ export const firebaseConfig = {
   messagingSenderId: '177585175620',
   appId: '1:177585175620:web:47e7044492e0b46bb99011',
 } satisfies FirebaseOptions;
+
+export const loginRedirectUrl = 'http://localhost:5173';

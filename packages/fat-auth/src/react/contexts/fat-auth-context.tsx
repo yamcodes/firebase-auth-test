@@ -6,6 +6,6 @@ export const [FatAuthContext, useFatAuth, useFatAuthWithoutGuarantee] =
     isLoggedIn: boolean;
     isLoading: boolean;
     user: User | null | undefined;
-    login: () => Promise<void>;
+    login: () => void;
     logout: () => Promise<void>;
   }>('FatAuthContext');

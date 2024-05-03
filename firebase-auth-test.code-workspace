@@ -25,6 +25,10 @@
       "path": "packages/utilities",
     },
     {
+      "name": "hooks",
+      "path": "packages/hooks",
+    },
+    {
       "name": "tsconfig",
       "path": "packages/tsconfig",
     },
