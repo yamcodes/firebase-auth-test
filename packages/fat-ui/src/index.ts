@@ -1,3 +1,4 @@
-export const hello = 'world';
-export const hello2 = 'world2';
-export const hello3 = 'world3';
+/**
+ * Note: Do not use this file as the public API.
+ * We manage our public API through `tsup.config.ts` entry points.
+ */

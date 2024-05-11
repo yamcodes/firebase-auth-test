@@ -2,11 +2,11 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: ['src/index.ts'],
+    entry: ['src/components/index.ts'],
     outDir: 'dist',
     splitting: false,
     treeshake: true,
-    minify: true,
+    minify: false,
     dts: true,
     sourcemap: 'inline',
     clean: false,

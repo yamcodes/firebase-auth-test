@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { iLikeTurtles } from 'utilities';
 import { FatAuthProvider, useUser, useAuth, LoginButton } from 'fat-auth/react';
-import { hello } from 'fat-ui';
-import './App.css';
+import { Button } from 'fat-ui';
 
 export const AppContent = () => {
   const [data, setData] = useState({});
@@ -25,7 +24,6 @@ export const AppContent = () => {
         <img className="icon-firebase" src="/firebase.svg" alt="firebase" />
         <div className="icon-divider">+</div>
         <img className="icon-turbo" src="/turborepo.svg" alt="turborepo" />
-        <p>{hello}</p>
       </div>
       <div>
         <div style={{ textAlign: 'left' }}>
@@ -43,20 +41,21 @@ export const AppContent = () => {
           <>
             <img alt="user" src={user.photoURL ?? undefined} height={32} />
             Hello {user.displayName}, your email is {user.email}
-            <button
+            <Button
               type="button"
               onClick={() => {
                 void logout();
               }}
             >
               Logout
-            </button>
+            </Button>
           </>
         ) : (
           <LoginButton>
-            <button type="button">Login</button>
+            <Button size="sm">Login now!</Button>
           </LoginButton>
         )}
+        <Button variant="default">default</Button>
       </div>
     </header>
   );
