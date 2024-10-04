@@ -44,5 +44,10 @@
 			"name": "tsconfig.package",
 			"path": "packages/tsconfig"
 		}
-	]
+	],
+	"settings": {
+		"cSpell.words": [
+			"fastify"
+		]
+	}
 }
