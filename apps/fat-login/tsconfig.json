@@ -7,11 +7,9 @@
 			"~/*": ["./src/*"]
 		},
 		"module": "ESNext",
-		"moduleResolution": "Node"
+		"moduleResolution": "Node",
+		"outDir": "dist"
 	},
-	"outDir": "dist",
-	"extends": "@repo/tsconfig/react.json",
-	"include": ["."],
-	"exclude": ["dist", "build", "node_modules"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+  "extends": "@repo/tsconfig/react-app.json",
+	"include": ["src"],
 }

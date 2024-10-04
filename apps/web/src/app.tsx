@@ -5,8 +5,8 @@ import {
 	useUser,
 } from "@repo/fat-auth/react";
 import { Button, ThemeProvider } from "@repo/fat-ui";
+import { useEffectOnce } from "react-use";
 import { useState } from "react";
-// import 'fat-ui/dist/index.css';
 
 export const AppContent = () => {
 	const [data, setData] = useState({});

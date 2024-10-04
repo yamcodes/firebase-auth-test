@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import { getQueryParams } from "utilities";
+import { getQueryParams } from "@repo/utilities";
 import { env } from "./config";
 import "./App.css";
 
