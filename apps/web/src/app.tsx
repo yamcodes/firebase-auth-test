@@ -56,6 +56,7 @@ export const AppContent = () => {
 				<Button variant="default" size="sm">
 					default
 				</Button>
+				<div className="text-red-500">Hello</div>
 			</div>
 		</header>
 	);
