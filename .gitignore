@@ -48,3 +48,6 @@ isolate
 
 # tsbuildinfo
 *.tsbuildinfo
+
+# tsup config bundled
+tsup.config.bundled_*.mjs
