@@ -27,5 +27,19 @@
 		"formatter": {
 			"quoteStyle": "double"
 		}
-	}
+	},
+	"overrides": [
+		{
+			"include": ["identity-api"],
+			"linter": {
+				"rules": {
+					"style": {
+						// Due to using experimental decorators, NestJS does not support `useImportType`.
+						// See https://biomejs.dev/linter/rules/use-import-type/#caveat-with-typescript-experimental-decorators
+						"useImportType": "off"
+					}
+				}
+			}
+		}
+	]
 }
