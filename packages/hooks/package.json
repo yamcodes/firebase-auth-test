@@ -22,7 +22,7 @@
 		"@repo/utilities": "workspace:*"
 	},
 	"devDependencies": {
-		"@testing-library/react": "^14.2.1",
+		"@testing-library/react": "^16.0.0",
 		"@types/jest": "^29.5.12",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
