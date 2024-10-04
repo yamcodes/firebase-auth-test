@@ -1,11 +1,7 @@
 {
-	"compilerOptions": {
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-		"outDir": "dist"
-	},
-	"extends": "@repo/tsconfig/functions.json",
-	"include": ["."],
-	"exclude": ["dist", "build", "node_modules"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }
