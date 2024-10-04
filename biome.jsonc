@@ -31,6 +31,12 @@
 	"overrides": [
 		{
 			"include": ["fat-identity"],
+			"javascript": {
+				"parser": {
+					// See https://stackoverflow.com/questions/77804479/decorators-are-not-valid-here-biomeparse
+					"unsafeParameterDecoratorsEnabled": true
+				}
+			},
 			"linter": {
 				"rules": {
 					"style": {
