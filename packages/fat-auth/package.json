@@ -1,47 +1,41 @@
 {
-  "name": "@repo/fat-auth",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "@faker-js/faker": "^8.0.1",
-    "firebase": "^10.11.0",
-    "react-use": "^17.5.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.6",
-    "eslint": "^8.0.0",
-    "hooks": "workspace:*",
-    "tsup": "^8.0.2",
-    "@repo/utilities": "workspace:*"
-  },
-  "scripts": {
-    "build": "pnpm typecheck && rm -rf dist && tsup",
-    "typecheck": "tsc --noEmit",
-    "prepack": "pnpm build",
-    "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
-  },
-  "type": "module",
-  "files": [
-    "dist"
-  ],
-  "exports": {
-    "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
-    },
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "core": [
-        "dist/core.d.ts"
-      ],
-      "react": [
-        "dist/react.d.ts"
-      ]
-    }
-  }
+	"name": "@repo/fat-auth",
+	"version": "0.0.0",
+	"private": true,
+	"dependencies": {
+		"@faker-js/faker": "^8.0.1",
+		"firebase": "^10.11.0",
+		"react-use": "^17.5.0"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.6",
+		"eslint": "^8.0.0",
+		"hooks": "workspace:*",
+		"tsup": "^8.0.2",
+		"@repo/utilities": "workspace:*"
+	},
+	"scripts": {
+		"build": "pnpm typecheck && rm -rf dist && tsup",
+		"typecheck": "tsc --noEmit",
+		"prepack": "pnpm build",
+		"clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
+	},
+	"type": "module",
+	"files": ["dist"],
+	"exports": {
+		"./react": {
+			"types": "./dist/react.d.ts",
+			"import": "./dist/react.js"
+		},
+		"./core": {
+			"types": "./dist/core.d.ts",
+			"import": "./dist/core.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"core": ["dist/core.d.ts"],
+			"react": ["dist/react.d.ts"]
+		}
+	}
 }

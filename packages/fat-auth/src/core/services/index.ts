@@ -1,1 +1,1 @@
-export * from './fat-auth';
+export * from "./fat-auth";

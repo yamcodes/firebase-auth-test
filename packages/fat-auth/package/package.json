@@ -1,24 +1,22 @@
 {
-  "name": "fat-auth",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "@faker-js/faker": "^8.0.1",
-    "firebase": "^10.11.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.6",
-    "tsup": "^8.0.2",
-    "@repo/utilities": "0.0.0"
-  },
-  "type": "module",
-  "files": [
-    "**/dist/**/*"
-  ],
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "build": "pnpm typecheck && rm -rf dist && tsup",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
-  }
+	"name": "fat-auth",
+	"version": "0.0.0",
+	"private": true,
+	"dependencies": {
+		"@faker-js/faker": "^8.0.1",
+		"firebase": "^10.11.0"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.6",
+		"tsup": "^8.0.2",
+		"@repo/utilities": "0.0.0"
+	},
+	"type": "module",
+	"files": ["**/dist/**/*"],
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "pnpm typecheck && rm -rf dist && tsup",
+		"typecheck": "tsc --noEmit",
+		"clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
+	}
 }

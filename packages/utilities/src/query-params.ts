@@ -3,8 +3,8 @@
  * @returns An object containing all query parameters.
  */
 export const getQueryParams = (): Record<string, string | undefined> => {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  return Object.fromEntries<string | undefined>(urlSearchParams.entries());
+	const urlSearchParams = new URLSearchParams(window.location.search);
+	return Object.fromEntries<string | undefined>(urlSearchParams.entries());
 };
 
 /**
@@ -12,13 +12,11 @@ export const getQueryParams = (): Record<string, string | undefined> => {
  * @param keys - The keys of the query parameters to remove.
  */
 export const removeParamsFromUrl = (keys: string[]) => {
-  const newSearchParams = new URLSearchParams(window.location.search);
-  keys.forEach((key) => {
-    newSearchParams.delete(key);
-  });
-  const newSearchParamsString = newSearchParams.toString();
-  const newUrl = `${window.location.pathname}${
-    newSearchParamsString ? `?${newSearchParamsString}` : ''
-  }`;
-  window.history.replaceState(null, '', newUrl);
+	const newSearchParams = new URLSearchParams(window.location.search);
+	for (const key of keys) newSearchParams.delete(key);
+	const newSearchParamsString = newSearchParams.toString();
+	const newUrl = `${window.location.pathname}${
+		newSearchParamsString ? `?${newSearchParamsString}` : ""
+	}`;
+	window.history.replaceState(null, "", newUrl);
 };

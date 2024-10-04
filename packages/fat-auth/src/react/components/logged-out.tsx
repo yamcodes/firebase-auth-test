@@ -1,9 +1,9 @@
-import { type PropsWithChildren } from 'react';
-import { useFatAuth } from '../contexts';
+import type { PropsWithChildren } from "react";
+import { useFatAuth } from "../contexts";
 
 export const LoggedOut = ({ children }: PropsWithChildren) => {
-  const { user } = useFatAuth();
+	const { user } = useFatAuth();
 
-  if (!user) return <>{children}</>;
-  return null;
+	if (!user) return <>{children}</>;
+	return null;
 };

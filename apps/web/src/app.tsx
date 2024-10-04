@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { FatAuthProvider, useUser, useAuth, LoginButton } from "fat-auth/react";
+import { FatAuthProvider, LoginButton, useAuth, useUser } from "fat-auth/react";
 import { Button, ThemeProvider } from "fat-ui";
+import { useState } from "react";
 // import 'fat-ui/dist/index.css';
 
 export const AppContent = () => {

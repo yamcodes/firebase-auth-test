@@ -1,11 +1,11 @@
 {
-  "extends": "tsconfig/react.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"],
-  "compilerOptions": {
-    "lib": ["dom", "ES2019", "DOM.Iterable"],
-    "paths": {
-      "~/*": ["./src/*"]
-    }
-  }
+	"extends": "tsconfig/react.json",
+	"include": ["."],
+	"exclude": ["dist", "build", "node_modules"],
+	"compilerOptions": {
+		"lib": ["dom", "ES2019", "DOM.Iterable"],
+		"paths": {
+			"~/*": ["./src/*"]
+		}
+	}
 }

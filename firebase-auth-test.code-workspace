@@ -1,36 +1,36 @@
 {
-  "folders": [
-    {
-      "name": "~",
-      "path": ".",
-    },
-    {
-      "name": "api",
-      "path": "apps/api",
-    },
-    {
-      "name": "web",
-      "path": "apps/web",
-    },
-    {
-      "name": "fat-login",
-      "path": "apps/fat-login",
-    },
-    {
-      "name": "fat-auth",
-      "path": "packages/fat-auth",
-    },
-    {
-      "name": "utilities",
-      "path": "packages/utilities",
-    },
-    {
-      "name": "hooks",
-      "path": "packages/hooks",
-    },
-    {
-      "name": "tsconfig",
-      "path": "packages/tsconfig",
-    },
-  ],
+	"folders": [
+		{
+			"name": "~",
+			"path": "."
+		},
+		{
+			"name": "api",
+			"path": "apps/api"
+		},
+		{
+			"name": "web",
+			"path": "apps/web"
+		},
+		{
+			"name": "fat-login",
+			"path": "apps/fat-login"
+		},
+		{
+			"name": "fat-auth",
+			"path": "packages/fat-auth"
+		},
+		{
+			"name": "utilities",
+			"path": "packages/utilities"
+		},
+		{
+			"name": "hooks",
+			"path": "packages/hooks"
+		},
+		{
+			"name": "tsconfig",
+			"path": "packages/tsconfig"
+		}
+	]
 }

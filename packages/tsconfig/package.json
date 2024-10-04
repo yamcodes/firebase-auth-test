@@ -1,12 +1,12 @@
 {
-  "name": "@repo/tsconfig",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "clean": "rm -rf .turbo && rm -rf node_modules"
-  },
-  "devDependencies": {
-    "@vercel/style-guide": "^6.0.0",
-    "typescript": "^5.3.3"
-  }
+	"name": "@repo/tsconfig",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"clean": "rm -rf .turbo && rm -rf node_modules"
+	},
+	"devDependencies": {
+		"@vercel/style-guide": "^6.0.0",
+		"typescript": "^5.3.3"
+	}
 }

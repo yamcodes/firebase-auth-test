@@ -1,6 +1,6 @@
 import { builtinModules } from "node:module";
-import { defineConfig } from "vite";
 import generatePackageJson from "rollup-plugin-generate-package-json";
+import { defineConfig } from "vite";
 import packageJson from "./package.json" assert { type: "json" };
 
 // NOTE: the utilities package cannot be included into the deps casue it will attempt to be installed in

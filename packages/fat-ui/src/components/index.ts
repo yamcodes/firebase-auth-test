@@ -1,4 +1,4 @@
-import '../index.css';
+import "../index.css";
 
-export * from './ui';
-export * from './theme-provider';
+export * from "./ui";
+export * from "./theme-provider";

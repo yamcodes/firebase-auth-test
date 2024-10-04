@@ -43,6 +43,7 @@ export const createContextAndHook = <CtxVal>(
 	const useCtx = () => {
 		const ctx = useContext(Ctx);
 		assertCtxFn(ctx, `${displayName} not found`);
+		// biome-ignore lint/style/noNonNullAssertion: We asserted the context exists
 		return ctx!;
 	};
 

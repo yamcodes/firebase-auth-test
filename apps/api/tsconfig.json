@@ -1,11 +1,11 @@
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "outDir": "dist"
-  },
-  "extends": "tsconfig/functions.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+	"compilerOptions": {
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"outDir": "dist"
+	},
+	"extends": "tsconfig/functions.json",
+	"include": ["."],
+	"exclude": ["dist", "build", "node_modules"]
 }

@@ -18,11 +18,11 @@
 // //   response.send("Hello from Firebase!");
 // // });
 
-import { onRequest } from "firebase-functions/v2/https";
 import { fastify } from "fastify";
 import * as logger from "firebase-functions/logger";
-import { setContentTypeParser } from "./utils";
+import { onRequest } from "firebase-functions/v2/https";
 import { routes } from "./routes";
+import { setContentTypeParser } from "./utils";
 
 const app = fastify({
 	logger: true,

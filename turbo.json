@@ -1,29 +1,29 @@
 {
-  "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "deploy": {
-      "dependsOn": ["build"]
-    },
-    "lint": {
-      "dependsOn": ["build"]
-    },
-    "dev": {
-      "dependsOn": ["build"],
-      "cache": false,
-      "persistent": true
-    },
-    "clean": {
-      "cache": false
-    },
-    "//#root:clean": {
-      "cache": false
-    },
-    "//#root:emulate": {
-      "cache": false,
-      "persistent": true
-    }
-  }
+	"pipeline": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**"]
+		},
+		"deploy": {
+			"dependsOn": ["build"]
+		},
+		"lint": {
+			"dependsOn": ["build"]
+		},
+		"dev": {
+			"dependsOn": ["build"],
+			"cache": false,
+			"persistent": true
+		},
+		"clean": {
+			"cache": false
+		},
+		"//#root:clean": {
+			"cache": false
+		},
+		"//#root:emulate": {
+			"cache": false,
+			"persistent": true
+		}
+	}
 }
