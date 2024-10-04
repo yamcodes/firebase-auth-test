@@ -17,6 +17,10 @@
 			"path": "apps/fat-login"
 		},
 		{
+			"name": "fat-ui",
+			"path": "packages/fat-ui"
+		},
+		{
 			"name": "fat-auth",
 			"path": "packages/fat-auth"
 		},

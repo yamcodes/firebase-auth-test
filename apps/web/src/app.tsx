@@ -1,5 +1,10 @@
-import { FatAuthProvider, LoginButton, useAuth, useUser } from "fat-auth/react";
-import { Button, ThemeProvider } from "fat-ui";
+import {
+	FatAuthProvider,
+	LoginButton,
+	useAuth,
+	useUser,
+} from "@repo/fat-auth/react";
+import { Button, ThemeProvider } from "@repo/fat-ui";
 import { useState } from "react";
 // import 'fat-ui/dist/index.css';
 

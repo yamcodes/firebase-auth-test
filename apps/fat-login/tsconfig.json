@@ -10,7 +10,7 @@
 		"moduleResolution": "Node"
 	},
 	"outDir": "dist",
-	"extends": "tsconfig/react.json",
+	"extends": "@repo/tsconfig/react.json",
 	"include": ["."],
 	"exclude": ["dist", "build", "node_modules"],
 	"references": [{ "path": "./tsconfig.node.json" }]
