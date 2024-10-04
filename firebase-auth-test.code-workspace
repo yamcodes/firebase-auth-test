@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"name": "~",
+			"name": "firebase-auth-test",
 			"path": "."
 		},
 		{
@@ -9,39 +9,39 @@
 			"path": ".github/workflows"
 		},
 		{
-			"name": "web",
+			"name": "web.app",
 			"path": "apps/web"
 		},
 		{
-			"name": "fat-login",
+			"name": "fat-login.app",
 			"path": "apps/fat-login"
 		},
 		{
-			"name": "api",
+			"name": "api.service",
 			"path": "services/api"
 		},
 		{
-			"name": "identity-api",
-			"path": "services/identity-api"
+			"name": "fat-identity.service",
+			"path": "services/fat-identity"
 		},
 		{
-			"name": "fat-ui",
+			"name": "fat-ui.package",
 			"path": "packages/fat-ui"
 		},
 		{
-			"name": "fat-auth",
+			"name": "fat-auth.package",
 			"path": "packages/fat-auth"
 		},
 		{
-			"name": "utilities",
+			"name": "utilities.package",
 			"path": "packages/utilities"
 		},
 		{
-			"name": "hooks",
+			"name": "hooks.package",
 			"path": "packages/hooks"
 		},
 		{
-			"name": "tsconfig",
+			"name": "tsconfig.package",
 			"path": "packages/tsconfig"
 		}
 	]
