@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": "./",
 		"paths": {
 			"react": ["./node_modules/@types/react"],
 			"react-dom": ["./node_modules/@types/react-dom"],
@@ -7,11 +8,9 @@
 			"~/*": ["./src/*"]
 		},
 		"module": "ESNext",
-		"moduleResolution": "Node"
+		"moduleResolution": "Node",
+		"outDir": "dist"
 	},
-	"outDir": "dist",
-	"extends": "tsconfig/react.json",
-	"include": ["."],
-	"exclude": ["dist", "build", "node_modules"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+	"extends": "@repo/tsconfig/react-app.json",
+	"include": ["src"]
 }

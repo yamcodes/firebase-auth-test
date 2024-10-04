@@ -5,7 +5,7 @@
 		},
 		"outDir": "dist"
 	},
-	"extends": "tsconfig/functions.json",
+	"extends": "@repo/tsconfig/functions.json",
 	"include": ["."],
 	"exclude": ["dist", "build", "node_modules"]
 }

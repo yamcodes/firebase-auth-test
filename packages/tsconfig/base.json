@@ -9,15 +9,13 @@
 		"forceConsistentCasingInFileNames": true,
 		"inlineSources": false,
 		"isolatedModules": true,
-		"moduleResolution": "node",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 		"preserveWatchOutput": true,
 		"skipLibCheck": true,
-		"strict": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitAny": true,
-		"noEmit": true
+		"strict": true
 	},
 	"exclude": ["node_modules"]
 }

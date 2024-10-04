@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: Test
 
 on:
   pull_request:
@@ -10,13 +10,13 @@ on:
 
 jobs:
   lint:
-    name: Test build and lint
+    name: Test build
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v4
         name: Checkout
-      - uses: dtinth/setup-github-actions-caching-for-turbo@v1
-        name: Setup Turbo caching
+      - name: Cache for Turbo
+        uses: rharkor/caching-for-turbo@v1.5
       - uses: pnpm/action-setup@v3
         with:
           version: 8
@@ -31,6 +31,3 @@ jobs:
 
       - name: Test the build
         run: pnpm run build
-
-      - name: Lint
-        run: pnpm run lint

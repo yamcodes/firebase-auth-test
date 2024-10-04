@@ -5,6 +5,10 @@
 			"path": "."
 		},
 		{
+			"name": "workflows",
+			"path": ".github/workflows"
+		},
+		{
 			"name": "api",
 			"path": "apps/api"
 		},
@@ -15,6 +19,10 @@
 		{
 			"name": "fat-login",
 			"path": "apps/fat-login"
+		},
+		{
+			"name": "fat-ui",
+			"path": "packages/fat-ui"
 		},
 		{
 			"name": "fat-auth",
