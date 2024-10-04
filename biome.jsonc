@@ -30,7 +30,7 @@
 	},
 	"overrides": [
 		{
-			"include": ["identity-api"],
+			"include": ["fat-identity"],
 			"linter": {
 				"rules": {
 					"style": {
