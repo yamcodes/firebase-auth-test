@@ -9,6 +9,6 @@
 		"module": "ESNext",
 		"moduleResolution": "Node"
 	},
-  "extends": "@repo/tsconfig/react-app.json",
-  "include": ["src"]
+	"extends": "@repo/tsconfig/react-app.json",
+	"include": ["src"]
 }

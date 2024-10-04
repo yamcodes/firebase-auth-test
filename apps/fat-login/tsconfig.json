@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": "./",
 		"paths": {
 			"react": ["./node_modules/@types/react"],
 			"react-dom": ["./node_modules/@types/react-dom"],
@@ -10,6 +11,6 @@
 		"moduleResolution": "Node",
 		"outDir": "dist"
 	},
-  "extends": "@repo/tsconfig/react-app.json",
-	"include": ["src"],
+	"extends": "@repo/tsconfig/react-app.json",
+	"include": ["src"]
 }
