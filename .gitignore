@@ -45,3 +45,6 @@ isolate
 
 # open-source firebase
 .firebaserc
+
+# tsbuildinfo
+*.tsbuildinfo
