@@ -15,7 +15,7 @@
     "@react-oauth/google": "^0.12.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "utilities": "workspace:*",
+    "@repo/utilities": "workspace:*",
     "znv": "^0.4.0",
     "zod": "^3.23.4"
   },

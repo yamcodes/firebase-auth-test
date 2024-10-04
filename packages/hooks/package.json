@@ -19,7 +19,7 @@
   "dependencies": {
     "react-use": "^17.5.0",
     "usehooks-ts": "^2.16.0",
-    "utilities": "workspace:*"
+    "@repo/utilities": "workspace:*"
   },
   "devDependencies": {
     "@testing-library/react": "^14.2.1",
