@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import { useEffectOnce } from "react-use";
 import {
 	FatAuthProvider,
 	LoginButton,
@@ -8,7 +6,9 @@ import {
 } from "@repo/fat-auth/react";
 import { Button } from "@repo/fat-ui";
 import { Moon, Sun } from "lucide-react";
-import { useTheme, ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { useEffectOnce } from "react-use";
 
 const AppContent = () => {
 	const [data, setData] = useState({});
