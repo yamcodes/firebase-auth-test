@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { getQueryParams } from "@repo/utilities";
+import { Loader2, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Loader2 } from "lucide-react";
-import { env } from "./config";
+import { useState } from "react";
 import { Button, Switch } from "~/components";
+import { env } from "./config";
 
 export const AppContent = () => {
 	const [isLoading, setIsLoading] = useState(false);

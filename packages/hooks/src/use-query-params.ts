@@ -1,6 +1,6 @@
+import { getQueryParams, removeParamsFromUrl } from "@repo/utilities";
 import { useMemo, useRef } from "react";
 import { useEffectOnce } from "react-use";
-import { getQueryParams, removeParamsFromUrl } from "@repo/utilities";
 
 /**
  * Filter the query parameters based on the specified keys.

@@ -1,6 +1,6 @@
+import { getQueryParams, removeParamsFromUrl } from "@repo/utilities";
 import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useEffectOnce } from "react-use";
-import { getQueryParams, removeParamsFromUrl } from "@repo/utilities";
 import { FatAuth, type User } from "~/core";
 import { FatAuthContext } from "../contexts/fat-auth-context";
 
