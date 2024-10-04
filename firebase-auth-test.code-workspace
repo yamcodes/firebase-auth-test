@@ -46,9 +46,6 @@
 		}
 	],
 	"settings": {
-		"cSpell.words": [
-			"fastify",
-			"unplugin"
-		]
+		"cSpell.words": ["fastify", "trpc", "unplugin"]
 	}
 }
