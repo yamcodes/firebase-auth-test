@@ -47,7 +47,8 @@
 	],
 	"settings": {
 		"cSpell.words": [
-			"fastify"
+			"fastify",
+			"unplugin"
 		]
 	}
 }
