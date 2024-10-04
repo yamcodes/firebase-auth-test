@@ -6,8 +6,8 @@
 			"react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"],
 			"~/*": ["./src/*"]
 		},
-		"module": "ESNext",
-		"moduleResolution": "Node"
+		"module": "Preserve",
+		"moduleResolution": "Bundler"
 	},
 	"extends": "@repo/tsconfig/react-app.json",
 	"include": ["src"]

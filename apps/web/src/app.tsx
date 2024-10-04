@@ -4,18 +4,58 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
-import { Button } from "@repo/fat-ui";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import { trpc } from "./utils/trpc";
+import { Input, Button } from "./components";
+import type { inferProcedureInput } from "@trpc/server";
+import type { AppRouter } from "@repo/fat-identity";
+
+type DogBreed = inferProcedureInput<AppRouter["dogs"]["create"]>["breed"];
 
 const AppContent = () => {
+	const dogsQuery = trpc.dogs.findAll.useQuery();
+	const dogCreator = trpc.dogs.create.useMutation();
+
 	const [data, setData] = useState({});
 	const { isLoading, isLoggedIn, user } = useUser();
 	const { logout } = useAuth();
 	const { theme, setTheme } = useTheme();
 	const [mounted, setMounted] = useState(false);
+
+	const [dogName, setDogName] = useState("");
+	const [dogBreed, setDogBreed] = useState<DogBreed | undefined>();
+
+	const utils = trpc.useUtils();
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (!dogName || !dogBreed) {
+			// Validation error
+			console.error("Dog name and breed are required");
+			return;
+		}
+		dogCreator.mutate(
+			{
+				name: dogName,
+				breed: dogBreed,
+			},
+			{
+				onSuccess: () => {
+					utils.dogs.findAll.invalidate();
+					setDogName("");
+					setDogBreed(undefined);
+				},
+				onError: (error) => {
+					console.error(error);
+				},
+			},
+		);
+	};
 
 	useEffect(() => {
 		setMounted(true);
@@ -150,9 +190,53 @@ const AppContent = () => {
 							<p>Please log in to view your information.</p>
 						)}
 					</div>
+					<div
+						className={`p-6 rounded-lg shadow-md ${theme === "light" ? "bg-white" : "bg-gray-800"}`}
+					>
+						<h2 className="text-2xl font-semibold mb-4">Dogs</h2>
+						{dogsQuery.isLoading ? (
+							<p>Loading...</p>
+						) : (
+							<ul>
+								{dogsQuery.data?.map((dog) => (
+									<li key={dog.id}>
+										<b>{dog.name}</b> - {dog.breed}
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
+					<div
+						className={`p-6 rounded-lg shadow-md ${theme === "light" ? "bg-white" : "bg-gray-800"}`}
+					>
+						<h2 className="text-2xl font-semibold mb-4">Add a Dog</h2>
+						<form onSubmit={handleSubmit} className="space-y-4">
+							<Input
+								type="text"
+								name="dogName"
+								placeholder="Dog Name"
+								value={dogName}
+								onChange={(e) => setDogName(e.target.value)}
+								className="w-full"
+							/>
+							<Input
+								type="text"
+								name="dogBreed"
+								placeholder="Dog Breed"
+								value={dogBreed}
+								onChange={(e) => {
+									// TODO: avoid this
+									setDogBreed(e.target.value as DogBreed);
+								}}
+								className="w-full"
+							/>
+							<Button type="submit" className="w-full">
+								Add Dog
+							</Button>
+						</form>
+					</div>
 				</section>
 			</main>
-
 			<footer
 				className={`py-6 mt-auto ${theme === "light" ? "bg-gray-200 text-gray-600" : "bg-gray-800 text-gray-400"}`}
 			>
@@ -165,10 +249,24 @@ const AppContent = () => {
 };
 
 export const App = () => {
+	const [queryClient] = useState(() => new QueryClient());
+	const [trpcClient] = useState(() =>
+		trpc.createClient({
+			links: [
+				httpBatchLink({
+					url: "http://localhost:3030/trpc",
+				}),
+			],
+		}),
+	);
 	return (
 		<FatAuthProvider>
 			<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-				<AppContent />
+				<trpc.Provider client={trpcClient} queryClient={queryClient}>
+					<QueryClientProvider client={queryClient}>
+						<AppContent />
+					</QueryClientProvider>
+				</trpc.Provider>
 			</ThemeProvider>
 		</FatAuthProvider>
 	);
