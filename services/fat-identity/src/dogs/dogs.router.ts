@@ -2,8 +2,8 @@ import { Inject } from "@nestjs/common";
 import { Input, Mutation, Query, Router } from "nestjs-trpc";
 import { z } from "zod";
 import { DatabaseService } from "../database.service";
-import { Dog } from "./entities/dog.entity";
 import { CreateDogDto } from "./dogs.dto";
+import { Dog } from "./entities/dog.entity";
 
 @Router({ alias: "dogs" })
 export class DogsRouter {

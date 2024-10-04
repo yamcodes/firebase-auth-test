@@ -8,7 +8,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["dist"]
+		"ignore": ["dist", "@generated"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -30,7 +30,7 @@
 	},
 	"overrides": [
 		{
-			"include": ["fat-identity"],
+			"include": ["./services/fat-identity/**"],
 			"javascript": {
 				"parser": {
 					// See https://stackoverflow.com/questions/77804479/decorators-are-not-valid-here-biomeparse

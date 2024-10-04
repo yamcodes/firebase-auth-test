@@ -2,8 +2,8 @@ import { Module } from "@nestjs/common";
 import { TRPCModule } from "nestjs-trpc";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { DogsRouter } from "./dogs/dogs.router";
 import { DatabaseService } from "./database.service";
+import { DogsRouter } from "./dogs/dogs.router";
 
 @Module({
 	imports: [TRPCModule.forRoot({ autoSchemaFile: "./src/@generated" })],

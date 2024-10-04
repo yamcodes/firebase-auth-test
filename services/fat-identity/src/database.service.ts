@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import z from "zod";
-import { Dog } from "./dogs/entities/dog.entity";
 import { CreateDogDto } from "./dogs/dogs.dto";
+import { Dog } from "./dogs/entities/dog.entity";
 
 @Injectable()
 export class DatabaseService {
