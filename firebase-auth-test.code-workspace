@@ -9,16 +9,20 @@
 			"path": ".github/workflows"
 		},
 		{
-			"name": "api",
-			"path": "apps/api"
-		},
-		{
 			"name": "web",
 			"path": "apps/web"
 		},
 		{
 			"name": "fat-login",
 			"path": "apps/fat-login"
+		},
+		{
+			"name": "api",
+			"path": "services/api"
+		},
+		{
+			"name": "identity-api",
+			"path": "services/identity-api"
 		},
 		{
 			"name": "fat-ui",
