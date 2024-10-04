@@ -12,14 +12,12 @@
     "eslint": "^8.0.0",
     "hooks": "workspace:*",
     "tsup": "^8.0.2",
-    "utilities": "workspace:*"
+    "@repo/utilities": "workspace:*"
   },
   "scripts": {
     "build": "pnpm typecheck && rm -rf dist && tsup",
     "typecheck": "tsc --noEmit",
     "prepack": "pnpm build",
-    "lint": "eslint .",
-    "lint:fix": "pnpm format && eslint . --fix",
     "clean": "rm -rf .turbo && rm -rf node_modules && find . -type d -name 'dist' -prune -exec rm -rf '{}' +"
   },
   "type": "module",

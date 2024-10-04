@@ -1,5 +1,5 @@
 {
-  "name": "utilities",
+  "name": "@repo/utilities",
   "version": "0.0.0",
   "private": true,
   "type": "module",

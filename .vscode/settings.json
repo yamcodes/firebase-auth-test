@@ -1,7 +1,3 @@
 {
-  "eslint.workingDirectories": [
-    { "pattern": "apps/*/" },
-    { "pattern": "packages/*/" }
-  ],
   "npm.packageManager": "pnpm"
 }

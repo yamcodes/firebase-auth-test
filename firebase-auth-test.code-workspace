@@ -32,9 +32,5 @@
       "name": "tsconfig",
       "path": "packages/tsconfig",
     },
-    {
-      "name": "eslint-config-custom",
-      "path": "packages/eslint-config-custom",
-    },
   ],
 }

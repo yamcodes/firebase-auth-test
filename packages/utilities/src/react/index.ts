@@ -1,20 +1,20 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
 export function assertContextExists(
-  contextVal: unknown,
-  msgOrCtx: string | React.Context<unknown>
+	contextVal: unknown,
+	msgOrCtx: string | React.Context<unknown>,
 ): asserts contextVal {
-  if (!contextVal) {
-    throw new Error(
-      typeof msgOrCtx === 'string'
-        ? msgOrCtx
-        : `${msgOrCtx.displayName ?? 'Context'} not found`
-    );
-  }
+	if (!contextVal) {
+		throw new Error(
+			typeof msgOrCtx === "string"
+				? msgOrCtx
+				: `${msgOrCtx.displayName ?? "Context"} not found`,
+		);
+	}
 }
 
 interface Options {
-  assertCtxFn?: (v: unknown, msg: string) => void;
+	assertCtxFn?: (v: unknown, msg: string) => void;
 }
 type ContextOf<T> = React.Context<T | undefined>;
 type UseCtxFn<T> = () => T;
@@ -29,28 +29,27 @@ type UseCtxFn<T> = () => T;
  * @returns The context, the use context function, and the use context function without guarantee.
  */
 export const createContextAndHook = <CtxVal>(
-  displayName: string,
-  options?: Options
+	displayName: string,
+	options?: Options,
 ): [
-  ContextOf<CtxVal>,
-  UseCtxFn<CtxVal>,
-  UseCtxFn<CtxVal | Partial<CtxVal>>,
+	ContextOf<CtxVal>,
+	UseCtxFn<CtxVal>,
+	UseCtxFn<CtxVal | Partial<CtxVal>>,
 ] => {
-  const { assertCtxFn = assertContextExists } = options ?? {};
-  const Ctx = createContext<CtxVal | undefined>(undefined);
-  Ctx.displayName = displayName;
+	const { assertCtxFn = assertContextExists } = options ?? {};
+	const Ctx = createContext<CtxVal | undefined>(undefined);
+	Ctx.displayName = displayName;
 
-  const useCtx = () => {
-    const ctx = useContext(Ctx);
-    assertCtxFn(ctx, `${displayName} not found`);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- With guarantee
-    return ctx!;
-  };
+	const useCtx = () => {
+		const ctx = useContext(Ctx);
+		assertCtxFn(ctx, `${displayName} not found`);
+		return ctx!;
+	};
 
-  const useCtxWithoutGuarantee = () => {
-    const ctx = useContext(Ctx);
-    return ctx ?? ({} as Partial<CtxVal>);
-  };
+	const useCtxWithoutGuarantee = () => {
+		const ctx = useContext(Ctx);
+		return ctx ?? ({} as Partial<CtxVal>);
+	};
 
-  return [Ctx, useCtx, useCtxWithoutGuarantee];
+	return [Ctx, useCtx, useCtxWithoutGuarantee];
 };
