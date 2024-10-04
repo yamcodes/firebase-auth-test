@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"dependencies": {
-		"@faker-js/faker": "^8.0.1",
+		"@faker-js/faker": "^9.0.0",
 		"firebase": "^10.11.0",
 		"react-use": "^17.5.0"
 	},
