@@ -26,7 +26,9 @@ export const AppContent = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground">
+		<div
+			className={`flex flex-col items-center justify-center min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-background text-foreground"}`}
+		>
 			<div className="absolute top-4 right-4 flex items-center space-x-2">
 				<Switch
 					checked={theme === "dark"}
@@ -48,6 +50,7 @@ export const AppContent = () => {
 					className="w-64 h-14 text-lg"
 					onClick={handleLogin}
 					disabled={isLoading}
+					variant={theme === "dark" ? "secondary" : "default"}
 				>
 					{isLoading ? (
 						<Loader2 className="mr-2 h-5 w-5 animate-spin" />

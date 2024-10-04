@@ -9,6 +9,7 @@
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview",
 		"deploy": "firebase deploy --only hosting",
+		"changeset": "pnpm ",
 		"clean": "rimraf node_modules dist"
 	},
 	"dependencies": {
