@@ -30,7 +30,7 @@
 		"@types/node": "^20.4.4",
 		"@types/tap": "^15.0.5",
 		"c8": "^7.13.0",
-		"concurrently": "^8.2.2",
+		"concurrently": "^9.0.0",
 		"fastify-tsconfig": "^2.0.0",
 		"tap": "^16.1.0",
 		"ts-node": "^10.4.0",
