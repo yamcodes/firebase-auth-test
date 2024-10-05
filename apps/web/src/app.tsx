@@ -4,16 +4,16 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
+import type { inferProcedureInput } from "@trpc/server";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
-import { trpc } from "./utils/trpc";
-import { Input, Button } from "./components";
-import type { inferProcedureInput } from "@trpc/server";
 import type { AppRouter } from "../../../services/fat-identity-nestjs/src/@generated/server";
+import { Button, Input } from "./components";
+import { trpc } from "./utils/trpc";
 
 type DogBreed = inferProcedureInput<AppRouter["dogs"]["create"]>["breed"];
 

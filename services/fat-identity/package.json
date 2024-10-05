@@ -8,12 +8,12 @@
 		"test": "test"
 	},
 	"scripts": {
-		"test": "npm run build:ts && tsc -p test/tsconfig.json && c8 tap --ts \"test/**/*.test.ts\"",
-		"start": "npm run build:ts && fastify start -l info dist/app.js",
-		"build": "tsup",
-		"build:watch": "tsup -w",
-		"dev": "npm run build:ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
-		"dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
+		"test": "pnpm build && tsc -p test/tsconfig.json && c8 tap --ts \"test/**/*.test.ts\"",
+		"serve": "pnpm build && fastify start -l info dist/app.js",
+		"build": "swc src --out-dir dist",
+		"build:watch": "swc src --out-dir dist -w",
+		"dev": "pnpm build && pnpm run '/build:watch|start/'",
+		"start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
 		"clean": "rimraf node_modules dist"
 	},
 	"keywords": [],
@@ -27,19 +27,17 @@
 		"fastify-plugin": "^5.0.1"
 	},
 	"devDependencies": {
+		"@swc/cli": "0.4.1-nightly.20240914",
+		"@swc/core": "^1.7.26",
 		"@types/node": "^20.4.4",
-		"@types/tap": "^15.0.5",
+		"@types/tap": "^15.0.12",
 		"c8": "^7.13.0",
-		"concurrently": "^8.2.2",
 		"fastify-tsconfig": "^2.0.0",
-		"tap": "^16.1.0",
+		"tap": "^16.3.10",
 		"ts-node": "^10.4.0",
 		"tsup": "^8.0.2",
 		"tsx": "^4.19.1",
-		"typescript": "^5.2.2"
-	},
-	"tap": {
-		"node-arg": ["--no-warnings", "--experimental-loader", "ts-node/esm"],
-		"coverage": false
+		"typescript": "^5.2.2",
+		"vitest": "^2.0.0"
 	}
 }

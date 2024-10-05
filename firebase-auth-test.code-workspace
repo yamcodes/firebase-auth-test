@@ -50,11 +50,6 @@
 		}
 	],
 	"settings": {
-		"cSpell.words": [
-			"fastify",
-			"nestjs",
-			"trpc",
-			"unplugin"
-		]
+		"cSpell.words": ["autoload", "fastify", "nestjs", "trpc", "unplugin"]
 	}
 }
