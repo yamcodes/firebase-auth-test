@@ -21,8 +21,8 @@
 			"path": "services/api"
 		},
 		{
-			"name": "fat-identity.service",
-			"path": "services/fat-identity"
+			"name": "fat-identity-nestjs.service",
+			"path": "services/fat-identity-nestjs"
 		},
 		{
 			"name": "fat-ui.package",
@@ -46,6 +46,11 @@
 		}
 	],
 	"settings": {
-		"cSpell.words": ["fastify", "trpc", "unplugin"]
+		"cSpell.words": [
+			"fastify",
+			"nestjs",
+			"trpc",
+			"unplugin"
+		]
 	}
 }

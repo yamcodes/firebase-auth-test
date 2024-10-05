@@ -13,7 +13,7 @@ import { httpBatchLink } from "@trpc/client";
 import { trpc } from "./utils/trpc";
 import { Input, Button } from "./components";
 import type { inferProcedureInput } from "@trpc/server";
-import type { AppRouter } from "@repo/fat-identity";
+import type { AppRouter } from "../../../services/fat-identity-nestjs/src/@generated/server";
 
 type DogBreed = inferProcedureInput<AppRouter["dogs"]["create"]>["breed"];
 
