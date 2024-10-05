@@ -50,6 +50,15 @@
 		}
 	],
 	"settings": {
-		"cSpell.words": ["autoload", "fastify", "nestjs", "trpc", "unplugin"]
+		"cSpell.words": [
+			"autoload",
+			"fastify",
+			"nestjs",
+			"pino",
+			"tanstack",
+			"trpc",
+			"tsup",
+			"unplugin"
+		]
 	}
 }

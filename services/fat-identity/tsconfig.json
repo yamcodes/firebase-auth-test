@@ -3,8 +3,8 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"sourceMap": true,
-		"moduleResolution": "Node16",
-		"module": "NodeNext",
+		"moduleResolution": "Bundler",
+		"module": "Preserve",
 		"target": "ES2022",
 		"esModuleInterop": true
 	},

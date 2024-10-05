@@ -4,23 +4,21 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
-import type { inferProcedureInput } from "@trpc/server";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
-import type { AppRouter } from "../../../services/fat-identity-nestjs/src/@generated/server";
 import { Button, Input } from "./components";
-import { trpc } from "./utils/trpc";
+import { services } from "./utils";
 
-type DogBreed = inferProcedureInput<AppRouter["dogs"]["create"]>["breed"];
+// TODO: get this from the server
+type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 
 const AppContent = () => {
-	const dogsQuery = trpc.dogs.findAll.useQuery();
-	const dogCreator = trpc.dogs.create.useMutation();
-
+	const dogsQuery = services.identityNest.trpc.dogs.findAll.useQuery();
+	const dogCreator = services.identityNest.trpc.dogs.create.useMutation();
+	const identityHello = services.identity.trpc.getHello.useQuery();
 	const [data, setData] = useState({});
 	const { isLoading, isLoggedIn, user } = useUser();
 	const { logout } = useAuth();
@@ -30,7 +28,7 @@ const AppContent = () => {
 	const [dogName, setDogName] = useState("");
 	const [dogBreed, setDogBreed] = useState<DogBreed | undefined>();
 
-	const utils = trpc.useUtils();
+	const nestUtils = services.identityNest.trpc.useUtils();
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -46,7 +44,7 @@ const AppContent = () => {
 			},
 			{
 				onSuccess: () => {
-					utils.dogs.findAll.invalidate();
+					nestUtils.dogs.findAll.invalidate();
 					setDogName("");
 					setDogBreed(undefined);
 				},
@@ -235,6 +233,12 @@ const AppContent = () => {
 							</Button>
 						</form>
 					</div>
+					<div
+						className={`p-6 rounded-lg shadow-md ${theme === "light" ? "bg-white" : "bg-gray-800"}`}
+					>
+						<h2 className="text-2xl font-semibold mb-4">Identity</h2>
+						<p>{identityHello.data}</p>
+					</div>
 				</section>
 			</main>
 			<footer
@@ -249,24 +253,32 @@ const AppContent = () => {
 };
 
 export const App = () => {
-	const [queryClient] = useState(() => new QueryClient());
-	const [trpcClient] = useState(() =>
-		trpc.createClient({
-			links: [
-				httpBatchLink({
-					url: "http://localhost:3030/trpc",
-				}),
-			],
-		}),
-	);
 	return (
 		<FatAuthProvider>
 			<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-				<trpc.Provider client={trpcClient} queryClient={queryClient}>
-					<QueryClientProvider client={queryClient}>
-						<AppContent />
+				<services.identity.trpc.Provider
+					client={services.identity.trpcClient}
+					queryClient={services.identity.queryClient}
+				>
+					<QueryClientProvider
+						client={services.identity.queryClient}
+						context={services.identity.reactQueryContext}
+					>
+						<services.identityNest.trpc.Provider
+							client={services.identityNest.trpcClient}
+							queryClient={services.identityNest.queryClient}
+						>
+							<QueryClientProvider
+								client={services.identityNest.queryClient}
+								context={services.identityNest.reactQueryContext}
+							>
+								<AppContent />
+							</QueryClientProvider>
+						</services.identityNest.trpc.Provider>
 					</QueryClientProvider>
-				</trpc.Provider>
+				</services.identity.trpc.Provider>
+				{/* </trpc.Provider>
+				</nestTrpc.Provider> */}
 			</ThemeProvider>
 		</FatAuthProvider>
 	);
