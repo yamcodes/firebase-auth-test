@@ -16,7 +16,7 @@
 		"@radix-ui/react-select": "^2.1.2",
 		"@radix-ui/react-slot": "^1.1.0",
 		"@repo/fat-auth": "workspace:*",
-		"@repo/fat-identity": "workspace:*",
+		"@repo/fat-identity-nestjs": "workspace:*",
 		"@repo/fat-ui": "workspace:*",
 		"@repo/utilities": "workspace:*",
 		"@tanstack/react-query": "^5.59.0",

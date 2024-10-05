@@ -21,6 +21,10 @@
 			"path": "services/api"
 		},
 		{
+			"name": "fat-identity.service",
+			"path": "services/fat-identity"
+		},
+		{
 			"name": "fat-identity-nestjs.service",
 			"path": "services/fat-identity-nestjs"
 		},

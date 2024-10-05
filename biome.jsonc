@@ -30,7 +30,7 @@
 	},
 	"overrides": [
 		{
-			"include": ["./services/fat-identity/**"],
+			"include": ["./services/fat-identity-nestjs/**"],
 			"javascript": {
 				"parser": {
 					// See https://stackoverflow.com/questions/77804479/decorators-are-not-valid-here-biomeparse
