@@ -3,7 +3,7 @@ import { GreetingsController } from "./greetings.controller";
 
 export class GreetingsModule {
 	constructor(app: OpenAPIHono) {
-		const greetingsController = new GreetingsController();
-		greetingsController.registerRoutes(app);
+		const greetingsController = new GreetingsController(app);
+		greetingsController.registerRoutes();
 	}
 }

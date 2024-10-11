@@ -3,7 +3,7 @@ import { GeneralController } from "./general.controller";
 
 export class GeneralModule {
 	constructor(app: OpenAPIHono) {
-		const generalController = new GeneralController();
-		app.get("/", generalController.getRoot);
+		const generalController = new GeneralController(app);
+		generalController.registerRoutes();
 	}
 }

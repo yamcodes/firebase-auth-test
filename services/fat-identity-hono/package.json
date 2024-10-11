@@ -1,6 +1,7 @@
 {
 	"name": "@repo/fat-identity-hono",
 	"type": "module",
+	"version": "1.0.0",
 	"scripts": {
 		"dev:server": "tsx watch src/main.ts",
 		"dev:swagger-ui": "browser-sync start --proxy 'localhost:2204' --files 'src/**/*.ts'",
