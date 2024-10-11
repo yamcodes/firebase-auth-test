@@ -1,9 +1,9 @@
-import type { Hono } from "hono";
+import type { OpenAPIHono } from "@hono/zod-openapi";
 import { GreetingsController } from "./greetings.controller";
 
 export class GreetingsModule {
-	constructor(app: Hono) {
+	constructor(app: OpenAPIHono) {
 		const greetingsController = new GreetingsController();
-		app.get("/greetings/:name", greetingsController.getGreeting);
+		app.openapi(greetingsController.getGreeting);
 	}
 }

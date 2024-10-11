@@ -7,9 +7,9 @@ import {
 	fastifyTRPCPlugin,
 } from "@trpc/server/adapters/fastify";
 import type { FastifyPluginAsync } from "fastify";
+import { renderTrpcPanel } from "trpc-panel";
 import { createContext } from "./context";
 import { type AppRouter, appRouter } from "./router";
-import { renderTrpcPanel } from "trpc-panel";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

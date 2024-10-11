@@ -1,21 +1,19 @@
-import { Hono } from "hono";
+import type { OpenAPIHono } from "@hono/zod-openapi";
 import { GeneralModule } from "./features/general/general.module";
 import { GreetingsModule } from "./features/greetings/greetings.module";
 
 export class AppModule {
-	private app: Hono;
+	constructor(app: OpenAPIHono) {
+		new GreetingsModule(app);
+		new GeneralModule(app);
 
-	constructor() {
-		this.app = new Hono();
-		this.setupModules();
-	}
-
-	private setupModules() {
-		new GeneralModule(this.app);
-		new GreetingsModule(this.app);
-	}
-
-	getApp() {
-		return this.app;
+		// Add OpenAPI documentation endpoint
+		app.doc("/docs", {
+			openapi: "3.0.0",
+			info: {
+				title: "My API",
+				version: "1.0.0",
+			},
+		});
 	}
 }

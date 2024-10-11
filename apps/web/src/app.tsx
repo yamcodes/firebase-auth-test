@@ -4,23 +4,23 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
+import type { AppType } from "@repo/fat-identity-hono";
+import { useForm } from "@tanstack/react-form";
 import {
 	QueryClient,
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { hc } from "hono/client";
+import type { InferRequestType } from "hono/client";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { Button, Input, Toaster } from "./components";
-import { services } from "./utils";
-import type { AppType } from "@repo/fat-identity-hono";
-import { hc } from "hono/client";
-import type { InferRequestType } from "hono/client";
 import { useToast } from "./hooks";
-import { useQuery } from "@tanstack/react-query";
-import { useForm } from "@tanstack/react-form";
+import { services } from "./utils";
 // TODO: get this from the server
 type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 

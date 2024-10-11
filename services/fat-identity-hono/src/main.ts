@@ -1,6 +1,8 @@
-import { serve } from "@hono/node-server";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { AppModule } from "./app.module";
 
-const appModule = new AppModule();
-const app = appModule.getApp();
+const app = new OpenAPIHono();
+
+new AppModule(app);
+
 export default app;

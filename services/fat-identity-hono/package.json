@@ -6,7 +6,7 @@
 		"dev:swagger-ui": "browser-sync start --proxy 'localhost:2204' --files 'src/**/*.ts'",
 		"dev:old": "pnpm run '/dev:server|dev:swagger-ui/'",
 		"dev": "vite",
-		"build": "vite build",
+		"build": "vite build --config config",
 		"serve": "node dist/index.js",
 		"clean": "rm -rf node_modules"
 	},
