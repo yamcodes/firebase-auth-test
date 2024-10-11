@@ -1,14 +1,15 @@
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import AutoLoad, { type AutoloadPluginOptions } from "@fastify/autoload";
+import fastifyCors from "@fastify/cors";
+import {
+	type FastifyTRPCPluginOptions,
+	fastifyTRPCPlugin,
+} from "@trpc/server/adapters/fastify";
 import type { FastifyPluginAsync } from "fastify";
 import { createContext } from "./context";
-import { appRouter, type AppRouter } from "./router";
-import {
-	fastifyTRPCPlugin,
-	type FastifyTRPCPluginOptions,
-} from "@trpc/server/adapters/fastify";
-import fastifyCors from "@fastify/cors";
+import { type AppRouter, appRouter } from "./router";
+import { renderTrpcPanel } from "trpc-panel";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,15 @@ const app: FastifyPluginAsync<AppOptions> = async (
 
 	void fastify.get("/ping", (req, reply) => {
 		reply.send({ msg: "pong" });
+	});
+
+	void fastify.get("/panel", (_, res) => {
+		return res.header("content-type", "text/html").send(
+			renderTrpcPanel(appRouter, {
+				url: "http://localhost:1434/trpc",
+				transformer: "superjson",
+			}),
+		);
 	});
 };
 

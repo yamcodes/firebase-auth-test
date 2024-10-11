@@ -1,11 +1,11 @@
+import type { AppRouter } from "@repo/fat-identity";
+import type { AppRouter as NestAppRouter } from "@repo/fat-identity-nestjs";
+import { QueryClient } from "@tanstack/react-query";
 import {
 	createTRPCClient,
 	createTRPCReact,
 	httpBatchLink,
 } from "@trpc/react-query";
-import type { AppRouter as NestAppRouter } from "@repo/fat-identity-nestjs";
-import type { AppRouter } from "@repo/fat-identity";
-import { QueryClient } from "@tanstack/react-query";
 import { createContext } from "react";
 
 export const createQueryClient = () => new QueryClient();

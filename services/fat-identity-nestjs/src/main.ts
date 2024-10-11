@@ -1,3 +1,4 @@
+import { VersioningType } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import {
 	FastifyAdapter,
@@ -11,6 +12,7 @@ async function bootstrap() {
 		new FastifyAdapter(),
 	);
 	app.enableCors();
+	app.enableVersioning({ type: VersioningType.URI });
 	await app.listen(3030, "0.0.0.0");
 }
 bootstrap();

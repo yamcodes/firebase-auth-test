@@ -1,4 +1,4 @@
-import { Inject } from "@nestjs/common";
+import { Inject, Version } from "@nestjs/common";
 import { Input, Mutation, Query, Router } from "nestjs-trpc";
 import { z } from "zod";
 import { DatabaseService } from "../database.service";

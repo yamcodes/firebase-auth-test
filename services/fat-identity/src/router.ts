@@ -26,6 +26,20 @@ export const appRouter = t.router({
 		users[user.id] = user;
 		return user;
 	}),
+	v1: t.router({
+		misc: t.router({
+			sayMyName: t.procedure
+				.input(z.object({ name: z.string() }))
+				.query(async ({ input }) => `Hello ${input.name}`),
+		}),
+	}),
+	v2: t.router({
+		misc: t.router({
+			sayMyName: t.procedure
+				.input(z.object({ name: z.string() }))
+				.query(async ({ input }) => `Hello ${input.name}!`),
+		}),
+	}),
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

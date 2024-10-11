@@ -25,6 +25,10 @@
 			"path": "services/fat-identity"
 		},
 		{
+			"name": "fat-identity-hono.service",
+			"path": "services/fat-identity-hono"
+		},
+		{
 			"name": "fat-identity-nestjs.service",
 			"path": "services/fat-identity-nestjs"
 		},
@@ -53,12 +57,18 @@
 		"cSpell.words": [
 			"autoload",
 			"fastify",
+			"hono",
+			"julr",
 			"nestjs",
+			"openapi",
 			"pino",
 			"tanstack",
 			"trpc",
 			"tsup",
 			"unplugin"
-		]
+		],
+		// keyboard shortcuts, cmd+[ or ] to navigate fporward and backward
+		"workbench.action.navigateForward": "cmd+]",
+		"workbench.action.navigateBack": "cmd+["
 	}
 }

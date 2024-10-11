@@ -4,21 +4,70 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
-import { QueryClientProvider } from "@tanstack/react-query";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useMutation,
+} from "@tanstack/react-query";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
-import { Button, Input } from "./components";
+import { Button, Input, Toaster } from "./components";
 import { services } from "./utils";
-
+import type { AppType } from "@repo/fat-identity-hono";
+import { hc } from "hono/client";
+import type { InferRequestType } from "hono/client";
+import { useToast } from "./hooks";
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
 // TODO: get this from the server
 type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 
 const AppContent = () => {
+	const { toast } = useToast();
+	// hono
+	const identityClient = hc<AppType>("http://localhost:2204").v1;
+
+	const form = useForm({
+		defaultValues: { myName: "John" },
+		onSubmit: async ({ value }) => {
+			toast({
+				title: "Name Said",
+				description: await sayMyNameMutation.mutateAsync({
+					name: value.myName,
+				}),
+			});
+		},
+	});
+
+	const sayMyName = useCallback(
+		async (
+			args: InferRequestType<
+				typeof identityClient.misc.sayMyName.$get
+			>["query"],
+		) => (await identityClient.misc.sayMyName.$get({ query: args })).text(),
+		[identityClient],
+	);
+
+	const sayMyNameMutation = useMutation({
+		mutationFn: sayMyName,
+		onSuccess: (description) => {
+			toast({ title: "Name Said", description });
+		},
+		onError: (error) => {
+			toast({
+				title: "Error",
+				description: "Failed to say name. Please try again.",
+				variant: "destructive",
+			});
+		},
+	});
+
 	const dogsQuery = services.identityNest.trpc.dogs.findAll.useQuery();
 	const dogCreator = services.identityNest.trpc.dogs.create.useMutation();
 	const identityHello = services.identity.trpc.getHello.useQuery();
+
 	const [data, setData] = useState({});
 	const { isLoading, isLoggedIn, user } = useUser();
 	const { logout } = useAuth();
@@ -191,7 +240,9 @@ const AppContent = () => {
 					<div
 						className={`p-6 rounded-lg shadow-md ${theme === "light" ? "bg-white" : "bg-gray-800"}`}
 					>
-						<h2 className="text-2xl font-semibold mb-4">Dogs</h2>
+						<h2 className="text-2xl font-semibold mb-4">
+							Dogs (NestJS + tRPC)
+						</h2>
 						{dogsQuery.isLoading ? (
 							<p>Loading...</p>
 						) : (
@@ -236,8 +287,48 @@ const AppContent = () => {
 					<div
 						className={`p-6 rounded-lg shadow-md ${theme === "light" ? "bg-white" : "bg-gray-800"}`}
 					>
-						<h2 className="text-2xl font-semibold mb-4">Identity</h2>
+						<h2 className="text-2xl font-semibold mb-4">
+							Identity (Fastify + tRPC)
+						</h2>
 						<p>{identityHello.data}</p>
+					</div>
+					<div
+						className={`p-6 rounded-lg shadow-md ${
+							theme === "light" ? "bg-white" : "bg-gray-800"
+						}`}
+					>
+						<h2 className="text-2xl font-semibold mb-4">Say My Name (Hono)</h2>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								form.handleSubmit();
+							}}
+							className="space-y-4"
+						>
+							<form.Field name="myName">
+								{(field) => (
+									<Input
+										type="text"
+										placeholder="Enter your name"
+										value={field.state.value}
+										onChange={(e) => field.handleChange(e.target.value)}
+									/>
+								)}
+							</form.Field>
+							<Button type="submit" className="w-full">
+								{sayMyNameMutation.isLoading ? "Saying..." : "Say My Name"}
+							</Button>
+						</form>
+						{sayMyNameMutation.isError && (
+							<p className="mt-4 text-red-500">
+								<strong>Error:</strong> Failed to fetch data
+							</p>
+						)}
+						{sayMyNameMutation.isSuccess && (
+							<p className="mt-4">
+								<strong>Result:</strong> {sayMyNameMutation.data}
+							</p>
+						)}
 					</div>
 				</section>
 			</main>
@@ -251,6 +342,8 @@ const AppContent = () => {
 		</div>
 	);
 };
+
+const honoQueryClient = new QueryClient();
 
 export const App = () => {
 	return (
@@ -272,7 +365,10 @@ export const App = () => {
 								client={services.identityNest.queryClient}
 								context={services.identityNest.reactQueryContext}
 							>
-								<AppContent />
+								<QueryClientProvider client={honoQueryClient}>
+									<AppContent />
+									<Toaster />
+								</QueryClientProvider>
 							</QueryClientProvider>
 						</services.identityNest.trpc.Provider>
 					</QueryClientProvider>

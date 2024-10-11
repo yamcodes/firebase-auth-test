@@ -1,0 +1,31 @@
+{
+	"name": "@repo/fat-identity-hono",
+	"type": "module",
+	"scripts": {
+		"dev:server": "tsx watch src/main.ts",
+		"dev:swagger-ui": "browser-sync start --proxy 'localhost:2204' --files 'src/**/*.ts'",
+		"dev:old": "pnpm run '/dev:server|dev:swagger-ui/'",
+		"dev": "vite",
+		"build": "vite build",
+		"serve": "node dist/index.js",
+		"clean": "rm -rf node_modules"
+	},
+	"dependencies": {
+		"@hono/node-server": "^1.13.1",
+		"@hono/swagger-ui": "^0.4.1",
+		"@hono/zod-openapi": "^0.16.4",
+		"hono": "^4.6.3",
+		"zod": "^3.23.4"
+	},
+	"devDependencies": {
+		"@hono/vite-build": "^1.1.0",
+		"@hono/vite-dev-server": "^0.16.0",
+		"@hono/zod-validator": "^0.3.0",
+		"@julr/vite-plugin-validate-env": "^1.1.1",
+		"@types/node": "^20.11.17",
+		"browser-sync": "^3.0.3",
+		"tsx": "^4.7.1",
+		"vite": "^5.4.8"
+	},
+	"exports": "./src/main.ts"
+}
