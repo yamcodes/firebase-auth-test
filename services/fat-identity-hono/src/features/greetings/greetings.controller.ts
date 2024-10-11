@@ -1,14 +1,14 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import type { Context } from "hono";
 import { z } from "zod";
+import { createRoute, type OpenAPIHono } from "@hono/zod-openapi";
 
 export class GreetingsController {
-	getGreeting = createRoute({
+	public getGreetingRoute = createRoute({
 		method: "get",
 		path: "/greetings/{name}",
 		request: {
 			params: z.object({
-				name: z.string().min(1).max(50),
+				name: z.string(),
 			}),
 		},
 		responses: {
@@ -23,9 +23,12 @@ export class GreetingsController {
 				description: "Successful response",
 			},
 		},
-		handler: (c: Context) => {
+	});
+
+	public registerRoutes(app: OpenAPIHono) {
+		app.openapi(this.getGreetingRoute, (c) => {
 			const { name } = c.req.valid("param");
 			return c.json({ message: `Hello, ${name}!` });
-		},
-	});
+		});
+	}
 }
