@@ -1,9 +1,12 @@
 import { type OpenAPIHono, createRoute } from "@hono/zod-openapi";
-import type { Context } from "hono";
 import { z } from "zod";
+import type { GreetingsService } from "./greetings.service";
 
 export class GreetingsController {
-	constructor(private app: OpenAPIHono) {}
+	constructor(
+		private app: OpenAPIHono,
+		private greetingsService: GreetingsService,
+	) {}
 
 	public registerRoutes() {
 		this.getGreeting();
@@ -40,7 +43,8 @@ export class GreetingsController {
 			}),
 			(c) => {
 				const { name } = c.req.valid("param");
-				return c.json({ message: `Hello, ${name}!` });
+				const message = this.greetingsService.getGreeting(name);
+				return c.json({ message });
 			},
 		);
 	}
@@ -59,7 +63,8 @@ export class GreetingsController {
 				},
 			}),
 			(c) => {
-				return c.json({ message: "Hello, special person!" });
+				const message = this.greetingsService.getSpecialGreeting();
+				return c.json({ message });
 			},
 		);
 	}
