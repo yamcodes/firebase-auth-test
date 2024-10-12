@@ -18,6 +18,9 @@
 		"@scalar/hono-api-reference": "^0.5.153",
 		"diod": "^3.0.0",
 		"hono": "^4.6.3",
+		"hono-pino": "^0.3.0",
+		"hono-pino-logger": "^1.0.0",
+		"pino": "^9.4.0",
 		"zod": "^3.23.4"
 	},
 	"devDependencies": {
@@ -27,6 +30,7 @@
 		"@julr/vite-plugin-validate-env": "^1.1.1",
 		"@types/node": "^20.11.17",
 		"browser-sync": "^3.0.3",
+		"pino-pretty": "^11.2.2",
 		"tsx": "^4.7.1",
 		"vite": "^5.4.8"
 	},

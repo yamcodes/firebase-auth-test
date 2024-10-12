@@ -6,7 +6,5 @@ export const envSchema = z.object({
 		.default("development"),
 	PORT: z.coerce.number().default(3000),
 });
-
-export type Env = z.infer<typeof envSchema>;
-
-export const env: Env = envSchema.parse(process.env);
+export const env = envSchema.parse(process.env);
+export type Env = typeof env;

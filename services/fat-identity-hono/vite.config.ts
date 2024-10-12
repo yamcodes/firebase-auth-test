@@ -9,7 +9,7 @@ export default defineConfig({
 	plugins: [
 		dev({ entry }),
 		build({ entry, emptyOutDir: true }),
-		// validateEnv({ configFile: "config/env" }),
+		validateEnv({ configFile: "env.config" }),
 	],
 	build: { rollupOptions: { input: entry } },
 });
