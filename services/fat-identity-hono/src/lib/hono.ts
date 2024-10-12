@@ -1,17 +1,16 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { HTTPException } from "hono/http-exception";
 import { formatZodErrors } from "~/utils";
 
 export const defaultHook: OpenAPIHono["defaultHook"] = (result, { json }) => {
 	if (result.success) return;
 
-	return json(
-		{
-			ok: false,
+	throw new HTTPException(422, {
+		cause: result.error,
+		res: json({
 			errors: formatZodErrors(result),
-			source: "custom_error_handler",
-		},
-		422,
-	);
+		}),
+	});
 };
 
 export const createApp = (

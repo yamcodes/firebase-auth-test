@@ -14,13 +14,11 @@ app.use(cors());
 app.use(logger({ logIncoming: import.meta.env.DEV }));
 
 app.onError((err, { json, var: { logger } }) => {
-	if (err instanceof HTTPException) {
-		return err.getResponse();
-	}
+	if (err instanceof HTTPException) return err.getResponse();
 
 	// Unknown error flow
-	logger.error(err);
 
+	logger.error(err);
 	throw new HTTPException(500, {
 		message: "Unexpected server error",
 		cause: err,

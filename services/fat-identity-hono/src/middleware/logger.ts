@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import { createMiddleware } from "hono/factory";
 import { logger as customPinoLogger } from "~/utils";
 import { STATUS_CODES } from "node:http";
+import { match, P } from "ts-pattern";
+import type { Level } from "pino";
 
 interface LoggerOptions {
 	/**
@@ -31,22 +33,20 @@ export const logger = ({
 		const ms = Date.now() - start;
 		const status = c.res.status;
 		const statusText = STATUS_CODES[status] || "Unknown Status";
+		const logLevel = match<number, Level>(status)
+			.with(P.number.gte(500), () => "error")
+			.with(P.union(400, 401, 403, 404), () => "info") // Common client errors
+			.with(P.number.gte(400), () => "warn") // Other 4xx errors
+			.otherwise(() => "info");
 
-		// Log traffic (request and response) if enabled
 		if (logTraffic) {
-			customPinoLogger.info(
+			customPinoLogger[logLevel](
 				{
 					requestId,
 					method: c.req.method,
 					path: c.req.path,
 					requestHeaders: logTraffic === "verbose" ? c.req.header() : undefined,
 					responseHeaders: logTraffic === "verbose" ? c.res.headers : undefined,
-					...(status >= 400 && {
-						errorMessage:
-							c.res.headers.get("X-Error-Message") || "Unknown error",
-						// responseBody:
-						// 	logTraffic === "verbose" ? await c.res.json() : undefined,
-					}),
 				},
 				`Response ${ms}ms ${status} ${statusText}`,
 			);

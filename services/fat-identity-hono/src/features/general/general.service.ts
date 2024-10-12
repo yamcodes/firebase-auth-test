@@ -5,5 +5,5 @@ export const getHealthStatus = () => "OK";
 
 export const getVersion = () => {
 	logger.debug("Version", { version });
-	throw new Error("Not implemented");
+	return version;
 };

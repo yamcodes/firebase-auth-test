@@ -82,30 +82,22 @@ export const greetings = createApp()
 			tags: ["Greetings"],
 			request: {
 				params: z.object({
-					name: z.string().min(3, "You must provide a name"),
+					name: z.string().min(3, "Name must be at least 3 characters long"),
 				}),
 			},
 			responses: {
 				200: {
 					content: {
-						"application/json": { schema: z.object({ message: z.string() }) },
+						"application/json": {
+							schema: z.object({ message: z.string() }),
+							example: { message: "Hello, John!" },
+						},
 					},
 					description: "Successful response",
 				},
-				// 422: {
-				// 	content: {
-				// 		"application/json": {
-				// 			schema: z.object({
-				// 				code: z.number().openapi({ example: 422 }),
-				// 				message: z.string().openapi({ example: "Validation Error" }),
-				// 			}),
-				// 		},
-				// 	},
-				// 	description: "Validation error",
-				// },
 			},
 		}),
-		({ req, var: { logger }, json }) => {
+		({ req, json }) => {
 			const { name } = req.valid("param");
 			const message = getRandomGreeting(name);
 			return json({ message });
