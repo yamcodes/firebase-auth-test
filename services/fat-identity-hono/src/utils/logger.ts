@@ -1,7 +1,7 @@
 import pino from "pino";
 
 export const logger = pino({
-	level: import.meta.env.FAT_LOG_LEVEL || "info",
+	level: import.meta.env.FAT_LOG_LEVEL,
 	transport: { target: "pino-pretty" },
 });
 

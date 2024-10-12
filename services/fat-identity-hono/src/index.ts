@@ -10,12 +10,7 @@ const app = new OpenAPIHono();
 app.use(cors());
 
 // Use the logger middleware with options
-app.use(
-	logger({
-		logRequests: import.meta.env.DEV,
-		logResponses: import.meta.env.DEV,
-	}),
-);
+app.use(logger({ logIncoming: import.meta.env.DEV }));
 
 const routes = app.route("/greetings", greetings).route("/", general);
 export type AppType = typeof routes;

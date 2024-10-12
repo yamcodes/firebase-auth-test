@@ -9,7 +9,9 @@ const envSchema = z.object({
 	/**
 	 * The log level
 	 */
-	FAT_LOG_LEVEL: z.string().default("info"),
+	FAT_LOG_LEVEL: z
+		.enum(["trace", "debug", "info", "warn", "error", "silent", "fatal"])
+		.default("info"),
 });
 
 export default defineConfig({
