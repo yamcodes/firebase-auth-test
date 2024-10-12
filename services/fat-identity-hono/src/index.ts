@@ -1,17 +1,20 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { version } from "../package.json";
-import { AppModule } from "./app.module";
+import { greetings } from "./features/greetings";
+import { general } from "./features/general";
+import { cors } from "hono/cors";
 
 const app = new OpenAPIHono();
-
-new AppModule(app);
+app.use("*", cors());
+const routes = app.route("/greetings", greetings).route("/", general);
+export type AppType = typeof routes;
 
 // Add OpenAPI documentation endpoint
-app.doc("/docs", {
+app.doc("/openapi.json", {
 	openapi: "3.0.0",
 	info: {
-		title: "Fat Identity Hono Service",
+		title: "fat-identity Docs",
 		version,
 	},
 	tags: [
@@ -21,12 +24,13 @@ app.doc("/docs", {
 });
 
 app.get(
-	"/reference",
+	"/docs",
 	apiReference({
 		spec: {
-			url: "/docs",
+			url: "/openapi.json",
 		},
 		theme: "bluePlanet",
+		pageTitle: "fat-identity Docs",
 	}),
 );
 

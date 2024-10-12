@@ -1,11 +1,5 @@
 import { version } from "../../../package.json";
 
-export class GeneralService {
-	getHealthStatus(): string {
-		return "OK";
-	}
+export const getHealthStatus = () => "OK";
 
-	getVersion(): string {
-		return version;
-	}
-}
+export const getVersion = () => version;

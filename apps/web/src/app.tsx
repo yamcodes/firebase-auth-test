@@ -11,7 +11,6 @@ import {
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
 import { hc } from "hono/client";
 import type { InferRequestType } from "hono/client";
 import { Moon, Sun } from "lucide-react";
@@ -27,7 +26,7 @@ type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 const AppContent = () => {
 	const { toast } = useToast();
 	// hono
-	const identityClient = hc<AppType>("http://localhost:2204").v1;
+	const identityClient = hc<AppType>("http://localhost:5173");
 
 	const form = useForm({
 		defaultValues: { myName: "John" },
@@ -44,9 +43,12 @@ const AppContent = () => {
 	const sayMyName = useCallback(
 		async (
 			args: InferRequestType<
-				typeof identityClient.misc.sayMyName.$get
-			>["query"],
-		) => (await identityClient.misc.sayMyName.$get({ query: args })).text(),
+				(typeof identityClient.greetings)[":name"]["$get"]
+			>["param"],
+		) => {
+			const res = await identityClient.greetings[":name"].$get({ param: args });
+			return (await res.json()).message;
+		},
 		[identityClient],
 	);
 

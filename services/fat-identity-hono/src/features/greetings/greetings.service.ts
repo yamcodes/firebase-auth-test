@@ -1,9 +1,3 @@
-export class GreetingsService {
-	getGreeting(name: string): string {
-		return `Hello, ${name}!`;
-	}
+export const getGreeting = (name: string) => `Hello, ${name}!`;
 
-	getSpecialGreeting(): string {
-		return "Hello, special person!";
-	}
-}
+export const getSpecialGreeting = () => "Hello, special person!";

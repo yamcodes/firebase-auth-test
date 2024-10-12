@@ -3,7 +3,7 @@ import dev from "@hono/vite-dev-server";
 import { ValidateEnv as validateEnv } from "@julr/vite-plugin-validate-env";
 import { defineConfig } from "vite";
 
-const entry = "src/main.ts";
+const entry = "src/index.ts";
 
 export default defineConfig({
 	plugins: [
