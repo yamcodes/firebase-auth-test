@@ -4,13 +4,35 @@ import { cors } from "hono/cors";
 import { version } from "../package.json";
 import { general } from "./features/general";
 import { greetings } from "./features/greetings";
-import { logger } from "./middleware/logger";
+import { logger } from "~/middleware/logger";
+import { HTTPException } from "hono/http-exception";
+import { createApp } from "~/lib/hono";
 
-const app = new OpenAPIHono();
+const app = createApp();
 app.use(cors());
 
-// Use the logger middleware with options
 app.use(logger({ logIncoming: import.meta.env.DEV }));
+
+app.onError((err, { json, var: { logger } }) => {
+	if (err instanceof HTTPException) {
+		return err.getResponse();
+	}
+
+	// Unknown error flow
+	logger.error(err);
+
+	throw new HTTPException(500, {
+		message: "Unexpected server error",
+		cause: err,
+		res: import.meta.env.DEV
+			? json({
+					error: "Unexpected server error",
+					message: err.message,
+					stack: err.stack,
+				})
+			: undefined,
+	});
+});
 
 const routes = app.route("/greetings", greetings).route("/", general);
 export type AppType = typeof routes;

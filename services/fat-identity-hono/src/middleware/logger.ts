@@ -41,26 +41,14 @@ export const logger = ({
 					path: c.req.path,
 					requestHeaders: logTraffic === "verbose" ? c.req.header() : undefined,
 					responseHeaders: logTraffic === "verbose" ? c.res.headers : undefined,
+					...(status >= 400 && {
+						errorMessage:
+							c.res.headers.get("X-Error-Message") || "Unknown error",
+						// responseBody:
+						// 	logTraffic === "verbose" ? await c.res.json() : undefined,
+					}),
 				},
 				`Response ${ms}ms ${status} ${statusText}`,
 			);
-		}
-
-		// Log detailed error information if status code indicates an error
-		if (status >= 400) {
-			customPinoLogger.error({
-				method: c.req.method,
-				path: c.req.path,
-				status,
-				duration: `${ms}ms`,
-				request: {
-					headers: c.req.header(),
-					body: await c.req.json(),
-				},
-				response: {
-					headers: c.res.headers,
-					body: c.res.body,
-				},
-			});
 		}
 	});

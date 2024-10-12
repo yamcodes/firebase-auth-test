@@ -7,6 +7,7 @@
 		"dev:swagger-ui": "browser-sync start --proxy 'localhost:2204' --files 'src/**/*.ts'",
 		"dev:old": "pnpm run '/dev:server|dev:swagger-ui/'",
 		"dev": "vite",
+		"start": "vite",
 		"build": "vite build --config config",
 		"serve": "node dist/index.js",
 		"clean": "rm -rf node_modules"
@@ -21,6 +22,7 @@
 		"hono-pino": "^0.3.0",
 		"hono-pino-logger": "^1.0.0",
 		"pino": "^9.4.0",
+		"radashi": "^12.1.0",
 		"zod": "^3.23.4"
 	},
 	"devDependencies": {

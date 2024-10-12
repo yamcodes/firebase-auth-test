@@ -1,12 +1,17 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
-import { getGreeting, getSpecialGreeting } from "./greetings.service";
+import {
+	getGreeting,
+	getRandomGreeting,
+	getSpecialGreeting,
+} from "./greetings.service";
+import { createApp } from "~/lib/hono";
 
-export const greetings = new OpenAPIHono()
+export const greetings = createApp()
 	.openapi(
 		createRoute({
 			method: "get",
-			path: "/{name}",
+			path: "/hello/{name}",
 			summary: "Get a greeting",
 			description:
 				"Use this endpoint to get a greeting, but don't forget to replace the placeholder with a real name.",
@@ -32,7 +37,7 @@ export const greetings = new OpenAPIHono()
 		}),
 		({ req, var: { logger }, json }) => {
 			const { name } = req.valid("param");
-			logger.info(`Processing greeting request for ${name}`);
+			logger.debug(`Processing greeting request for ${name}`);
 			const message = getGreeting(name);
 			return json({ message });
 		},
@@ -50,8 +55,59 @@ export const greetings = new OpenAPIHono()
 			},
 		}),
 		({ var: { logger }, json }) => {
-			logger.info("Processing special greeting request");
+			logger.debug("Processing special greeting request");
 			const message = getSpecialGreeting();
+			return json({ message });
+		},
+	)
+	.openapi(
+		createRoute({
+			method: "get",
+			path: "/goodbye",
+			summary: "Get a goodbye message",
+			tags: ["Greetings"],
+			responses: {
+				200: { description: "Successful response" },
+			},
+		}),
+		({ json }) => {
+			return json({ message: "Goodbye!" });
+		},
+	)
+	.openapi(
+		createRoute({
+			method: "get",
+			path: "/random/{name}",
+			summary: "Get a random greeting",
+			tags: ["Greetings"],
+			request: {
+				params: z.object({
+					name: z.string().min(3, "You must provide a name"),
+				}),
+			},
+			responses: {
+				200: {
+					content: {
+						"application/json": { schema: z.object({ message: z.string() }) },
+					},
+					description: "Successful response",
+				},
+				// 422: {
+				// 	content: {
+				// 		"application/json": {
+				// 			schema: z.object({
+				// 				code: z.number().openapi({ example: 422 }),
+				// 				message: z.string().openapi({ example: "Validation Error" }),
+				// 			}),
+				// 		},
+				// 	},
+				// 	description: "Validation error",
+				// },
+			},
+		}),
+		({ req, var: { logger }, json }) => {
+			const { name } = req.valid("param");
+			const message = getRandomGreeting(name);
 			return json({ message });
 		},
 	);

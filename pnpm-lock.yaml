@@ -526,6 +526,9 @@ importers:
       pino:
         specifier: ^9.4.0
         version: 9.4.0
+      radashi:
+        specifier: ^12.1.0
+        version: 12.1.0
       zod:
         specifier: ^3.23.4
         version: 3.23.8
@@ -8103,6 +8106,10 @@ packages:
   quick-lru@5.1.1:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
+
+  radashi@12.1.0:
+    resolution: {integrity: sha512-EB/t8uDEuCzAhWsVzUvI0fK7K0/nCRl0jh7oFUuQUium6zolLjQlaSJGykDdwcarTbmcDy2EHqxFPylOPcoZxQ==}
+    engines: {node: '>=14.18.0'}
 
   railroad-diagrams@1.0.0:
     resolution: {integrity: sha512-cz93DjNeLY0idrCNOH6PviZGRN9GJhsdm9hpn1YCS879fj4W+x5IFJhhkRZcwVgMmFF7R82UA/7Oh+R8lLZg6A==}
@@ -19335,6 +19342,8 @@ snapshots:
   quick-format-unescaped@4.0.4: {}
 
   quick-lru@5.1.1: {}
+
+  radashi@12.1.0: {}
 
   railroad-diagrams@1.0.0: {}
 

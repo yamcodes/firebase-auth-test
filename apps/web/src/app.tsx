@@ -40,20 +40,22 @@ const AppContent = () => {
 		},
 	});
 
-	const sayMyName = useCallback(
+	const greetMe = useCallback(
 		async (
 			args: InferRequestType<
-				(typeof identityClient.greetings)[":name"]["$get"]
+				(typeof identityClient.greetings)["random"][":name"]["$get"]
 			>["param"],
 		) => {
-			const res = await identityClient.greetings[":name"].$get({ param: args });
+			const res = await identityClient.greetings.random[":name"].$get({
+				param: args,
+			});
 			return (await res.json()).message;
 		},
 		[identityClient],
 	);
 
 	const sayMyNameMutation = useMutation({
-		mutationFn: sayMyName,
+		mutationFn: greetMe,
 		onSuccess: (description) => {
 			toast({ title: "Name Said", description });
 		},

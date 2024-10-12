@@ -2,8 +2,9 @@ import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
 import { version } from "../../../package.json";
 import { getHealthStatus, getVersion } from "./general.service";
+import { createApp } from "~/lib/hono";
 
-export const general = new OpenAPIHono()
+export const general = createApp()
 	.openapi(
 		createRoute({
 			method: "get",
