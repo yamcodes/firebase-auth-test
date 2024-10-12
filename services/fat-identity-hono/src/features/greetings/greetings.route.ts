@@ -1,11 +1,11 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
+import { createApp } from "~/lib/hono";
 import {
 	getGreeting,
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
-import { createApp } from "~/lib/hono";
 
 export const greetings = createApp()
 	.openapi(
