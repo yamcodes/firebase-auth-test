@@ -26,6 +26,7 @@ app.get(
 		spec: {
 			url: "/docs",
 		},
+		theme: "bluePlanet",
 	}),
 );
 
