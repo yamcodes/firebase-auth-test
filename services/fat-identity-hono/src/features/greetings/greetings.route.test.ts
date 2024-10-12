@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import app from "~/index";
+import app from "~";
 
 describe("Greetings Routes", () => {
 	it("should return a greeting for a given name", async () => {

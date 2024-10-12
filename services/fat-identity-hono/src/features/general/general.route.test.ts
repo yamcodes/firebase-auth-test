@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import app from "~/index";
+import app from "~";
 
 describe("General Routes", () => {
 	it("should return health status", async () => {

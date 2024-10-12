@@ -1,11 +1,13 @@
 import { ValidateEnv as validateEnv } from "@julr/vite-plugin-validate-env";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
+import { defineConfig, mergeConfig } from "vitest/config";
+import { sharedConfig } from "./vite.config";
 
-export default defineConfig({
-	plugins: [tsconfigPaths(), validateEnv({ configFile: "env.config" })],
-	envPrefix: "FAT_",
-	test: {
-		open: false,
-	},
-});
+export default mergeConfig(
+	sharedConfig,
+	defineConfig({
+		test: {
+			open: false,
+		},
+	}),
+);
