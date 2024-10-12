@@ -1,5 +1,5 @@
+import { version } from "~/../package.json";
 import { logger } from "~/utils";
-import { version } from "../../../package.json";
 
 export const getHealthStatus = () => "OK";
 
