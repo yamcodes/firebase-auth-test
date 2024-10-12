@@ -8,9 +8,16 @@ import { logger } from "./middleware/logger";
 
 const app = new OpenAPIHono();
 app.use(cors());
-if (import.meta.env.DEV) app.use(logger);
-const routes = app.route("/greetings", greetings).route("/", general);
 
+// Use the logger middleware with options
+app.use(
+	logger({
+		logRequests: import.meta.env.DEV,
+		logResponses: import.meta.env.DEV,
+	}),
+);
+
+const routes = app.route("/greetings", greetings).route("/", general);
 export type AppType = typeof routes;
 
 // Add OpenAPI documentation endpoint

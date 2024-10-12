@@ -2,21 +2,44 @@ import crypto from "node:crypto";
 import { createMiddleware } from "hono/factory";
 import { logger as customPinoLogger } from "~/utils";
 
-export const logger = createMiddleware(async (c, next) => {
-	const requestId = crypto.randomUUID();
-	const logger = customPinoLogger.child({
-		requestId,
-		path: c.req.path,
-		method: c.req.method,
+interface LoggerOptions {
+	/**
+	 * Whether to automatically log requests
+	 */
+	logRequests?: boolean;
+	/**
+	 * Whether to automatically log responses
+	 */
+	logResponses?: boolean;
+}
+
+export const logger = ({
+	logRequests = true,
+	logResponses = true,
+}: LoggerOptions = {}) =>
+	createMiddleware(async (c, next) => {
+		const requestId = crypto.randomUUID();
+		const requestLogger = customPinoLogger.child({
+			requestId,
+			path: c.req.path,
+			method: c.req.method,
+		});
+
+		c.set("logger", requestLogger);
+
+		if (logRequests) {
+			requestLogger.info("Request started", {
+				headers: c.req.header(),
+				query: c.req.query(),
+			});
+		}
+
+		await next();
+
+		if (logResponses) {
+			requestLogger.info("Request completed", {
+				status: c.res.status,
+				headers: c.res.headers,
+			});
+		}
 	});
-
-	c.set("logger", logger);
-
-	// Log the start of the request
-	logger.info("Request started");
-
-	await next();
-
-	// Log the end of the request
-	logger.info("Request completed");
-});
