@@ -1,7 +1,7 @@
+import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import { z } from "zod";
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { getHealthStatus, getVersion } from "./general.service";
 import { version } from "../../../package.json";
+import { getHealthStatus, getVersion } from "./general.service";
 
 export const general = new OpenAPIHono()
 	.openapi(

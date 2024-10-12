@@ -1,8 +1,8 @@
+import crypto from "node:crypto";
 import { createMiddleware } from "hono/factory";
 import { logger as customPinoLogger } from "~/utils";
-import crypto from "node:crypto";
 
-export const loggerMiddleware = createMiddleware(async (c, next) => {
+export const logger = createMiddleware(async (c, next) => {
 	const requestId = crypto.randomUUID();
 	const logger = customPinoLogger.child({
 		requestId,

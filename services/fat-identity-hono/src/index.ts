@@ -1,14 +1,14 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
-import { version } from "../package.json";
-import { greetings } from "./features/greetings";
-import { general } from "./features/general";
 import { cors } from "hono/cors";
-import { loggerMiddleware } from "./middleware";
+import { version } from "../package.json";
+import { general } from "./features/general";
+import { greetings } from "./features/greetings";
+import { logger } from "./middleware/logger";
 
 const app = new OpenAPIHono();
 app.use(cors());
-if (import.meta.env.DEV) app.use(loggerMiddleware);
+if (import.meta.env.DEV) app.use(logger);
 const routes = app.route("/greetings", greetings).route("/", general);
 
 export type AppType = typeof routes;
