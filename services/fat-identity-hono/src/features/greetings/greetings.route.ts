@@ -30,10 +30,11 @@ export const greetings = new OpenAPIHono()
 				},
 			},
 		}),
-		(c) => {
-			const { name } = c.req.valid("param");
+		({ req, var: { logger }, json }) => {
+			const { name } = req.valid("param");
+			logger.info(`Processing greeting request for ${name}`);
 			const message = getGreeting(name);
-			return c.json({ message });
+			return json({ message });
 		},
 	)
 	.openapi(
@@ -48,8 +49,9 @@ export const greetings = new OpenAPIHono()
 				},
 			},
 		}),
-		(c) => {
+		({ var: { logger }, json }) => {
+			logger.info("Processing special greeting request");
 			const message = getSpecialGreeting();
-			return c.json({ message });
+			return json({ message });
 		},
 	);

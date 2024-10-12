@@ -4,20 +4,11 @@ import { version } from "../package.json";
 import { greetings } from "./features/greetings";
 import { general } from "./features/general";
 import { cors } from "hono/cors";
-import { pino } from "pino";
-import { pinoLogger } from "hono-pino-logger";
+import { loggerMiddleware } from "./middleware";
 
 const app = new OpenAPIHono();
-app.use("*", cors());
-if (import.meta.env.DEV)
-	app.use(
-		"*",
-		pinoLogger(
-			pino({
-				transport: { target: "pino-pretty" },
-			}),
-		),
-	);
+app.use(cors());
+if (import.meta.env.DEV) app.use(loggerMiddleware);
 const routes = app.route("/greetings", greetings).route("/", general);
 
 export type AppType = typeof routes;
