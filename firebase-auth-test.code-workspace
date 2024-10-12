@@ -62,6 +62,7 @@
 			"nestjs",
 			"openapi",
 			"pino",
+			"radashi",
 			"tanstack",
 			"trpc",
 			"tsup",
