@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { AppModule } from "./app.module";
 import { apiReference } from "@scalar/hono-api-reference";
 import { version } from "../package.json";
+import { AppModule } from "./app.module";
 
 const app = new OpenAPIHono();
 

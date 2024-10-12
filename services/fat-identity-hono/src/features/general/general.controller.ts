@@ -1,6 +1,6 @@
+import { type OpenAPIHono, createRoute } from "@hono/zod-openapi";
 import type { Context } from "hono";
 import { z } from "zod";
-import { createRoute, type OpenAPIHono } from "@hono/zod-openapi";
 
 export class GeneralController {
 	constructor(private app: OpenAPIHono) {}
