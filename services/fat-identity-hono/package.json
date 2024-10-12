@@ -8,7 +8,7 @@
 		"dev:old": "pnpm run '/dev:server|dev:swagger-ui/'",
 		"dev": "vite",
 		"start": "vite",
-		"build": "vite build --config config",
+		"build": "vite build",
 		"serve": "node dist/index.js",
 		"clean": "rm -rf node_modules"
 	},

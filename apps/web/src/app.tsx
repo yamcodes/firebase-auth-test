@@ -49,6 +49,9 @@ const AppContent = () => {
 			const res = await identityClient.greetings.random[":name"].$get({
 				param: args,
 			});
+			if (!res.ok) {
+				throw new Error("Failed to say name");
+			}
 			return (await res.json()).message;
 		},
 		[identityClient],
@@ -59,7 +62,7 @@ const AppContent = () => {
 		onSuccess: (description) => {
 			toast({ title: "Name Said", description });
 		},
-		onError: (error) => {
+		onError: () => {
 			toast({
 				title: "Error",
 				description: "Failed to say name. Please try again.",
