@@ -2,8 +2,8 @@ import build from "@hono/vite-build/node";
 import dev from "@hono/vite-dev-server";
 import { ValidateEnv as validateEnv } from "@julr/vite-plugin-validate-env";
 import { type PluginOption, defineConfig, mergeConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 import env from "vite-plugin-env-compatible";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 const entry = "src/index.ts";
 

@@ -1,4 +1,4 @@
-import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { type Firestore, getFirestore } from "firebase-admin/firestore";
 import type { DatabaseInterface } from "./database.interface";
 
 export class FirestoreDatabase implements DatabaseInterface {

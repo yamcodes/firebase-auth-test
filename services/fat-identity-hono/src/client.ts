@@ -1,7 +1,7 @@
 // See: https://hono.dev/docs/guides/rpc#ide-performance
 
-import type { routes } from "./index";
 import { hc } from "hono/client";
+import type { routes } from "./index";
 
 // assign the client to a variable to calculate the type when compiling
 const client = hc<typeof routes>("");

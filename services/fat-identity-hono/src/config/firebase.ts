@@ -1,4 +1,4 @@
-import { initializeApp, type App as FirebaseApp } from "firebase-admin/app";
+import { type App as FirebaseApp, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 let app: FirebaseApp;

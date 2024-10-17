@@ -1,22 +1,22 @@
+import { HTTPException } from "hono/http-exception";
 import { db } from "~/config/firebase";
 import { createApp } from "~/lib/hono";
+import { GreetingConverter } from "./greetings.model";
+import {
+	deleteAllGreetingsRoute,
+	getAllGreetingsRoute,
+	getGoodbyeRoute,
+	getGreetingRoute,
+	getHelloRoute,
+	getRandomGreetingRoute,
+	getSpecialRoute,
+	postGreetingRoute,
+} from "./greetings.openapi";
 import {
 	getGreeting,
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
-import { HTTPException } from "hono/http-exception";
-import { GreetingConverter } from "./greetings.model";
-import {
-	getHelloRoute,
-	getSpecialRoute,
-	getGoodbyeRoute,
-	getRandomGreetingRoute,
-	postGreetingRoute,
-	getGreetingRoute,
-	getAllGreetingsRoute,
-	deleteAllGreetingsRoute,
-} from "./greetings.openapi";
 
 export const greetings = createApp()
 	.openapi(getHelloRoute, ({ req, var: { logger }, json }) => {
