@@ -3,6 +3,7 @@ import dev from "@hono/vite-dev-server";
 import { ValidateEnv as validateEnv } from "@julr/vite-plugin-validate-env";
 import { type PluginOption, defineConfig, mergeConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import env from "vite-plugin-env-compatible";
 
 const entry = "src/index.ts";
 
@@ -18,7 +19,17 @@ export default mergeConfig(
 	 */
 	defineConfig({
 		plugins: [
+			/**
+			 * Since we're using Vite in the server, this is required to support `process.env.XXX` variables for third-party libraries (like Firebase)
+			 */
+			env() as PluginOption,
+			/**
+			 * Allow Vite to be used as the dev server for Hono (our server framework)
+			 */
 			dev({ entry }) as PluginOption,
+			/**
+			 * Allow Vite to build the Hono application
+			 */
 			build({ entry, emptyOutDir: true }) as PluginOption,
 		],
 		// We don't use rollup, this is just to silence a warning

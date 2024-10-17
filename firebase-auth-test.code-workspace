@@ -57,6 +57,7 @@
 		"cSpell.words": [
 			"autoload",
 			"fastify",
+			"Firestore",
 			"hono",
 			"julr",
 			"nestjs",
