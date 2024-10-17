@@ -1,4 +1,5 @@
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import { createRoute } from "@hono/zod-openapi";
+import { db } from "~/config/firebase";
 import { z } from "zod";
 import { createApp } from "~/lib/hono";
 import {
@@ -101,5 +102,82 @@ export const greetings = createApp()
 			const { name } = req.valid("param");
 			const message = getRandomGreeting(name);
 			return json({ message });
+		},
+	)
+	.openapi(
+		createRoute({
+			method: "post",
+			path: "/",
+			summary: "Save a greeting",
+			tags: ["Greetings"],
+			request: {
+				body: {
+					content: {
+						"application/json": {
+							schema: z.object({
+								name: z.string().min(1, "Name is required"),
+								greeting: z.string().min(1, "Greeting is required"),
+							}),
+						},
+					},
+				},
+			},
+			responses: {
+				201: {
+					content: {
+						"application/json": {
+							schema: z.object({
+								id: z.string(),
+								name: z.string(),
+								greeting: z.string(),
+							}),
+						},
+					},
+					description: "Greeting created successfully",
+				},
+			},
+		}),
+		async ({ req, json, var: { logger } }) => {
+			const greetingDto = req.valid("json");
+			logger.debug({ greetingDto }, "Saving greeting");
+			const docRef = await db.collection("greetings").add(greetingDto);
+			return json({ id: docRef.id, ...greetingDto }, 201);
+		},
+	)
+	.openapi(
+		createRoute({
+			method: "get",
+			path: "/{id}",
+			summary: "Get a saved greeting",
+			tags: ["Greetings"],
+			request: {
+				params: z.object({
+					id: z.string().min(1, "ID is required"),
+				}),
+			},
+			responses: {
+				200: {
+					content: {
+						"application/json": {
+							schema: z.object({
+								name: z.string(),
+								greeting: z.string(),
+							}),
+						},
+					},
+					description: "Greeting retrieved successfully",
+				},
+				404: {
+					description: "Greeting not found",
+				},
+			},
+		}),
+		async ({ req, json }) => {
+			const { id } = req.valid("param");
+			const greeting = await db.collection("greetings").doc(id).get();
+			if (greeting.exists) {
+				return json(greeting.data());
+			}
+			return json({ error: "Greeting not found" }, 404);
 		},
 	);
