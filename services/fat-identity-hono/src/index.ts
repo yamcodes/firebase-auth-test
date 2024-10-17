@@ -35,7 +35,7 @@ const routes = app.route("/greetings", greetings).route("/", general);
 export type AppType = typeof routes;
 
 // Add OpenAPI documentation endpoint
-app.doc("/openapi.json", {
+app.doc("/docs/json", {
 	openapi: "3.0.0",
 	info: {
 		title: "fat-identity Docs",
@@ -50,7 +50,7 @@ app.doc("/openapi.json", {
 app.get(
 	"/",
 	apiReference({
-		spec: { url: "/openapi.json" },
+		spec: { url: "/docs/json" },
 		theme: "bluePlanet",
 		pageTitle: "fat-identity Docs",
 	}),
