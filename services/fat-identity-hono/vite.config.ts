@@ -30,7 +30,7 @@ export default mergeConfig(
 			/**
 			 * Allow Vite to build the Hono application
 			 */
-			build({ entry, emptyOutDir: true }) as PluginOption,
+			build({ entry, emptyOutDir: false }) as PluginOption,
 		],
 		// We don't use rollup, this is just to silence a warning
 		build: { rollupOptions: { input: entry } },

@@ -4,14 +4,13 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
-import type { AppType } from "@repo/fat-identity-hono";
+import { createClient } from "@repo/fat-identity-hono";
 import { useForm } from "@tanstack/react-form";
 import {
 	QueryClient,
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import { hc } from "hono/client";
 import type { InferRequestType } from "hono/client";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
@@ -26,7 +25,7 @@ type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 const AppContent = () => {
 	const { toast } = useToast();
 	// hono
-	const identityClient = hc<AppType>("http://localhost:5173");
+	const identityClient = createClient("http://localhost:5173");
 
 	const form = useForm({
 		defaultValues: { myName: "John" },

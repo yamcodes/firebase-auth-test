@@ -7,8 +7,9 @@
 			"~/*": ["./src/*"]
 		},
 		"module": "Preserve",
-		"moduleResolution": "Bundler"
+		"moduleResolution": "Bundler",
 	},
 	"extends": "@repo/tsconfig/react-app.json",
-	"include": ["src"]
+	"include": ["src"],
+	"exclude": ["node_modules", "dist"]
 }

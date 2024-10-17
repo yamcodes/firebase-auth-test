@@ -31,7 +31,7 @@ app.onError((err, { json, var: { logger } }) => {
 	});
 });
 
-const routes = app.route("/greetings", greetings).route("/", general);
+export const routes = app.route("/greetings", greetings).route("/", general);
 export type AppType = typeof routes;
 
 // Add OpenAPI documentation endpoint
