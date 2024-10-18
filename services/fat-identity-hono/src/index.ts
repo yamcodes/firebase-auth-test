@@ -6,6 +6,7 @@ import { general } from "~/features/general";
 import { greetings } from "~/features/greetings";
 import { createApp } from "~/lib/hono";
 import { logger } from "~/middleware/logger";
+import { firestore } from "./features/database";
 
 const app = createApp();
 app.use(cors());

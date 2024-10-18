@@ -1,6 +1,5 @@
 import { z } from "@hono/zod-openapi";
 import { HTTPException } from "hono/http-exception";
-import { db } from "~/config/firebase";
 import { createApp, createDelete, createGet, createPost } from "~/lib/hono";
 import { GreetingConverter } from "./greetings.model";
 import {
@@ -14,6 +13,9 @@ import {
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
+import { firestore } from "../database";
+import { db as dbNotDI } from "~/config/firebase";
+import { GreetingsRepository } from "./greetings.repository";
 
 export const getHello = createGet(
 	"/hello/:name",
@@ -151,7 +153,7 @@ export const postGreeting = createPost(
 		const { name, greeting: rawGreeting } = greetingDto;
 		const greeting = rawGreeting.replace("%name", name);
 		logger.debug({ greetingDto }, "Saving greeting");
-		const docRef = await db
+		const docRef = await dbNotDI
 			.collection("greetings")
 			.withConverter(GreetingConverter)
 			.add({
@@ -167,6 +169,31 @@ export const postGreeting = createPost(
 		}
 		logger.debug({ resultData }, "Greeting saved successfully");
 		return json({ ...resultData, id: docRef.id }, 201);
+	},
+);
+
+export const getAllGreetings = createGet(
+	"/",
+	{
+		summary: "Get all greetings",
+		description: "Retrieve all saved greetings",
+		tags: ["Greetings"],
+		responses: {
+			200: {
+				content: { "application/json": { schema: z.array(Greeting) } },
+				description: "Successfully retrieved all greetings",
+			},
+		},
+	},
+	async ({ json, var: { logger, db } }) => {
+		logger.debug("Retrieving all greetings");
+		const greetingsRepository = new GreetingsRepository(db);
+		const greetings = await greetingsRepository.getAllGreetings();
+		logger.debug(
+			{ greetingsCount: greetings.length },
+			"Greetings retrieved successfully",
+		);
+		return json(greetings);
 	},
 );
 
@@ -192,44 +219,13 @@ export const getGreetingById = createGet(
 	},
 	async ({ req, json }) => {
 		const { id } = req.valid("param");
-		const greeting = await db.collection("greetings").doc(id).get();
+		const greeting = await dbNotDI.collection("greetings").doc(id).get();
 		if (!greeting.exists) {
 			throw new HTTPException(404, {
 				message: "Greeting not found",
 			});
 		}
 		return json(greeting.data());
-	},
-);
-
-export const getAllGreetings = createGet(
-	"/",
-	{
-		summary: "Get all greetings",
-		description: "Retrieve all saved greetings",
-		tags: ["Greetings"],
-		responses: {
-			200: {
-				content: { "application/json": { schema: z.array(Greeting) } },
-				description: "Successfully retrieved all greetings",
-			},
-		},
-	},
-	async ({ json, var: { logger } }) => {
-		logger.debug("Retrieving all greetings");
-		const greetingsSnapshot = await db
-			.collection("greetings")
-			.withConverter(GreetingConverter)
-			.get();
-		const greetings = greetingsSnapshot.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
-		logger.debug(
-			{ greetingsCount: greetings.length },
-			"Greetings retrieved successfully",
-		);
-		return json(greetings, 200);
 	},
 );
 
@@ -243,29 +239,23 @@ export const deleteAllGreetings = createDelete(
 			204: { description: "All greetings deleted successfully" },
 		},
 	},
-	async ({ var: { logger }, body }) => {
+	async ({ var: { logger, db }, body }) => {
 		logger.debug("Deleting all greetings");
-		const greetingsSnapshot = await db
-			.collection("greetings")
-			.withConverter(GreetingConverter)
-			.get();
-		const batch = db.batch();
-		for (const doc of greetingsSnapshot.docs) {
-			batch.delete(doc.ref);
-		}
-		await batch.commit();
-		const deletedCount = greetingsSnapshot.size;
+		const deletedCount = await db.deleteAll("greetings");
 		logger.debug({ deletedCount }, "All greetings deleted successfully");
 		return body(null, 204);
 	},
 );
 
-export const greetings = createApp()
+const app = createApp();
+app.use(firestore);
+export const greetings = app
+	.openapi(...getHello)
 	.openapi(...getHello)
 	.openapi(...getSpecial)
 	.openapi(...getGoodbye)
 	.openapi(...getRandomGreetingHandler)
 	.openapi(...postGreeting)
-	.openapi(...getGreetingById)
 	.openapi(...getAllGreetings)
+	.openapi(...getGreetingById)
 	.openapi(...deleteAllGreetings);
