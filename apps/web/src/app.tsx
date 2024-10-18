@@ -46,7 +46,9 @@ const AppContent = () => {
 			>["param"],
 		) => {
 			const res = await identityClient.greetings.random[":name"].$get({
-				param: args,
+				param: {
+					name: args.name,
+				},
 			});
 			if (!res.ok) {
 				throw new Error("Failed to say name");

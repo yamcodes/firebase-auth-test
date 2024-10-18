@@ -19,7 +19,8 @@
 	},
 	"tsup": {
 		"entry": ["src/client.ts"],
-		"dts": true
+		"dts": true,
+		"format": "esm"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.13.1",
@@ -54,7 +55,7 @@
 		"vitest": "^2.0.0"
 	},
 	"exports": {
-		"types": "./dist/client.d.cts",
-		"import": "./dist/client.cjs"
+		"types": "./dist/client.d.ts",
+		"import": "./dist/client.js"
 	}
 }
