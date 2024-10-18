@@ -1,9 +1,9 @@
+import { type App as FirebaseApp, initializeApp } from "firebase-admin/app";
 import { type Firestore, getFirestore } from "firebase-admin/firestore";
 import type { z } from "zod";
-import type { IDatabase } from "../../database.interface";
-import { logger } from "~/utils";
 import { initializeFirebase } from "~/config/firebase";
-import { type App as FirebaseApp, initializeApp } from "firebase-admin/app";
+import { logger } from "~/utils";
+import type { IDatabase } from "../../database.interface";
 
 export class FirestoreDatabase implements IDatabase {
 	private app: FirebaseApp;

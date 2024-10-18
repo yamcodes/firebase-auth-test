@@ -1,6 +1,9 @@
 import { z } from "@hono/zod-openapi";
 import { createMiddleware } from "hono/factory";
+import { type IDatabase, firestore } from "~/database";
 import { createAppWithRoutes } from "~/lib/hono";
+import type { Logger } from "~/utils";
+import { GreetingsRepository } from "./greetings.repository";
 import {
 	Greeting,
 	GreetingDto,
@@ -8,10 +11,6 @@ import {
 	GreetingMessageResponse,
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
-import { firestore } from "../../database";
-import type { Logger } from "~/utils";
-import type { IDatabase } from "../../database";
-import { GreetingsRepository } from "./greetings.repository";
 
 type Env = {
 	Variables: {

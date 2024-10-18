@@ -1,8 +1,8 @@
-import type { GreetingsRepository } from "./greetings.repository";
-import type { Greeting, GreetingDto } from "./greetings.schema";
-import type { Logger } from "~/utils";
 import { HTTPException } from "hono/http-exception";
 import type { BaseLogger } from "pino";
+import type { Logger } from "~/utils";
+import type { GreetingsRepository } from "./greetings.repository";
+import type { Greeting, GreetingDto } from "./greetings.schema";
 
 export class GreetingsService {
 	constructor(

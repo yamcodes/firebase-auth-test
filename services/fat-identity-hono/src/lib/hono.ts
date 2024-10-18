@@ -1,3 +1,5 @@
+// Necessary for the build to work, otherwise it throws 'this might not be portable'
+import type {} from "@asteasolutions/zod-to-openapi";
 import { OpenAPIHono, createRoute as createSchema } from "@hono/zod-openapi";
 import type {
 	OpenAPIHonoOptions,
@@ -7,8 +9,6 @@ import type {
 import type { Env, Hono, Schema } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { formatZodErrors } from "~/utils";
-// Necessary for the build to work, otherwise it throws 'this might not be portable'
-import type {} from "@asteasolutions/zod-to-openapi";
 
 type HonoInit<E extends Env> = ConstructorParameters<typeof Hono>[0] &
 	OpenAPIHonoOptions<E>;

@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
-import { GreetingsService } from "./greetings.service";
-import { GreetingsRepository } from "./greetings.repository";
 import type { BaseLogger } from "pino";
+import { describe, expect, it, vi } from "vitest";
 import { FirestoreDatabase } from "~/database";
+import { GreetingsRepository } from "./greetings.repository";
+import { GreetingsService } from "./greetings.service";
 
 describe("GreetingsService", () => {
 	const mockLogger: BaseLogger = {
