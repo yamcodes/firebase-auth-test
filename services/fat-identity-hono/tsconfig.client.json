@@ -1,16 +1,19 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
-		"strict": true,
-		"skipLibCheck": true,
 		"types": ["node"],
 		"jsx": "react-jsx",
 		"jsxImportSource": "hono/jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
 		"paths": {
 			"~/*": ["./src/*"],
 			"~": ["./src"]
 		},
 	},
+	"include": ["src/client.ts", "src/vite-env.d.ts", "src/hono-env.d.ts"],
 }
