@@ -1,19 +1,19 @@
+import { z } from "@hono/zod-openapi";
 import { HTTPException } from "hono/http-exception";
 import { db } from "~/config/firebase";
 import { createApp, createDelete, createGet, createPost } from "~/lib/hono";
 import { GreetingConverter } from "./greetings.model";
 import {
+	Greeting,
+	GreetingDto,
+	GreetingId,
+	GreetingMessageResponse,
+} from "./greetings.schema";
+import {
 	getGreeting,
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
-import {
-	GreetingMessageResponse,
-	Greeting,
-	GreetingDto,
-	GreetingId,
-} from "./greetings.schema";
-import { z } from "@hono/zod-openapi";
 
 export const getHello = createGet(
 	"/hello/:name",

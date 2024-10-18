@@ -17,9 +17,7 @@
 		"clean": "rm -rf node_modules"
 	},
 	"tsup": {
-		"entry": [
-			"src/client.ts"
-		],
+		"entry": ["src/client.ts"],
 		"dts": true
 	},
 	"dependencies": {
