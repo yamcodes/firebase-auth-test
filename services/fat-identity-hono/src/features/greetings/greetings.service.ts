@@ -2,11 +2,12 @@ import type { GreetingsRepository } from "./greetings.repository";
 import type { Greeting, GreetingDto } from "./greetings.schema";
 import type { Logger } from "~/utils";
 import { HTTPException } from "hono/http-exception";
+import type { BaseLogger } from "pino";
 
 export class GreetingsService {
 	constructor(
 		private readonly greetingsRepository: GreetingsRepository,
-		private readonly logger: Logger,
+		private readonly logger: BaseLogger,
 	) {}
 
 	getSpecialGreeting(): string {

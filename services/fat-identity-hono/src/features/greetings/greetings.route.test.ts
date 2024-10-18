@@ -13,7 +13,9 @@ describe("Greetings Routes", () => {
 		const res = await app.request("/greetings/special");
 		expect(res.status).toBe(200);
 		const json = await res.json();
-		expect(json).toEqual({ message: "Hello, special person!" });
+		expect(json).toEqual({
+			message: "Here's a special greeting just for you!",
+		});
 	});
 
 	it("should return a goodbye message", async () => {

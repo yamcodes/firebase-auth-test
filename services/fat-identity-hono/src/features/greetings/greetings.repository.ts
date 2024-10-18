@@ -1,9 +1,9 @@
-import type { DatabaseInterface } from "~/database";
+import type { IDatabase } from "~/database";
 import { type Greeting, GreetingDto, GreetingId } from "./greetings.schema";
 import type { z } from "zod";
 
 export class GreetingsRepository {
-	constructor(private db: DatabaseInterface) {}
+	constructor(private db: IDatabase) {}
 
 	async getAllGreetings(): Promise<Greeting[]> {
 		return this.db.getAll("greetings", GreetingDto);

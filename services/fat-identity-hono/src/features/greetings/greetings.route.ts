@@ -10,13 +10,13 @@ import {
 import { GreetingsService } from "./greetings.service";
 import { firestore } from "../../database";
 import type { Logger } from "~/utils";
-import type { DatabaseInterface } from "../../database";
+import type { IDatabase } from "../../database";
 import { GreetingsRepository } from "./greetings.repository";
 
 type Env = {
 	Variables: {
 		logger: Logger;
-		db: DatabaseInterface;
+		db: IDatabase;
 		service: GreetingsService;
 	};
 };
