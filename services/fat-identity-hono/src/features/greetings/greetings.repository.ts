@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import type { IDatabase } from "~/database";
-import { type Greeting, GreetingDto, GreetingId } from "./greetings.schema";
+import { type Greeting, GreetingDto } from "./greetings.schema";
 
 export class GreetingsRepository {
 	constructor(private db: IDatabase) {}

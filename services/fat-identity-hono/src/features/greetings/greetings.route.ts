@@ -2,7 +2,6 @@ import { z } from "@hono/zod-openapi";
 import { createMiddleware } from "hono/factory";
 import { type IDatabase, firestore } from "~/database";
 import { createAppWithRoutes } from "~/lib/hono";
-import type { Logger } from "~/utils";
 import { GreetingsRepository } from "./greetings.repository";
 import {
 	Greeting,
@@ -11,10 +10,10 @@ import {
 	GreetingMessageResponse,
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
+import type { Env as HonoEnv } from "hono";
 
-type Env = {
+type Env = HonoEnv & {
 	Variables: {
-		logger: Logger;
 		db: IDatabase;
 		service: GreetingsService;
 	};

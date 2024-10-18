@@ -6,7 +6,6 @@ declare module "hono" {
 	interface Env extends HonoEnv {
 		Variables: {
 			logger: Logger;
-			db: DatabaseInterface;
 		};
 	}
 }
