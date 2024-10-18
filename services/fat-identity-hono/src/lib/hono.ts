@@ -44,31 +44,36 @@ export function createAppWithRoutes<
 
 	return {
 		app,
-		get: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
-			path: P,
-			config: R,
-			handler: RouteHandler<R & { path: P; method: "get" }, E>,
-		) => createRoute<"get", P, R>("get", path, config, handler),
-		post: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
-			path: P,
-			config: R,
-			handler: RouteHandler<R & { path: P; method: "post" }, E>,
-		) => createRoute<"post", P, R>("post", path, config, handler),
-		put: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
-			path: P,
-			config: R,
-			handler: RouteHandler<R & { path: P; method: "put" }, E>,
-		) => createRoute<"put", P, R>("put", path, config, handler),
-		delete: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
-			path: P,
-			config: R,
-			handler: RouteHandler<R & { path: P; method: "delete" }, E>,
-		) => createRoute<"delete", P, R>("delete", path, config, handler),
-		patch: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
-			path: P,
-			config: R,
-			handler: RouteHandler<R & { path: P; method: "patch" }, E>,
-		) => createRoute<"patch", P, R>("patch", path, config, handler),
+		routes: {
+			get: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
+				path: P,
+				config: R,
+				handler: RouteHandler<R & { path: P; method: "get" }, E>,
+			) => createRoute<"get", P, R>("get", path, config, handler),
+			post: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
+				path: P,
+				config: R,
+				handler: RouteHandler<R & { path: P; method: "post" }, E>,
+			) => createRoute<"post", P, R>("post", path, config, handler),
+			put: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
+				path: P,
+				config: R,
+				handler: RouteHandler<R & { path: P; method: "put" }, E>,
+			) => createRoute<"put", P, R>("put", path, config, handler),
+			delete: <
+				P extends string,
+				R extends Omit<RouteConfig, "path" | "method">,
+			>(
+				path: P,
+				config: R,
+				handler: RouteHandler<R & { path: P; method: "delete" }, E>,
+			) => createRoute<"delete", P, R>("delete", path, config, handler),
+			patch: <P extends string, R extends Omit<RouteConfig, "path" | "method">>(
+				path: P,
+				config: R,
+				handler: RouteHandler<R & { path: P; method: "patch" }, E>,
+			) => createRoute<"patch", P, R>("patch", path, config, handler),
+		},
 	};
 }
 

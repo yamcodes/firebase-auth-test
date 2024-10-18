@@ -1,5 +1,5 @@
-import { OpenAPIHono, z } from "@hono/zod-openapi";
-import { HTTPException } from "hono/http-exception";
+import { z } from "@hono/zod-openapi";
+import { createMiddleware } from "hono/factory";
 import { createAppWithRoutes } from "~/lib/hono";
 import {
 	Greeting,
@@ -7,27 +7,30 @@ import {
 	GreetingId,
 	GreetingMessageResponse,
 } from "./greetings.schema";
-import {
-	getGreeting,
-	getRandomGreeting,
-	getSpecialGreeting,
-} from "./greetings.service";
-import { type DatabaseInterface, firestore } from "../../database";
-import { GreetingsRepository } from "./greetings.repository";
-import { injectRepositories } from "~/middleware/repository.middleware";
+import { GreetingsService } from "./greetings.service";
+import { firestore } from "../../database";
 import type { Logger } from "~/utils";
+import type { DatabaseInterface } from "../../database";
+import { GreetingsRepository } from "./greetings.repository";
 
-const greetings = createAppWithRoutes<{
+type Env = {
 	Variables: {
 		logger: Logger;
 		db: DatabaseInterface;
-		greetingsRepository: GreetingsRepository;
+		service: GreetingsService;
 	};
-}>();
-const { app } = greetings;
+};
+const { app, routes: greetings } = createAppWithRoutes<Env>();
 
-app.use(injectRepositories);
 app.use(firestore);
+app.use(
+	createMiddleware<Env>(async ({ var: { db, logger }, set }, next) => {
+		const repo = new GreetingsRepository(db);
+		const service = new GreetingsService(repo, logger);
+		set("service", service);
+		await next();
+	}),
+);
 
 export const getSpecial = greetings.get(
 	"/special",
@@ -42,9 +45,8 @@ export const getSpecial = greetings.get(
 			},
 		},
 	},
-	({ var: { logger }, json }) => {
-		logger.debug("Processing special greeting request");
-		const message = getSpecialGreeting();
+	({ var: { service }, json }) => {
+		const message = service.getSpecialGreeting();
 		return json({ message }, 200);
 	},
 );
@@ -62,8 +64,9 @@ export const getGoodbye = greetings.get(
 			},
 		},
 	},
-	({ json }) => {
-		return json({ message: "Goodbye!" }, 200);
+	({ var: { service }, json }) => {
+		const message = service.getGoodbye();
+		return json({ message }, 200);
 	},
 );
 
@@ -91,9 +94,9 @@ export const getRandomGreetingHandler = greetings.get(
 			},
 		},
 	},
-	({ req, json }) => {
+	({ var: { service }, json, req }) => {
 		const { name } = req.valid("param");
-		const message = getRandomGreeting(name);
+		const message = service.getRandomGreeting(name);
 		return json({ message }, 200);
 	},
 );
@@ -127,22 +130,10 @@ export const postGreeting = greetings.post(
 			},
 		},
 	},
-	async ({ req, json, var: { logger, greetingsRepository } }) => {
+	async ({ var: { service }, json, req }) => {
 		const greetingDto = req.valid("json");
-		const { name, greeting: rawGreeting } = greetingDto;
-		const greeting = rawGreeting.replace("%name", name);
-		logger.debug({ greetingDto }, "Saving greeting");
-		try {
-			const result = await greetingsRepository.createGreeting({
-				name,
-				greeting,
-			});
-			logger.debug({ result }, "Greeting saved successfully");
-			return json(result, 201);
-		} catch (error) {
-			logger.error({ error }, "Failed to save greeting");
-			throw new HTTPException(500, { message: "Failed to save greeting" });
-		}
+		const result = await service.createGreeting(greetingDto);
+		return json(result, 201);
 	},
 );
 
@@ -159,14 +150,8 @@ export const getAllGreetings = greetings.get(
 			},
 		},
 	},
-	async ({ json, var: { logger, db } }) => {
-		logger.debug("Retrieving all greetings");
-		const greetingsRepository = new GreetingsRepository(db);
-		const greetings = await greetingsRepository.getAllGreetings();
-		logger.debug(
-			{ greetingsCount: greetings.length },
-			"Greetings retrieved successfully",
-		);
+	async ({ var: { service }, json }) => {
+		const greetings = await service.getAllGreetings();
 		return json(greetings);
 	},
 );
@@ -191,16 +176,9 @@ export const getGreetingById = greetings.get(
 			},
 		},
 	},
-	async ({ req, json, var: { logger, db } }) => {
+	async ({ var: { service }, json, req }) => {
 		const { id } = req.valid("param");
-		logger.debug({ id }, "Retrieving greeting by ID");
-		const greetingsRepository = new GreetingsRepository(db);
-		const greeting = await greetingsRepository.getGreetingById(id);
-		if (!greeting) {
-			logger.debug({ id }, "Greeting not found");
-			throw new HTTPException(404, { message: "Greeting not found" });
-		}
-		logger.debug({ greeting }, "Greeting retrieved successfully");
+		const greeting = await service.getGreetingById(id);
 		return json(greeting, 200);
 	},
 );
@@ -215,11 +193,8 @@ export const deleteAllGreetings = greetings.delete(
 			204: { description: "All greetings deleted successfully" },
 		},
 	},
-	async ({ var: { logger, db }, body }) => {
-		logger.debug("Deleting all greetings");
-		const greetingsRepository = new GreetingsRepository(db);
-		const deletedCount = await greetingsRepository.deleteAllGreetings();
-		logger.debug({ deletedCount }, "All greetings deleted successfully");
+	async ({ var: { service }, body }) => {
+		await service.deleteAllGreetings();
 		return body(null, 204);
 	},
 );
@@ -249,10 +224,9 @@ export const getHello = greetings.get(
 			},
 		},
 	},
-	({ req, var: { logger }, json }) => {
+	({ var: { service }, json, req }) => {
 		const { name } = req.valid("param");
-		logger.debug(`Processing greeting request for ${name}`);
-		const message = getGreeting(name);
+		const message = service.getGreeting(name);
 		return json({ message }, 200);
 	},
 );

@@ -15,7 +15,7 @@
 			"~/*": ["./src/*"],
 			"~": ["./src"]
 		},
-		"rootDir": "./src"
+		"rootDir": "./src",
 	},
 	"include": ["src/client.ts", "src/vite-env.d.ts", "src/hono-env.d.ts"]
 }
