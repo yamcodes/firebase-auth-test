@@ -27,7 +27,7 @@ export const general = createApp()
 		}),
 		(c) => {
 			const status = getHealthStatus();
-			return c.json({ status });
+			return c.json({ status }, 200);
 		},
 	)
 	.openapi(

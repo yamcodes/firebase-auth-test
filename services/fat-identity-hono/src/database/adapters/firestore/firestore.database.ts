@@ -2,12 +2,16 @@ import { type Firestore, getFirestore } from "firebase-admin/firestore";
 import type { z } from "zod";
 import type { IDatabase } from "../../database.interface";
 import { logger } from "~/utils";
+import { initializeFirebase } from "~/config/firebase";
+import { type App as FirebaseApp, initializeApp } from "firebase-admin/app";
 
 export class FirestoreDatabase implements IDatabase {
+	private app: FirebaseApp;
 	private db: Firestore;
 
 	constructor() {
-		this.db = getFirestore();
+		this.app = initializeFirebase();
+		this.db = getFirestore(this.app);
 	}
 
 	async add<T extends z.ZodType>(

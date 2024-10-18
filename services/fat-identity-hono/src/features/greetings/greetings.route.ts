@@ -1,6 +1,6 @@
-import { z } from "@hono/zod-openapi";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { HTTPException } from "hono/http-exception";
-import { createApp, createDelete, createGet, createPost } from "~/lib/hono";
+import { createAppWithRoutes } from "~/lib/hono";
 import {
 	Greeting,
 	GreetingDto,
@@ -12,44 +12,28 @@ import {
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
-import { firestore } from "../../database";
-import { db as dbNotDI } from "~/config/firebase";
+import { type DatabaseInterface, firestore } from "../../database";
 import { GreetingsRepository } from "./greetings.repository";
+import { injectRepositories } from "~/middleware/repository.middleware";
+import type { Logger } from "~/utils";
 
-export const getHello = createGet(
-	"/hello/:name",
-	{
-		summary: "Get a hello greeting",
-		description: "Use this endpoint to get a personalized hello greeting",
-		tags: ["Greetings"],
-		request: {
-			params: z.object({
-				name: z.string().openapi({
-					description: "The name of the person to greet",
-					example: "John",
-				}),
-			}),
-		},
-		responses: {
-			200: {
-				content: {
-					"application/json": {
-						schema: GreetingMessageResponse,
-					},
-				},
-				description: "Successful response with a greeting message",
-			},
-		},
-	},
-	({ req, var: { logger }, json }) => {
-		const { name } = req.valid("param");
-		logger.debug(`Processing greeting request for ${name}`);
-		const message = getGreeting(name);
-		return json({ message }, 200);
-	},
-);
+const {
+	app: greetings,
+	get,
+	post,
+	delete: del,
+} = createAppWithRoutes<{
+	Variables: {
+		logger: Logger;
+		db: DatabaseInterface;
+		greetingsRepository: GreetingsRepository;
+	};
+}>();
 
-export const getSpecial = createGet(
+greetings.use(injectRepositories);
+greetings.use(firestore);
+
+export const getSpecial = get(
 	"/special",
 	{
 		summary: "Get a special greeting",
@@ -69,7 +53,7 @@ export const getSpecial = createGet(
 	},
 );
 
-export const getGoodbye = createGet(
+export const getGoodbye = get(
 	"/goodbye",
 	{
 		summary: "Get a goodbye message",
@@ -87,7 +71,7 @@ export const getGoodbye = createGet(
 	},
 );
 
-export const getRandomGreetingHandler = createGet(
+export const getRandomGreetingHandler = get(
 	"/random/:name",
 	{
 		summary: "Get a random greeting",
@@ -114,11 +98,11 @@ export const getRandomGreetingHandler = createGet(
 	({ req, json }) => {
 		const { name } = req.valid("param");
 		const message = getRandomGreeting(name);
-		return json({ message });
+		return json({ message }, 200);
 	},
 );
 
-export const postGreeting = createPost(
+export const postGreeting = post(
 	"/",
 	{
 		summary: "Save a greeting",
@@ -147,13 +131,11 @@ export const postGreeting = createPost(
 			},
 		},
 	},
-	async ({ req, json, var: { logger, db } }) => {
+	async ({ req, json, var: { logger, greetingsRepository } }) => {
 		const greetingDto = req.valid("json");
 		const { name, greeting: rawGreeting } = greetingDto;
 		const greeting = rawGreeting.replace("%name", name);
 		logger.debug({ greetingDto }, "Saving greeting");
-
-		const greetingsRepository = new GreetingsRepository(db);
 		try {
 			const result = await greetingsRepository.createGreeting({
 				name,
@@ -168,7 +150,7 @@ export const postGreeting = createPost(
 	},
 );
 
-export const getAllGreetings = createGet(
+export const getAllGreetings = get(
 	"/",
 	{
 		summary: "Get all greetings",
@@ -193,7 +175,7 @@ export const getAllGreetings = createGet(
 	},
 );
 
-export const getGreetingById = createGet(
+export const getGreetingById = get(
 	"/:id",
 	{
 		summary: "Get a saved greeting",
@@ -227,7 +209,7 @@ export const getGreetingById = createGet(
 	},
 );
 
-export const deleteAllGreetings = createDelete(
+export const deleteAllGreetings = del(
 	"/all",
 	{
 		summary: "Delete all greetings",
@@ -246,15 +228,45 @@ export const deleteAllGreetings = createDelete(
 	},
 );
 
-const app = createApp();
-app.use(firestore);
-export const greetings = app
-	.openapi(...getHello)
-	.openapi(...getHello)
-	.openapi(...getSpecial)
-	.openapi(...getGoodbye)
-	.openapi(...getRandomGreetingHandler)
-	.openapi(...postGreeting)
-	.openapi(...getAllGreetings)
-	.openapi(...getGreetingById)
-	.openapi(...deleteAllGreetings);
+export const getHello = get(
+	"/hello/:name",
+	{
+		summary: "Get a hello greeting",
+		description: "Use this endpoint to get a personalized hello greeting",
+		tags: ["Greetings"],
+		request: {
+			params: z.object({
+				name: z.string().openapi({
+					description: "The name of the person to greet",
+					example: "John",
+				}),
+			}),
+		},
+		responses: {
+			200: {
+				content: {
+					"application/json": {
+						schema: GreetingMessageResponse,
+					},
+				},
+				description: "Successful response with a greeting message",
+			},
+		},
+	},
+	({ req, var: { logger }, json }) => {
+		const { name } = req.valid("param");
+		logger.debug(`Processing greeting request for ${name}`);
+		const message = getGreeting(name);
+		return json({ message }, 200);
+	},
+);
+
+export const routes = greetings
+	.route("/", getHello)
+	.route("/", getSpecial)
+	.route("/", getGoodbye)
+	.route("/", getRandomGreetingHandler)
+	.route("/", postGreeting)
+	.route("/", getAllGreetings)
+	.route("/", getGreetingById)
+	.route("/", deleteAllGreetings);
