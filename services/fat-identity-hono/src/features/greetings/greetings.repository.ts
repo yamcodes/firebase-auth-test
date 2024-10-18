@@ -1,4 +1,4 @@
-import type { DatabaseInterface } from "../database";
+import type { DatabaseInterface } from "../../database";
 import { type Greeting, GreetingDto, GreetingId } from "./greetings.schema";
 import type { z } from "zod";
 

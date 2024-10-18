@@ -1,5 +1,5 @@
 import type { Env as HonoEnv } from "hono";
-import type { DatabaseInterface } from "./features/database";
+import type { DatabaseInterface } from "./database";
 import type { Logger } from "~/utils";
 
 declare module "hono" {

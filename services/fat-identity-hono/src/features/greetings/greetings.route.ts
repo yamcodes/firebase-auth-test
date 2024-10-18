@@ -1,7 +1,6 @@
 import { z } from "@hono/zod-openapi";
 import { HTTPException } from "hono/http-exception";
 import { createApp, createDelete, createGet, createPost } from "~/lib/hono";
-import { GreetingConverter } from "./greetings.model";
 import {
 	Greeting,
 	GreetingDto,
@@ -13,7 +12,7 @@ import {
 	getRandomGreeting,
 	getSpecialGreeting,
 } from "./greetings.service";
-import { firestore } from "../database";
+import { firestore } from "../../database";
 import { db as dbNotDI } from "~/config/firebase";
 import { GreetingsRepository } from "./greetings.repository";
 
