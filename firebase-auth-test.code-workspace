@@ -68,6 +68,7 @@
 			"tanstack",
 			"trpc",
 			"tsup",
+			"typecheck",
 			"unplugin"
 		],
 		// keyboard shortcuts, cmd+[ or ] to navigate fporward and backward
