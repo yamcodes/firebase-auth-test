@@ -20,11 +20,16 @@ export const GreetingDto = z.object({
 
 export type GreetingDto = z.infer<typeof GreetingDto>;
 
-export const Greeting = GreetingDto.extend({
-	id: z.string().openapi({
+export const GreetingId = z
+	.string()
+	.min(1, "ID is required")
+	.openapi({
 		examples: ["123", "456"],
 		description: "Unique identifier for the greeting",
-	}),
+	});
+
+export const Greeting = GreetingDto.extend({
+	id: GreetingId,
 });
 
 export type Greeting = z.infer<typeof Greeting>;

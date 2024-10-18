@@ -1,6 +1,6 @@
 import { HTTPException } from "hono/http-exception";
 import { db } from "~/config/firebase";
-import { createApp, createHandler } from "~/lib/hono";
+import { createApp, createDelete, createGet, createPost } from "~/lib/hono";
 import { GreetingConverter } from "./greetings.model";
 import {
 	getGreeting,
@@ -11,13 +11,13 @@ import {
 	GreetingMessageResponse,
 	Greeting,
 	GreetingDto,
+	GreetingId,
 } from "./greetings.schema";
 import { z } from "@hono/zod-openapi";
 
-export const getHello = createHandler(
+export const getHello = createGet(
+	"/hello/:name",
 	{
-		method: "get",
-		path: "/hello/{name}",
 		summary: "Get a hello greeting",
 		description: "Use this endpoint to get a personalized hello greeting",
 		tags: ["Greetings"],
@@ -48,20 +48,15 @@ export const getHello = createHandler(
 	},
 );
 
-export const getSpecial = createHandler(
+export const getSpecial = createGet(
+	"/special",
 	{
-		method: "get",
-		path: "/special",
 		summary: "Get a special greeting",
 		description: "Retrieve a unique, special greeting",
 		tags: ["Greetings"],
 		responses: {
 			200: {
-				content: {
-					"application/json": {
-						schema: GreetingMessageResponse,
-					},
-				},
+				content: { "application/json": { schema: GreetingMessageResponse } },
 				description: "Successful response with a special greeting",
 			},
 		},
@@ -73,20 +68,15 @@ export const getSpecial = createHandler(
 	},
 );
 
-export const getGoodbye = createHandler(
+export const getGoodbye = createGet(
+	"/goodbye",
 	{
-		method: "get",
-		path: "/goodbye",
 		summary: "Get a goodbye message",
 		description: "Retrieve a farewell message",
 		tags: ["Greetings"],
 		responses: {
 			200: {
-				content: {
-					"application/json": {
-						schema: GreetingMessageResponse,
-					},
-				},
+				content: { "application/json": { schema: GreetingMessageResponse } },
 				description: "Successful response with a goodbye message",
 			},
 		},
@@ -96,10 +86,9 @@ export const getGoodbye = createHandler(
 	},
 );
 
-export const getRandomGreetingHandler = createHandler(
+export const getRandomGreetingHandler = createGet(
+	"/random/:name",
 	{
-		method: "get",
-		path: "/random/{name}",
 		summary: "Get a random greeting",
 		description: "Retrieve a random personalized greeting",
 		tags: ["Greetings"],
@@ -116,11 +105,7 @@ export const getRandomGreetingHandler = createHandler(
 		},
 		responses: {
 			200: {
-				content: {
-					"application/json": {
-						schema: GreetingMessageResponse,
-					},
-				},
+				content: { "application/json": { schema: GreetingMessageResponse } },
 				description: "Successful response with a random greeting",
 			},
 		},
@@ -132,30 +117,21 @@ export const getRandomGreetingHandler = createHandler(
 	},
 );
 
-export const postGreeting = createHandler(
+export const postGreeting = createPost(
+	"/",
 	{
-		method: "post",
-		path: "/",
 		summary: "Save a greeting",
 		description:
 			"Use this endpoint to save a new greeting. Use `%name` in the `greeting` field to include the name in the greeting.",
 		tags: ["Greetings"],
 		request: {
 			body: {
-				content: {
-					"application/json": {
-						schema: GreetingDto,
-					},
-				},
+				content: { "application/json": { schema: GreetingDto } },
 			},
 		},
 		responses: {
 			201: {
-				content: {
-					"application/json": {
-						schema: Greeting,
-					},
-				},
+				content: { "application/json": { schema: Greeting } },
 				description: "Greeting created successfully",
 			},
 			500: {
@@ -194,38 +170,22 @@ export const postGreeting = createHandler(
 	},
 );
 
-export const getGreetingById = createHandler(
+export const getGreetingById = createGet(
+	"/:id",
 	{
-		method: "get",
-		path: "/{id}",
 		summary: "Get a saved greeting",
 		description: "Retrieve a specific greeting by its ID",
 		tags: ["Greetings"],
-		request: {
-			params: z.object({
-				id: z.string().min(1, "ID is required").openapi({
-					description: "The unique identifier of the greeting",
-					example: "123",
-				}),
-			}),
-		},
+		request: { params: z.object({ id: GreetingId }) },
 		responses: {
 			200: {
-				content: {
-					"application/json": {
-						schema: Greeting,
-					},
-				},
+				content: { "application/json": { schema: Greeting } },
 				description: "Greeting retrieved successfully",
 			},
 			404: {
 				description: "Greeting not found",
 				content: {
-					"application/json": {
-						schema: z.object({
-							error: z.string(),
-						}),
-					},
+					"application/json": { schema: z.object({ error: z.string() }) },
 				},
 			},
 		},
@@ -233,29 +193,24 @@ export const getGreetingById = createHandler(
 	async ({ req, json }) => {
 		const { id } = req.valid("param");
 		const greeting = await db.collection("greetings").doc(id).get();
-		if (greeting.exists) {
-			return json(greeting.data());
+		if (!greeting.exists) {
+			throw new HTTPException(404, {
+				message: "Greeting not found",
+			});
 		}
-		throw new HTTPException(404, {
-			message: "Greeting not found",
-		});
+		return json(greeting.data());
 	},
 );
 
-export const getAllGreetings = createHandler(
+export const getAllGreetings = createGet(
+	"/",
 	{
-		method: "get",
-		path: "/",
 		summary: "Get all greetings",
 		description: "Retrieve all saved greetings",
 		tags: ["Greetings"],
 		responses: {
 			200: {
-				content: {
-					"application/json": {
-						schema: z.array(Greeting),
-					},
-				},
+				content: { "application/json": { schema: z.array(Greeting) } },
 				description: "Successfully retrieved all greetings",
 			},
 		},
@@ -278,17 +233,14 @@ export const getAllGreetings = createHandler(
 	},
 );
 
-export const deleteAllGreetings = createHandler(
+export const deleteAllGreetings = createDelete(
+	"/all",
 	{
-		method: "delete",
-		path: "/all",
 		summary: "Delete all greetings",
 		description: "Remove all saved greetings from the database",
 		tags: ["Greetings"],
 		responses: {
-			204: {
-				description: "All greetings deleted successfully",
-			},
+			204: { description: "All greetings deleted successfully" },
 		},
 	},
 	async ({ var: { logger }, body }) => {
