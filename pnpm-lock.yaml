@@ -536,6 +536,9 @@ importers:
         specifier: ^3.23.4
         version: 3.23.8
     devDependencies:
+      '@asteasolutions/zod-to-openapi':
+        specifier: ^7.2.0
+        version: 7.2.0(zod@3.23.8)
       '@hono/vite-build':
         specifier: ^1.1.0
         version: 1.1.0(hono@4.6.3)

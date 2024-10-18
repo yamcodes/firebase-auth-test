@@ -17,23 +17,19 @@ import { GreetingsRepository } from "./greetings.repository";
 import { injectRepositories } from "~/middleware/repository.middleware";
 import type { Logger } from "~/utils";
 
-const {
-	app: greetings,
-	get,
-	post,
-	delete: del,
-} = createAppWithRoutes<{
+const greetings = createAppWithRoutes<{
 	Variables: {
 		logger: Logger;
 		db: DatabaseInterface;
 		greetingsRepository: GreetingsRepository;
 	};
 }>();
+const { app } = greetings;
 
-greetings.use(injectRepositories);
-greetings.use(firestore);
+app.use(injectRepositories);
+app.use(firestore);
 
-export const getSpecial = get(
+export const getSpecial = greetings.get(
 	"/special",
 	{
 		summary: "Get a special greeting",
@@ -53,7 +49,7 @@ export const getSpecial = get(
 	},
 );
 
-export const getGoodbye = get(
+export const getGoodbye = greetings.get(
 	"/goodbye",
 	{
 		summary: "Get a goodbye message",
@@ -71,7 +67,7 @@ export const getGoodbye = get(
 	},
 );
 
-export const getRandomGreetingHandler = get(
+export const getRandomGreetingHandler = greetings.get(
 	"/random/:name",
 	{
 		summary: "Get a random greeting",
@@ -102,7 +98,7 @@ export const getRandomGreetingHandler = get(
 	},
 );
 
-export const postGreeting = post(
+export const postGreeting = greetings.post(
 	"/",
 	{
 		summary: "Save a greeting",
@@ -150,7 +146,7 @@ export const postGreeting = post(
 	},
 );
 
-export const getAllGreetings = get(
+export const getAllGreetings = greetings.get(
 	"/",
 	{
 		summary: "Get all greetings",
@@ -175,7 +171,7 @@ export const getAllGreetings = get(
 	},
 );
 
-export const getGreetingById = get(
+export const getGreetingById = greetings.get(
 	"/:id",
 	{
 		summary: "Get a saved greeting",
@@ -209,7 +205,7 @@ export const getGreetingById = get(
 	},
 );
 
-export const deleteAllGreetings = del(
+export const deleteAllGreetings = greetings.delete(
 	"/all",
 	{
 		summary: "Delete all greetings",
@@ -228,7 +224,7 @@ export const deleteAllGreetings = del(
 	},
 );
 
-export const getHello = get(
+export const getHello = greetings.get(
 	"/hello/:name",
 	{
 		summary: "Get a hello greeting",
@@ -261,7 +257,7 @@ export const getHello = get(
 	},
 );
 
-export const routes = greetings
+export const routes = app
 	.route("/", getHello)
 	.route("/", getSpecial)
 	.route("/", getGoodbye)
