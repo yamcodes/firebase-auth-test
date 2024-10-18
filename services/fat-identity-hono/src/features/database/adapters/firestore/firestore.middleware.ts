@@ -1,9 +1,9 @@
 import { createMiddleware } from "hono/factory";
-import type { DatabaseInterface } from "./database.interface";
-import { FirestoreDatabase } from "./firestore";
+import type { IDatabase } from "../../database.interface";
+import { FirestoreDatabase } from "./firestore.database";
 
 export const createDatabaseMiddleware = (
-	DatabaseImplementation: new () => DatabaseInterface,
+	DatabaseImplementation: new () => IDatabase,
 ) =>
 	createMiddleware(async (c, next) => {
 		const db = new DatabaseImplementation();

@@ -148,27 +148,24 @@ export const postGreeting = createPost(
 			},
 		},
 	},
-	async ({ req, json, var: { logger } }) => {
+	async ({ req, json, var: { logger, db } }) => {
 		const greetingDto = req.valid("json");
 		const { name, greeting: rawGreeting } = greetingDto;
 		const greeting = rawGreeting.replace("%name", name);
 		logger.debug({ greetingDto }, "Saving greeting");
-		const docRef = await dbNotDI
-			.collection("greetings")
-			.withConverter(GreetingConverter)
-			.add({
+
+		const greetingsRepository = new GreetingsRepository(db);
+		try {
+			const result = await greetingsRepository.createGreeting({
 				name,
 				greeting,
 			});
-		const result = await docRef.get();
-		const resultData = result.data();
-		if (!resultData) {
-			throw new HTTPException(500, {
-				message: "Failed to save greeting",
-			});
+			logger.debug({ result }, "Greeting saved successfully");
+			return json(result, 201);
+		} catch (error) {
+			logger.error({ error }, "Failed to save greeting");
+			throw new HTTPException(500, { message: "Failed to save greeting" });
 		}
-		logger.debug({ resultData }, "Greeting saved successfully");
-		return json({ ...resultData, id: docRef.id }, 201);
 	},
 );
 
@@ -217,15 +214,17 @@ export const getGreetingById = createGet(
 			},
 		},
 	},
-	async ({ req, json }) => {
+	async ({ req, json, var: { logger, db } }) => {
 		const { id } = req.valid("param");
-		const greeting = await dbNotDI.collection("greetings").doc(id).get();
-		if (!greeting.exists) {
-			throw new HTTPException(404, {
-				message: "Greeting not found",
-			});
+		logger.debug({ id }, "Retrieving greeting by ID");
+		const greetingsRepository = new GreetingsRepository(db);
+		const greeting = await greetingsRepository.getGreetingById(id);
+		if (!greeting) {
+			logger.debug({ id }, "Greeting not found");
+			throw new HTTPException(404, { message: "Greeting not found" });
 		}
-		return json(greeting.data());
+		logger.debug({ greeting }, "Greeting retrieved successfully");
+		return json(greeting, 200);
 	},
 );
 
@@ -241,7 +240,8 @@ export const deleteAllGreetings = createDelete(
 	},
 	async ({ var: { logger, db }, body }) => {
 		logger.debug("Deleting all greetings");
-		const deletedCount = await db.deleteAll("greetings");
+		const greetingsRepository = new GreetingsRepository(db);
+		const deletedCount = await greetingsRepository.deleteAllGreetings();
 		logger.debug({ deletedCount }, "All greetings deleted successfully");
 		return body(null, 204);
 	},

@@ -1,9 +1,9 @@
 import { type Firestore, getFirestore } from "firebase-admin/firestore";
 import type { z } from "zod";
-import type { DatabaseInterface } from "./database.interface";
+import type { IDatabase } from "../../database.interface";
 import { logger } from "~/utils";
 
-export class FirestoreDatabase implements DatabaseInterface {
+export class FirestoreDatabase implements IDatabase {
 	private db: Firestore;
 
 	constructor() {

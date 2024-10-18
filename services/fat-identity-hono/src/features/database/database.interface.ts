@@ -1,6 +1,6 @@
 import type { z } from "zod";
 
-export interface DatabaseInterface {
+export interface IDatabase {
 	add<T extends z.ZodType>(
 		collection: string,
 		data: z.infer<T>,
