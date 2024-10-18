@@ -55,6 +55,7 @@
 	],
 	"settings": {
 		"cSpell.words": [
+			"asteasolutions",
 			"autoload",
 			"fastify",
 			"Firestore",
