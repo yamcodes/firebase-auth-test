@@ -3,25 +3,7 @@ import type { RouteConfig, RouteHandler } from "@hono/zod-openapi";
 import { HTTPException } from "hono/http-exception";
 import { formatZodErrors } from "~/utils";
 
-/**
- * Create a Hono route with an OpenAPI schema.
- * @param path - The route path
- * @param config - The route configuration object
- * @param handler - The handler function for the route
- * @returns A tuple containing the route configuration and handler
- */
-export function createRoute<
-	const P extends string,
-	const R extends Omit<RouteConfig, "path">,
->(
-	path: P,
-	config: R,
-	handler: RouteHandler<R & { path: P }>,
-): [R & { path: P }, RouteHandler<R & { path: P }>] {
-	return [createSchema({ ...config, path }), handler];
-}
-
-function createMethodRoute<
+function createRoute<
 	const M extends "get" | "post" | "put" | "delete" | "patch",
 	const P extends string,
 	const R extends Omit<RouteConfig, "path" | "method">,
@@ -31,15 +13,7 @@ function createMethodRoute<
 	config: R,
 	handler: RouteHandler<R & { method: M; path: P }>,
 ): [R & { method: M; path: P }, RouteHandler<R & { method: M; path: P }>] {
-	return createRoute(
-		path,
-		{
-			...config,
-			method,
-			path,
-		},
-		handler,
-	);
+	return [createSchema({ ...config, path, method }), handler];
 }
 
 /** Create a GET route */
@@ -50,7 +24,7 @@ export const createGet = <
 	path: P,
 	config: R,
 	handler: RouteHandler<R & { path: P; method: "get" }>,
-) => createMethodRoute<"get", P, R>("get", path, config, handler);
+) => createRoute<"get", P, R>("get", path, config, handler);
 
 /** Create a POST route */
 export const createPost = <
@@ -60,7 +34,7 @@ export const createPost = <
 	path: P,
 	config: R,
 	handler: RouteHandler<R & { path: P; method: "post" }>,
-) => createMethodRoute<"post", P, R>("post", path, config, handler);
+) => createRoute<"post", P, R>("post", path, config, handler);
 
 /** Create a PUT route */
 export const createPut = <
@@ -70,7 +44,7 @@ export const createPut = <
 	path: P,
 	config: R,
 	handler: RouteHandler<R & { path: P; method: "put" }>,
-) => createMethodRoute<"put", P, R>("put", path, config, handler);
+) => createRoute<"put", P, R>("put", path, config, handler);
 
 /** Create a DELETE route */
 export const createDelete = <
@@ -80,7 +54,7 @@ export const createDelete = <
 	path: P,
 	config: R,
 	handler: RouteHandler<R & { path: P; method: "delete" }>,
-) => createMethodRoute<"delete", P, R>("delete", path, config, handler);
+) => createRoute<"delete", P, R>("delete", path, config, handler);
 
 /** Create a PATCH route */
 export const createPatch = <
@@ -90,7 +64,7 @@ export const createPatch = <
 	path: P,
 	config: R,
 	handler: RouteHandler<R & { path: P; method: "patch" }>,
-) => createMethodRoute<"patch", P, R>("patch", path, config, handler);
+) => createRoute<"patch", P, R>("patch", path, config, handler);
 
 export const defaultHook: OpenAPIHono["defaultHook"] = (result, { json }) => {
 	if (result.success) return;
