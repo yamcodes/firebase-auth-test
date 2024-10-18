@@ -11,7 +11,9 @@
 		"dev": "vite",
 		"start": "vite",
 		"build:server": "vite build",
-		"build:client": "tsup",
+		"build:client": "pnpm run '/build:client:js|build:client:dts/'",
+		"build:client:dts": "tsc --project tsconfig.client.json",
+		"build:client:js": "tsup",
 		"build": "pnpm run '/build:server|build:client/'",
 		"serve": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
@@ -19,7 +21,7 @@
 	},
 	"tsup": {
 		"entry": ["src/client.ts"],
-		"dts": true,
+		"dts": false,
 		"format": "esm"
 	},
 	"dependencies": {
