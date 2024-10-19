@@ -1,4 +1,4 @@
-import { type App as FirebaseApp, initializeApp } from "firebase-admin/app";
+import type { App as FirebaseApp } from "firebase-admin/app";
 import { type Firestore, getFirestore } from "firebase-admin/firestore";
 import type { z } from "zod";
 import { initializeFirebase } from "~/config/firebase";

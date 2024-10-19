@@ -12,6 +12,7 @@ const envSchema = z.object({
 	FAT_LOG_LEVEL: z
 		.enum(["trace", "debug", "info", "warn", "error", "silent", "fatal"])
 		.default("info"),
+	FIRESTORE_EMULATOR_HOST: z.string().optional(),
 });
 
 export default defineConfig({

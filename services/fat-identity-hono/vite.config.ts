@@ -8,7 +8,14 @@ import tsconfigPaths from "vite-tsconfig-paths";
 const entry = "src/index.ts";
 
 export const sharedConfig = defineConfig({
-	plugins: [tsconfigPaths(), validateEnv({ configFile: "env.config" })],
+	plugins: [
+		tsconfigPaths(),
+		validateEnv({ configFile: "env.config" }),
+		/**
+		 * Since we're using Vite in the server, this is required to support `process.env.XXX` variables for third-party libraries (like Firebase)
+		 */
+		env() as PluginOption,
+	],
 	envPrefix: "FAT_",
 });
 
@@ -19,10 +26,6 @@ export default mergeConfig(
 	 */
 	defineConfig({
 		plugins: [
-			/**
-			 * Since we're using Vite in the server, this is required to support `process.env.XXX` variables for third-party libraries (like Firebase)
-			 */
-			env() as PluginOption,
 			/**
 			 * Allow Vite to be used as the dev server for Hono (our server framework)
 			 */

@@ -3,8 +3,6 @@
 	"type": "module",
 	"version": "1.0.0",
 	"scripts": {
-		"test": "vitest",
-		"test:ui": "vitest --ui",
 		"dev:server": "tsx watch src/index.ts",
 		"dev:swagger-ui": "browser-sync start --proxy 'localhost:2204' --files 'src/**/*.ts'",
 		"dev:old": "pnpm run '/dev:server|dev:swagger-ui/'",
@@ -15,7 +13,12 @@
 		"build": "pnpm run '/build:server|build:client/'",
 		"serve": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
-		"clean": "rm -rf node_modules"
+		"clean": "rm -rf node_modules",
+		"emulator": "firebase emulators:start --only firestore,auth --project fat-core-dev",
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:e2e:no-emulator": "vitest --config vitest.e2e.config.ts",
+		"test:e2e": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:e2e:no-emulator'"
 	},
 	"tsup": {
 		"entry": ["src/client.ts"],
