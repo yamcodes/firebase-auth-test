@@ -46,10 +46,10 @@ export class GreetingsController {
 			.route("/", this.getGoodbye())
 			.route("/", this.getRandomGreeting())
 			.route("/", this.postGreeting())
+			.route("/", this.getSpecialGreeting())
 			.route("/", this.getAllGreetings())
 			.route("/", this.getGreetingById())
-			.route("/", this.getHello())
-			.route("/", this.getSpecialGreeting());
+			.route("/", this.getHello());
 	}
 
 	private getGoodbye() {

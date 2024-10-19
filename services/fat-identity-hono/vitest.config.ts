@@ -1,11 +1,12 @@
 import { defineConfig, mergeConfig } from "vitest/config";
-import { sharedConfig } from "./vite.config";
+import { loadEnv } from "vite";
+import { sharedTestConfig } from "./vitest.shared.config";
 
 export default mergeConfig(
-	sharedConfig,
+	sharedTestConfig,
 	defineConfig({
 		test: {
-			open: false,
+			setupFiles: "./test/setup.e2e.ts",
 		},
 	}),
 );
