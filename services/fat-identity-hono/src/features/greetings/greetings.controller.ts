@@ -1,4 +1,4 @@
-import { type OpenAPIHono, z } from "@hono/zod-openapi";
+import { createRoute, type OpenAPIHono, z } from "@hono/zod-openapi";
 import { createMiddleware } from "hono/factory";
 import { type IDatabase, firestore } from "~/database";
 import { createApp } from "~/lib/hono";
@@ -54,11 +54,11 @@ export class GreetingsController {
 
 	private getGoodbye() {
 		return this.greetings.openapi(
-			{
+			createRoute({
+				method: "get",
+				path: "/goodbye",
 				summary: "Get a goodbye message",
 				description: "Retrieve a farewell message",
-				path: "/goodbye",
-				method: "get",
 				tags: ["Greetings"],
 				responses: {
 					200: {
@@ -68,7 +68,7 @@ export class GreetingsController {
 						description: "Successful response with a goodbye message",
 					},
 				},
-			},
+			}),
 			({ var: { service }, json }) => {
 				const message = service.getGoodbye();
 				return json({ message }, 200);
@@ -78,9 +78,9 @@ export class GreetingsController {
 
 	private getRandomGreeting() {
 		return this.greetings.openapi(
-			{
-				path: "/random/:name",
+			createRoute({
 				method: "get",
+				path: "/random/:name",
 				summary: "Get a random greeting",
 				description: "Retrieve a random personalized greeting",
 				tags: ["Greetings"],
@@ -103,7 +103,7 @@ export class GreetingsController {
 						description: "Successful response with a random greeting",
 					},
 				},
-			},
+			}),
 			({ var: { service }, json, req }) => {
 				const { name } = req.valid("param");
 				const message = service.getRandomGreeting(name);
@@ -114,9 +114,9 @@ export class GreetingsController {
 
 	private postGreeting() {
 		return this.greetings.openapi(
-			{
-				path: "/",
+			createRoute({
 				method: "post",
+				path: "/",
 				summary: "Save a greeting",
 				description:
 					"Use this endpoint to save a new greeting. Use `%name` in the `greeting` field to include the name in the greeting.",
@@ -142,7 +142,7 @@ export class GreetingsController {
 						},
 					},
 				},
-			},
+			}),
 			async ({ var: { service }, json, req }) => {
 				const greetingDto = req.valid("json");
 				const result = await service.createGreeting(greetingDto);
@@ -153,9 +153,9 @@ export class GreetingsController {
 
 	private getAllGreetings() {
 		return this.greetings.openapi(
-			{
-				path: "/",
+			createRoute({
 				method: "get",
+				path: "/",
 				summary: "Get all greetings",
 				description: "Retrieve all saved greetings",
 				tags: ["Greetings"],
@@ -165,7 +165,7 @@ export class GreetingsController {
 						description: "Successfully retrieved all greetings",
 					},
 				},
-			},
+			}),
 			async ({ var: { service }, json }) => {
 				const greetings = await service.getAllGreetings();
 				return json(greetings);
@@ -175,9 +175,9 @@ export class GreetingsController {
 
 	private getGreetingById() {
 		return this.greetings.openapi(
-			{
-				path: "/:id",
+			createRoute({
 				method: "get",
+				path: "/:id",
 				summary: "Get a saved greeting",
 				description: "Retrieve a specific greeting by its ID",
 				tags: ["Greetings"],
@@ -194,7 +194,7 @@ export class GreetingsController {
 						},
 					},
 				},
-			},
+			}),
 			async ({ var: { service }, json, req }) => {
 				const { id } = req.valid("param");
 				const greeting = await service.getGreetingById(id);
@@ -205,16 +205,16 @@ export class GreetingsController {
 
 	private deleteAllGreetings() {
 		return this.greetings.openapi(
-			{
-				path: "/all",
+			createRoute({
 				method: "delete",
+				path: "/all",
 				summary: "Delete all greetings",
 				description: "Remove all saved greetings from the database",
 				tags: ["Greetings"],
 				responses: {
 					204: { description: "All greetings deleted successfully" },
 				},
-			},
+			}),
 			async ({ var: { service }, body }) => {
 				await service.deleteAllGreetings();
 				return body(null, 204);
@@ -224,9 +224,9 @@ export class GreetingsController {
 
 	private getHello() {
 		return this.greetings.openapi(
-			{
-				path: "/hello/:name",
+			createRoute({
 				method: "get",
+				path: "/hello/:name",
 				summary: "Get a hello greeting",
 				description: "Use this endpoint to get a personalized hello greeting",
 				tags: ["Greetings"],
@@ -248,7 +248,7 @@ export class GreetingsController {
 						description: "Successful response with a greeting message",
 					},
 				},
-			},
+			}),
 			({ var: { service }, json, req }) => {
 				const { name } = req.valid("param");
 				const message = service.getGreeting(name);
@@ -259,9 +259,9 @@ export class GreetingsController {
 
 	private getSpecialGreeting() {
 		return this.greetings.openapi(
-			{
-				path: "/special",
+			createRoute({
 				method: "get",
+				path: "/special",
 				summary: "Get a special greeting",
 				description: "Retrieve a unique, special greeting",
 				tags: ["Greetings"],
@@ -273,7 +273,7 @@ export class GreetingsController {
 						description: "Successful response with a special greeting",
 					},
 				},
-			},
+			}),
 			({ var: { service }, json }) => {
 				const message = service.getSpecialGreeting();
 				return json({ message }, 200);

@@ -1,12 +1,11 @@
 import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { version } from "~/../package.json";
+import { version } from "./../package.json";
 import { general } from "~/features/general";
 import { greetings } from "~/features/greetings";
 import { createApp } from "~/lib/hono";
 import { logger } from "~/middleware/logger";
-import { firestore } from "./database";
 
 const app = createApp();
 app.use(cors());

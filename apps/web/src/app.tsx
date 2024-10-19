@@ -11,7 +11,7 @@ import {
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import type { InferRequestType } from "hono/client";
+import { hc, type InferRequestType } from "hono/client";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";
@@ -25,7 +25,7 @@ type DogBreed = "Labrador" | "Corgi" | "Beagle" | "Golden Retriever";
 const AppContent = () => {
 	const { toast } = useToast();
 	// hono
-	const identityClient = createClient("http://localhost:5173");
+	const identityClient = createClient("localhost:5173");
 
 	const form = useForm({
 		defaultValues: { myName: "John" },
