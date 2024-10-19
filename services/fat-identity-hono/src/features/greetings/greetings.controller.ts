@@ -19,7 +19,7 @@ type Env = HonoEnv & {
 	};
 };
 
-export class GreetingsRoute {
+export class GreetingsController {
 	private app;
 	private greetings;
 
@@ -43,12 +43,25 @@ export class GreetingsRoute {
 		);
 	}
 
+	public getRoutes() {
+		return this.app
+			.route("/", this.deleteAllGreetings())
+			.route("/", this.getGoodbye())
+			.route("/", this.getRandomGreeting())
+			.route("/", this.postGreeting())
+			.route("/", this.getAllGreetings())
+			.route("/", this.getGreetingById())
+			.route("/", this.getHello())
+			.route("/", this.getSpecialGreeting());
+	}
+
 	private getGoodbye() {
-		return this.greetings.get(
-			"/goodbye",
+		return this.app.openapi(
 			{
 				summary: "Get a goodbye message",
 				description: "Retrieve a farewell message",
+				path: "/goodbye",
+				method: "get",
 				tags: ["Greetings"],
 				responses: {
 					200: {
@@ -263,20 +276,8 @@ export class GreetingsRoute {
 			},
 		);
 	}
-
-	public getRoutes() {
-		return this.app
-			.route("/", this.deleteAllGreetings())
-			.route("/", this.getGoodbye())
-			.route("/", this.getRandomGreeting())
-			.route("/", this.postGreeting())
-			.route("/", this.getAllGreetings())
-			.route("/", this.getGreetingById())
-			.route("/", this.getHello())
-			.route("/", this.getSpecialGreeting());
-	}
 }
 
 // Create an instance of GreetingsRoute and export the routes
-const greetingsRoute = new GreetingsRoute();
+const greetingsRoute = new GreetingsController();
 export const routes = greetingsRoute.getRoutes();

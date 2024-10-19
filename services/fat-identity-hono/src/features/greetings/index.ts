@@ -1,1 +1,1 @@
-export { routes as greetings } from "./greetings.route";
+export { routes as greetings } from "./greetings.controller";
