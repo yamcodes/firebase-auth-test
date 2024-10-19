@@ -19,7 +19,8 @@
 		"test:e2e:no-emulator": "vitest --config vitest.e2e.config.ts",
 		"test:e2e": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:e2e:no-emulator'",
 		"test:no-emulator": "vitest",
-		"test": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:no-emulator'"
+		"test": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:no-emulator'",
+		"validate-process-env": "tsx scripts/validate-process-env.ts .env.local"
 	},
 	"tsup": {
 		"entry": ["src/client.ts"],
@@ -35,7 +36,7 @@
 		"hono-pino": "^0.3.0",
 		"hono-pino-logger": "^1.0.0",
 		"pino": "^9.4.0",
-		"radashi": "^12.1.0",
+		"radashi": "12.2.0-beta.af825f4",
 		"ts-pattern": "^5.4.0",
 		"zod": "^3.23.4"
 	},
@@ -48,6 +49,7 @@
 		"@types/node": "^20.11.17",
 		"@vitest/ui": "2.1.2",
 		"browser-sync": "^3.0.3",
+		"dotenv": "^16.4.5",
 		"pino-pretty": "^11.2.2",
 		"tsup": "^8.3.0",
 		"tsx": "^4.7.1",

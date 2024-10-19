@@ -6,17 +6,18 @@ import env from "vite-plugin-env-compatible";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 const entry = "src/index.ts";
+export const envPrefix = "FAT_";
 
 export const sharedConfig = defineConfig({
 	plugins: [
 		tsconfigPaths(),
-		validateEnv({ configFile: "env.config" }),
 		/**
 		 * Since we're using Vite in the server, this is required to support `process.env.XXX` variables for third-party libraries (like Firebase)
 		 */
 		env() as PluginOption,
+		validateEnv({ configFile: "env.config", debug: true }),
 	],
-	envPrefix: "FAT_",
+	envPrefix,
 });
 
 export default mergeConfig(

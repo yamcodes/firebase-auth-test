@@ -1,8 +1,4 @@
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
-import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import { db } from "~/config/firebase";
-import type { Greeting } from "~/features/greetings/greetings.schema";
+import { afterEach, beforeEach } from "vitest";
 import { logger } from "~/utils";
 import {
 	DEFAULT_EMULATOR_HOST,
@@ -20,10 +16,10 @@ const EMULATOR_PORT = process.env.FIREBASE_EMULATOR_HOST
 	? process.env.FIREBASE_EMULATOR_HOST.split(":")[1]
 	: DEFAULT_EMULATOR_PORT;
 
-// biome-ignore lint/suspicious/noExplicitAny: fix l8r
-let server: any;
-
-// Function to clear data using Firestore emulator REST endpoint
+/**
+ * Clear the database using the Firestore emulator REST endpoint
+ * See: https://firebase.google.com/docs/emulator-suite/connect_firestore#clear_your_database_between_tests
+ */
 const clearDatabase = async () => {
 	const url = `http://${EMULATOR_HOST}:${EMULATOR_PORT}/emulator/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 	try {
@@ -38,24 +34,10 @@ const clearDatabase = async () => {
 	}
 };
 
-const execAsync = promisify(exec);
-
-beforeAll(async () => {
-	// const { stdout, stderr } = await execAsync("pnpm run emulator");
-	// if (stderr) {
-	// 	console.error(`Emulator stderr: ${stderr}`);
-	// }
-	// console.log(`Emulator stdout: ${stdout}`);
-});
-
 beforeEach(async () => {
 	await clearDatabase();
 });
 
 afterEach(async () => {
 	await clearDatabase();
-});
-
-afterAll(async () => {
-	// await execAsync("pnpm exec firebase emulators:stop");
 });

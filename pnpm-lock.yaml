@@ -527,8 +527,8 @@ importers:
         specifier: ^9.4.0
         version: 9.4.0
       radashi:
-        specifier: ^12.1.0
-        version: 12.1.0
+        specifier: 12.2.0-beta.af825f4
+        version: 12.2.0-beta.af825f4
       ts-pattern:
         specifier: ^5.4.0
         version: 5.4.0
@@ -560,6 +560,9 @@ importers:
       browser-sync:
         specifier: ^3.0.3
         version: 3.0.3
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       pino-pretty:
         specifier: ^11.2.2
         version: 11.2.2
@@ -8146,9 +8149,9 @@ packages:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
 
-  radashi@12.1.0:
-    resolution: {integrity: sha512-EB/t8uDEuCzAhWsVzUvI0fK7K0/nCRl0jh7oFUuQUium6zolLjQlaSJGykDdwcarTbmcDy2EHqxFPylOPcoZxQ==}
-    engines: {node: '>=14.18.0'}
+  radashi@12.2.0-beta.af825f4:
+    resolution: {integrity: sha512-qgHft4yu2ZPoHGEYEfqfsq1NMGoPq2Eo/r3QkbrJimNJ+63m8sDgISsQnTFjayC3pRCBr+FO2YIsORPs8pIiJA==}
+    engines: {node: '>=16.0.0'}
 
   railroad-diagrams@1.0.0:
     resolution: {integrity: sha512-cz93DjNeLY0idrCNOH6PviZGRN9GJhsdm9hpn1YCS879fj4W+x5IFJhhkRZcwVgMmFF7R82UA/7Oh+R8lLZg6A==}
@@ -19415,7 +19418,7 @@ snapshots:
 
   quick-lru@5.1.1: {}
 
-  radashi@12.1.0: {}
+  radashi@12.2.0-beta.af825f4: {}
 
   railroad-diagrams@1.0.0: {}
 

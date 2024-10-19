@@ -57,6 +57,7 @@
 		"cSpell.words": [
 			"asteasolutions",
 			"autoload",
+			"consts",
 			"fastify",
 			"Firestore",
 			"hono",
