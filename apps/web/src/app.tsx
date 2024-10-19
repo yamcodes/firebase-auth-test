@@ -11,7 +11,7 @@ import {
 	QueryClientProvider,
 	useMutation,
 } from "@tanstack/react-query";
-import { hc, type InferRequestType } from "hono/client";
+import { type InferRequestType, hc } from "hono/client";
 import { Moon, Sun } from "lucide-react";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useCallback, useEffect, useState } from "react";

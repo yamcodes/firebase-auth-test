@@ -1,5 +1,7 @@
-import { createRoute, type OpenAPIHono, z } from "@hono/zod-openapi";
+import { type OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import type { Env as HonoEnv } from "hono";
 import { createMiddleware } from "hono/factory";
+import type { EmptyObject } from "type-fest";
 import { type IDatabase, firestore } from "~/database";
 import { createApp } from "~/lib/hono";
 import { GreetingsRepository } from "./greetings.repository";
@@ -10,8 +12,6 @@ import {
 	GreetingMessageResponse,
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
-import type { Env as HonoEnv } from "hono";
-import type { EmptyObject } from "type-fest";
 
 type Env = HonoEnv & {
 	Variables: {
@@ -40,7 +40,7 @@ export class GreetingsController {
 		);
 	}
 
-	public getRoutes() {
+	get routes() {
 		return this.greetings
 			.route("/", this.deleteAllGreetings())
 			.route("/", this.getGoodbye())
@@ -282,6 +282,4 @@ export class GreetingsController {
 	}
 }
 
-// Create an instance of GreetingsRoute and export the routes
-const greetingsRoute = new GreetingsController();
-export const routes = greetingsRoute.getRoutes();
+export const { routes } = new GreetingsController();
