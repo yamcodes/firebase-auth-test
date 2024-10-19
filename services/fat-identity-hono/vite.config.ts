@@ -1,12 +1,31 @@
 import build from "@hono/vite-build/node";
 import dev from "@hono/vite-dev-server";
 import { ValidateEnv as validateEnv } from "@julr/vite-plugin-validate-env";
-import { type PluginOption, defineConfig, mergeConfig } from "vite";
+import {
+	type Plugin,
+	type PluginOption,
+	defineConfig,
+	mergeConfig,
+} from "vite";
 import env from "vite-plugin-env-compatible";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { validateEnv as validateProcessEnv } from "./scripts/validate-process-env";
+import type { ZodObject } from "zod";
+import { processEnvSchema } from "./env.config";
 
 const entry = "src/index.ts";
 export const envPrefix = "FAT_";
+
+export const validateProcessEnvPlugin = (
+	// biome-ignore lint/suspicious/noExplicitAny: any zod object
+	envSchema: ZodObject<any, any, any, any>,
+): Plugin => ({
+	name: "validate-process-env",
+	enforce: "pre",
+	config: () => {
+		validateProcessEnv(envSchema);
+	},
+});
 
 export const sharedConfig = defineConfig({
 	plugins: [
@@ -15,7 +34,8 @@ export const sharedConfig = defineConfig({
 		 * Since we're using Vite in the server, this is required to support `process.env.XXX` variables for third-party libraries (like Firebase)
 		 */
 		env() as PluginOption,
-		validateEnv({ configFile: "env.config", debug: true }),
+		validateEnv({ configFile: "env.config" }),
+		validateProcessEnvPlugin(processEnvSchema),
 	],
 	envPrefix,
 });

@@ -4,7 +4,7 @@ import {
 	DEFAULT_EMULATOR_HOST,
 	DEFAULT_EMULATOR_PORT,
 	DEFAULT_PROJECT_ID,
-} from "./consts";
+} from "../consts";
 
 const PROJECT_ID = process.env.FIREBASE_CONFIG
 	? JSON.parse(process.env.FIREBASE_CONFIG).projectId

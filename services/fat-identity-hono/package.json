@@ -15,10 +15,10 @@
 		"typecheck": "tsc --noEmit",
 		"clean": "rm -rf node_modules",
 		"emulator": "firebase emulators:start --only firestore,auth --project fat-core-dev",
-		"test:unit": "vitest --config vitest.unit.config.ts",
-		"test:e2e:no-emulator": "vitest --config vitest.e2e.config.ts",
+		"test:unit": "vitest --config test/vitest.unit.config.ts",
+		"test:e2e:no-emulator": "vitest --config test/vitest.e2e.config.ts",
 		"test:e2e": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:e2e:no-emulator'",
-		"test:no-emulator": "vitest",
+		"test:no-emulator": "vitest --config test/vitest.config.ts",
 		"test": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:no-emulator'",
 		"validate-process-env": "tsx scripts/validate-process-env.ts .env.local"
 	},
