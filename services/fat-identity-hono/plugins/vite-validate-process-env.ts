@@ -52,12 +52,14 @@ function validateEnv(
  *
  * Note that this is different than `@julr/vite-plugin-validate-env` which validates prefixed `import.meta.env` variables.
  */
-export const validateProcessEnv = (
+export function validateProcessEnv(
 	...args: Parameters<typeof validateEnv>
-): Plugin => ({
-	name: "validate-process-env",
-	enforce: "pre",
-	config: () => {
-		validateEnv(...args);
-	},
-});
+): Plugin {
+	return {
+		name: "validate-process-env",
+		enforce: "pre",
+		config: () => {
+			validateEnv(...args);
+		},
+	};
+}
