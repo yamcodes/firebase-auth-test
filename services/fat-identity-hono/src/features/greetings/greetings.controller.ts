@@ -1,7 +1,7 @@
-import { z } from "@hono/zod-openapi";
+import { type OpenAPIHono, z } from "@hono/zod-openapi";
 import { createMiddleware } from "hono/factory";
 import { type IDatabase, firestore } from "~/database";
-import { createAppWithRoutes } from "~/lib/hono";
+import { createApp } from "~/lib/hono";
 import { GreetingsRepository } from "./greetings.repository";
 import {
 	Greeting,
@@ -11,6 +11,7 @@ import {
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
 import type { Env as HonoEnv } from "hono";
+import type { EmptyObject } from "type-fest";
 
 type Env = HonoEnv & {
 	Variables: {
@@ -20,20 +21,16 @@ type Env = HonoEnv & {
 };
 
 export class GreetingsController {
-	private app;
-	private greetings;
+	private greetings: OpenAPIHono<Env, EmptyObject, "/">;
 
 	constructor() {
-		const { app, routes: greetings } = createAppWithRoutes<Env>();
-
-		this.app = app;
-		this.greetings = greetings;
+		this.greetings = createApp<Env>();
 		this.setupMiddleware();
 	}
 
 	private setupMiddleware() {
-		this.app.use(firestore);
-		this.app.use(
+		this.greetings.use(firestore);
+		this.greetings.use(
 			createMiddleware<Env>(async ({ var: { db, logger }, set }, next) => {
 				const repo = new GreetingsRepository(db);
 				const service = new GreetingsService(repo, logger);
@@ -44,7 +41,7 @@ export class GreetingsController {
 	}
 
 	public getRoutes() {
-		return this.app
+		return this.greetings
 			.route("/", this.deleteAllGreetings())
 			.route("/", this.getGoodbye())
 			.route("/", this.getRandomGreeting())
@@ -56,7 +53,7 @@ export class GreetingsController {
 	}
 
 	private getGoodbye() {
-		return this.app.openapi(
+		return this.greetings.openapi(
 			{
 				summary: "Get a goodbye message",
 				description: "Retrieve a farewell message",
@@ -80,9 +77,10 @@ export class GreetingsController {
 	}
 
 	private getRandomGreeting() {
-		return this.greetings.get(
-			"/random/:name",
+		return this.greetings.openapi(
 			{
+				path: "/random/:name",
+				method: "get",
 				summary: "Get a random greeting",
 				description: "Retrieve a random personalized greeting",
 				tags: ["Greetings"],
@@ -115,9 +113,10 @@ export class GreetingsController {
 	}
 
 	private postGreeting() {
-		return this.greetings.post(
-			"/",
+		return this.greetings.openapi(
 			{
+				path: "/",
+				method: "post",
 				summary: "Save a greeting",
 				description:
 					"Use this endpoint to save a new greeting. Use `%name` in the `greeting` field to include the name in the greeting.",
@@ -153,9 +152,10 @@ export class GreetingsController {
 	}
 
 	private getAllGreetings() {
-		return this.greetings.get(
-			"/",
+		return this.greetings.openapi(
 			{
+				path: "/",
+				method: "get",
 				summary: "Get all greetings",
 				description: "Retrieve all saved greetings",
 				tags: ["Greetings"],
@@ -174,9 +174,10 @@ export class GreetingsController {
 	}
 
 	private getGreetingById() {
-		return this.greetings.get(
-			"/:id",
+		return this.greetings.openapi(
 			{
+				path: "/:id",
+				method: "get",
 				summary: "Get a saved greeting",
 				description: "Retrieve a specific greeting by its ID",
 				tags: ["Greetings"],
@@ -203,9 +204,10 @@ export class GreetingsController {
 	}
 
 	private deleteAllGreetings() {
-		return this.greetings.delete(
-			"/all",
+		return this.greetings.openapi(
 			{
+				path: "/all",
+				method: "delete",
 				summary: "Delete all greetings",
 				description: "Remove all saved greetings from the database",
 				tags: ["Greetings"],
@@ -221,9 +223,10 @@ export class GreetingsController {
 	}
 
 	private getHello() {
-		return this.greetings.get(
-			"/hello/:name",
+		return this.greetings.openapi(
 			{
+				path: "/hello/:name",
+				method: "get",
 				summary: "Get a hello greeting",
 				description: "Use this endpoint to get a personalized hello greeting",
 				tags: ["Greetings"],
@@ -255,9 +258,10 @@ export class GreetingsController {
 	}
 
 	private getSpecialGreeting() {
-		return this.greetings.get(
-			"/special",
+		return this.greetings.openapi(
 			{
+				path: "/special",
+				method: "get",
 				summary: "Get a special greeting",
 				description: "Retrieve a unique, special greeting",
 				tags: ["Greetings"],
