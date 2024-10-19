@@ -36,7 +36,7 @@ export const processEnvSchema = z.object({
 			projectId: z.string(),
 		}),
 	),
-	FIRESTORE_EMULATOR_HOST: z.string().ip(),
+	FIRESTORE_EMULATOR_HOST: z.string().min(1),
 	FIRESTORE_EMULATOR_PORT: z
 		.string()
 		.regex(/^\d+$/)
