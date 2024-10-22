@@ -1,4 +1,3 @@
-import { HTTPException } from "hono/http-exception";
 import pino from "pino";
 import { describe, expect, it } from "vitest";
 import { InMemoryDatabase } from "~/database/adapters/in-memory/in-memory.database";
