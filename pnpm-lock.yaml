@@ -480,7 +480,7 @@ importers:
         version: 2.0.0
       pino-pretty:
         specifier: ^11.2.2
-        version: 11.2.2
+        version: 11.3.0
       tap:
         specifier: ^16.3.10
         version: 16.3.10(ts-node@10.9.2(@swc/core@1.7.39)(@types/node@20.16.14)(typescript@5.6.3))(typescript@5.6.3)
@@ -562,7 +562,7 @@ importers:
         version: 16.4.5
       pino-pretty:
         specifier: ^11.2.2
-        version: 11.2.2
+        version: 11.3.0
       tsup:
         specifier: ^8.3.0
         version: 8.3.0(@swc/core@1.7.39)(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.3)(yaml@2.5.1)
@@ -7869,8 +7869,8 @@ packages:
   pino-abstract-transport@2.0.0:
     resolution: {integrity: sha512-F63x5tizV6WCh4R6RHyi2Ml+M70DNRXt/+HANowMflpgGFMAym/VKm6G7ZOQRjqN7XbGxK1Lg9t6ZrtzOaivMw==}
 
-  pino-pretty@11.2.2:
-    resolution: {integrity: sha512-2FnyGir8nAJAqD3srROdrF1J5BIcMT4nwj7hHSc60El6Uxlym00UbCCd8pYIterstVBFlMyF1yFV8XdGIPbj4A==}
+  pino-pretty@11.3.0:
+    resolution: {integrity: sha512-oXwn7ICywaZPHmu3epHGU2oJX4nPmKvHvB/bwrJHlGcbEWaVcotkpyVHMKLKmiVryWYByNp0jpgAcXpFJDXJzA==}
     hasBin: true
 
   pino-std-serializers@7.0.0:
@@ -16030,7 +16030,7 @@ snapshots:
       generify: 4.2.0
       help-me: 4.2.0
       is-docker: 2.2.1
-      pino-pretty: 11.2.2
+      pino-pretty: 11.3.0
       pkg-up: 3.1.0
       resolve-from: 5.0.0
       semver: 7.6.3
@@ -18864,7 +18864,7 @@ snapshots:
     dependencies:
       split2: 4.2.0
 
-  pino-pretty@11.2.2:
+  pino-pretty@11.3.0:
     dependencies:
       colorette: 2.0.20
       dateformat: 4.6.3
@@ -18874,11 +18874,11 @@ snapshots:
       joycon: 3.1.1
       minimist: 1.2.8
       on-exit-leak-free: 2.1.2
-      pino-abstract-transport: 1.2.0
+      pino-abstract-transport: 2.0.0
       pump: 3.0.2
       readable-stream: 4.5.2
       secure-json-parse: 2.7.0
-      sonic-boom: 4.1.0
+      sonic-boom: 4.2.0
       strip-json-comments: 3.1.1
 
   pino-std-serializers@7.0.0: {}
