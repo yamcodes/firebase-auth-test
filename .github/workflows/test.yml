@@ -9,7 +9,8 @@ on:
       - main
 
 jobs:
-  lint:
+  test-
+  test-build:
     name: Test build
     runs-on: 'ubuntu-latest'
     steps:

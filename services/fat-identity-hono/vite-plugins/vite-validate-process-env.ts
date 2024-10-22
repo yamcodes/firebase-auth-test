@@ -1,6 +1,6 @@
-import path from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import dotenv from "dotenv";
+import { config as initializeDotenv } from "dotenv";
 import { type Level, pino } from "pino";
 import { pick } from "radashi";
 import type { Plugin } from "vite";
@@ -22,13 +22,11 @@ function validateEnv(
 	});
 	try {
 		const __filename = fileURLToPath(import.meta.url);
-		const __dirname = path.dirname(__filename);
-		const rootDir = path.resolve(__dirname, "..");
+		const __dirname = dirname(__filename);
+		const rootDir = resolve(__dirname, "..");
 
-		dotenv.config(
-			process.env.VITEST
-				? { path: path.resolve(rootDir, ".env.test") }
-				: undefined,
+		initializeDotenv(
+			process.env.VITEST ? { path: resolve(rootDir, ".env.test") } : undefined,
 		);
 
 		const filteredEnv = pick(

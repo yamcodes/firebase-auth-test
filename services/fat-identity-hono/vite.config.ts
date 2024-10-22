@@ -5,7 +5,7 @@ import { type PluginOption, defineConfig, mergeConfig } from "vite";
 import env from "vite-plugin-env-compatible";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { processEnvSchema } from "./env.config";
-import { validateProcessEnv } from "./plugins/vite-validate-process-env";
+import { validateProcessEnv } from "./vite-plugins/vite-validate-process-env";
 
 const entry = "src/index.ts";
 export const envPrefix = "FAT_";
