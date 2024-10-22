@@ -174,7 +174,7 @@ importers:
         version: 2.1.1
       hono:
         specifier: ^4.6.3
-        version: 4.6.3
+        version: 4.6.5
       lucide-react:
         specifier: ^0.447.0
         version: 0.447.0(react@18.3.1)
@@ -504,28 +504,28 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.13.1
-        version: 1.13.1(hono@4.6.3)
+        version: 1.13.1(hono@4.6.5)
       '@hono/swagger-ui':
         specifier: ^0.4.1
-        version: 0.4.1(hono@4.6.3)
+        version: 0.4.1(hono@4.6.5)
       '@hono/zod-openapi':
         specifier: ^0.16.4
-        version: 0.16.4(hono@4.6.3)(zod@3.23.8)
+        version: 0.16.4(hono@4.6.5)(zod@3.23.8)
       '@scalar/hono-api-reference':
         specifier: ^0.5.153
-        version: 0.5.153(hono@4.6.3)
+        version: 0.5.153(hono@4.6.5)
       firebase-admin:
         specifier: ^12.0.0
         version: 12.6.0(encoding@0.1.13)
       hono:
         specifier: ^4.6.3
-        version: 4.6.3
+        version: 4.6.5
       hono-pino:
         specifier: ^0.3.0
-        version: 0.3.0(hono@4.6.3)(pino@9.4.0)
+        version: 0.3.0(hono@4.6.5)(pino@9.4.0)
       hono-pino-logger:
         specifier: ^1.0.0
-        version: 1.0.0(hono@4.6.3)
+        version: 1.0.0(hono@4.6.5)
       pino:
         specifier: ^9.4.0
         version: 9.4.0
@@ -544,13 +544,13 @@ importers:
         version: 7.2.0(zod@3.23.8)
       '@hono/vite-build':
         specifier: ^1.1.0
-        version: 1.1.0(hono@4.6.3)
+        version: 1.1.0(hono@4.6.5)
       '@hono/vite-dev-server':
         specifier: ^0.16.0
-        version: 0.16.0(hono@4.6.3)
+        version: 0.16.0(hono@4.6.5)
       '@hono/zod-validator':
         specifier: ^0.3.0
-        version: 0.3.0(hono@4.6.3)(zod@3.23.8)
+        version: 0.3.0(hono@4.6.5)(zod@3.23.8)
       '@julr/vite-plugin-validate-env':
         specifier: ^1.1.1
         version: 1.1.1(vite@5.4.8(@types/node@20.16.10)(terser@5.34.1))(zod@3.23.8)
@@ -5291,6 +5291,7 @@ packages:
   eslint@8.57.1:
     resolution: {integrity: sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -6022,8 +6023,8 @@ packages:
       hono: '>=4.0.0'
       pino: '>=7.1.0'
 
-  hono@4.6.3:
-    resolution: {integrity: sha512-0LeEuBNFeSHGqZ9sNVVgZjB1V5fmhkBSB0hZrpqStSMLOWgfLy0dHOvrjbJh0H2khsjet6rbHfWTHY0kpYThKQ==}
+  hono@4.6.5:
+    resolution: {integrity: sha512-qsmN3V5fgtwdKARGLgwwHvcdLKursMd+YOt69eGpl1dUCJb8mCd7hZfyZnBYjxCegBG7qkJRQRUy2oO25yHcyQ==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -11516,34 +11517,34 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
-  '@hono/node-server@1.13.1(hono@4.6.3)':
+  '@hono/node-server@1.13.1(hono@4.6.5)':
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
 
-  '@hono/swagger-ui@0.4.1(hono@4.6.3)':
+  '@hono/swagger-ui@0.4.1(hono@4.6.5)':
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
 
-  '@hono/vite-build@1.1.0(hono@4.6.3)':
+  '@hono/vite-build@1.1.0(hono@4.6.5)':
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
 
-  '@hono/vite-dev-server@0.16.0(hono@4.6.3)':
+  '@hono/vite-dev-server@0.16.0(hono@4.6.5)':
     dependencies:
-      '@hono/node-server': 1.13.1(hono@4.6.3)
-      hono: 4.6.3
+      '@hono/node-server': 1.13.1(hono@4.6.5)
+      hono: 4.6.5
       minimatch: 9.0.5
 
-  '@hono/zod-openapi@0.16.4(hono@4.6.3)(zod@3.23.8)':
+  '@hono/zod-openapi@0.16.4(hono@4.6.5)(zod@3.23.8)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.2.0(zod@3.23.8)
-      '@hono/zod-validator': 0.3.0(hono@4.6.3)(zod@3.23.8)
-      hono: 4.6.3
+      '@hono/zod-validator': 0.3.0(hono@4.6.5)(zod@3.23.8)
+      hono: 4.6.5
       zod: 3.23.8
 
-  '@hono/zod-validator@0.3.0(hono@4.6.3)(zod@3.23.8)':
+  '@hono/zod-validator@0.3.0(hono@4.6.5)(zod@3.23.8)':
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
       zod: 3.23.8
 
   '@humanwhocodes/config-array@0.13.0':
@@ -12954,10 +12955,10 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.4': {}
 
-  '@scalar/hono-api-reference@0.5.153(hono@4.6.3)':
+  '@scalar/hono-api-reference@0.5.153(hono@4.6.5)':
     dependencies:
       '@scalar/types': 0.0.14
-      hono: 4.6.3
+      hono: 4.6.5
 
   '@scalar/openapi-types@0.1.2': {}
 
@@ -16835,18 +16836,18 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono-pino-logger@1.0.0(hono@4.6.3):
+  hono-pino-logger@1.0.0(hono@4.6.5):
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
       pino: 8.21.0
 
-  hono-pino@0.3.0(hono@4.6.3)(pino@9.4.0):
+  hono-pino@0.3.0(hono@4.6.5)(pino@9.4.0):
     dependencies:
       defu: 6.1.4
-      hono: 4.6.3
+      hono: 4.6.5
       pino: 9.4.0
 
-  hono@4.6.3: {}
+  hono@4.6.5: {}
 
   hookable@5.5.3: {}
 
