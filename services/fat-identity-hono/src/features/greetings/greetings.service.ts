@@ -37,7 +37,7 @@ export class GreetingsService {
 		const greeting = rawGreeting.replace("%name", name);
 		this.logger.debug({ greetingDto }, "Saving greeting");
 		try {
-			const result = await this.greetingsRepository.createGreeting({
+			const result = await this.greetingsRepository.create({
 				name,
 				greeting,
 			});
@@ -51,7 +51,7 @@ export class GreetingsService {
 
 	async getAllGreetings(): Promise<Greeting[]> {
 		this.logger.debug("Retrieving all greetings");
-		const greetings = await this.greetingsRepository.getAllGreetings();
+		const greetings = await this.greetingsRepository.findAll();
 		this.logger.debug(
 			{ greetingsCount: greetings.length },
 			"Greetings retrieved successfully",
@@ -61,7 +61,7 @@ export class GreetingsService {
 
 	async getGreetingById(id: string): Promise<Greeting> {
 		this.logger.debug({ id }, "Retrieving greeting by ID");
-		const greeting = await this.greetingsRepository.getGreetingById(id);
+		const greeting = await this.greetingsRepository.findOne(id);
 		if (!greeting) {
 			this.logger.debug({ id }, "Greeting not found");
 			throw new HTTPException(404, { message: "Greeting not found" });
@@ -72,7 +72,7 @@ export class GreetingsService {
 
 	async deleteAllGreetings(): Promise<number> {
 		this.logger.debug("Deleting all greetings");
-		const deletedCount = await this.greetingsRepository.deleteAllGreetings();
+		const deletedCount = await this.greetingsRepository.deleteAll();
 		this.logger.debug({ deletedCount }, "All greetings deleted successfully");
 		return deletedCount;
 	}

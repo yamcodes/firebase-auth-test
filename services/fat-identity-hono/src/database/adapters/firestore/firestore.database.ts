@@ -14,7 +14,7 @@ export class FirestoreDatabase implements IDatabase {
 		this.db = getFirestore(this.app);
 	}
 
-	async add<T extends z.ZodType>(
+	async create<T extends z.ZodType>(
 		collection: string,
 		data: z.infer<T>,
 		schema: T,
@@ -24,7 +24,7 @@ export class FirestoreDatabase implements IDatabase {
 		return docRef.id;
 	}
 
-	async get<T extends z.ZodType>(
+	async findOne<T extends z.ZodType>(
 		collection: string,
 		id: string,
 		schema: T,
@@ -35,7 +35,7 @@ export class FirestoreDatabase implements IDatabase {
 		return schema.parse(data);
 	}
 
-	async getAll<T extends z.ZodType>(
+	async findAll<T extends z.ZodType>(
 		collection: string,
 		schema: T,
 	): Promise<Array<z.infer<T> & { id: string }>> {
