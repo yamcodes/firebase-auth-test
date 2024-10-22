@@ -521,8 +521,8 @@ importers:
         specifier: ^4.6.3
         version: 4.6.5
       hono-pino:
-        specifier: ^0.3.0
-        version: 0.3.0(hono@4.6.5)(pino@9.4.0)
+        specifier: ^0.4.0
+        version: 0.4.0(hono@4.6.5)(pino@9.4.0)
       hono-pino-logger:
         specifier: ^1.0.0
         version: 1.0.0(hono@4.6.5)
@@ -6094,8 +6094,8 @@ packages:
     peerDependencies:
       hono: '>=4.*'
 
-  hono-pino@0.3.0:
-    resolution: {integrity: sha512-9jryKLvU3mTWafqvwcJSmZs91ulcQnMu+wtlaFhvv41fFWtOSmRLA3JZpk5KI96I6gKzigSzrxcuXGjgx131RA==}
+  hono-pino@0.4.0:
+    resolution: {integrity: sha512-Qcnf0q4K6WAS/HEuQJk/nQwtUUOcnLS3AI5M7ciG2Slf6BdsOPbCGdrBrr2yKsD2MvK18R4injvCv0ddZ/GJ5A==}
     engines: {node: '>=18'}
     peerDependencies:
       hono: '>=4.0.0'
@@ -16980,7 +16980,7 @@ snapshots:
       hono: 4.6.5
       pino: 8.21.0
 
-  hono-pino@0.3.0(hono@4.6.5)(pino@9.4.0):
+  hono-pino@0.4.0(hono@4.6.5)(pino@9.4.0):
     dependencies:
       defu: 6.1.4
       hono: 4.6.5
