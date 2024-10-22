@@ -174,7 +174,7 @@ importers:
         version: 2.1.1
       hono:
         specifier: ^4.6.3
-        version: 4.6.5
+        version: 4.6.6
       lucide-react:
         specifier: ^0.453.0
         version: 0.453.0(react@18.3.1)
@@ -504,22 +504,22 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.13.1
-        version: 1.13.1(hono@4.6.5)
+        version: 1.13.1(hono@4.6.6)
       '@hono/swagger-ui':
         specifier: ^0.4.1
-        version: 0.4.1(hono@4.6.5)
+        version: 0.4.1(hono@4.6.6)
       '@hono/zod-openapi':
         specifier: ^0.16.4
-        version: 0.16.4(hono@4.6.5)(zod@3.23.8)
+        version: 0.16.4(hono@4.6.6)(zod@3.23.8)
       '@scalar/hono-api-reference':
         specifier: ^0.5.153
-        version: 0.5.153(hono@4.6.5)
+        version: 0.5.153(hono@4.6.6)
       firebase-admin:
         specifier: ^12.0.0
         version: 12.6.0(encoding@0.1.13)
       hono:
         specifier: ^4.6.3
-        version: 4.6.5
+        version: 4.6.6
       pino:
         specifier: ^9.4.0
         version: 9.5.0
@@ -538,13 +538,13 @@ importers:
         version: 7.2.0(zod@3.23.8)
       '@hono/vite-build':
         specifier: ^1.1.0
-        version: 1.1.0(hono@4.6.5)
+        version: 1.1.0(hono@4.6.6)
       '@hono/vite-dev-server':
         specifier: ^0.16.0
-        version: 0.16.0(hono@4.6.5)
+        version: 0.16.0(hono@4.6.6)
       '@hono/zod-validator':
         specifier: ^0.4.0
-        version: 0.4.1(hono@4.6.5)(zod@3.23.8)
+        version: 0.4.1(hono@4.6.6)(zod@3.23.8)
       '@julr/vite-plugin-validate-env':
         specifier: ^1.1.1
         version: 1.1.1(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))(zod@3.23.8)
@@ -6095,8 +6095,8 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
-  hono@4.6.5:
-    resolution: {integrity: sha512-qsmN3V5fgtwdKARGLgwwHvcdLKursMd+YOt69eGpl1dUCJb8mCd7hZfyZnBYjxCegBG7qkJRQRUy2oO25yHcyQ==}
+  hono@4.6.6:
+    resolution: {integrity: sha512-euUj5qwvtkG+p38GFs0LYacwaoS2hYRAGn9ysAggiwT2QBcPnT1XYUCW3hatW4C1KzAXTYuQ08BlVDJtAGuhlg==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -11607,39 +11607,39 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
-  '@hono/node-server@1.13.1(hono@4.6.5)':
+  '@hono/node-server@1.13.1(hono@4.6.6)':
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.6
 
-  '@hono/swagger-ui@0.4.1(hono@4.6.5)':
+  '@hono/swagger-ui@0.4.1(hono@4.6.6)':
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.6
 
-  '@hono/vite-build@1.1.0(hono@4.6.5)':
+  '@hono/vite-build@1.1.0(hono@4.6.6)':
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.6
 
-  '@hono/vite-dev-server@0.16.0(hono@4.6.5)':
+  '@hono/vite-dev-server@0.16.0(hono@4.6.6)':
     dependencies:
-      '@hono/node-server': 1.13.1(hono@4.6.5)
-      hono: 4.6.5
+      '@hono/node-server': 1.13.1(hono@4.6.6)
+      hono: 4.6.6
       minimatch: 9.0.5
 
-  '@hono/zod-openapi@0.16.4(hono@4.6.5)(zod@3.23.8)':
+  '@hono/zod-openapi@0.16.4(hono@4.6.6)(zod@3.23.8)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.2.0(zod@3.23.8)
-      '@hono/zod-validator': 0.3.0(hono@4.6.5)(zod@3.23.8)
-      hono: 4.6.5
+      '@hono/zod-validator': 0.3.0(hono@4.6.6)(zod@3.23.8)
+      hono: 4.6.6
       zod: 3.23.8
 
-  '@hono/zod-validator@0.3.0(hono@4.6.5)(zod@3.23.8)':
+  '@hono/zod-validator@0.3.0(hono@4.6.6)(zod@3.23.8)':
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.6
       zod: 3.23.8
 
-  '@hono/zod-validator@0.4.1(hono@4.6.5)(zod@3.23.8)':
+  '@hono/zod-validator@0.4.1(hono@4.6.6)(zod@3.23.8)':
     dependencies:
-      hono: 4.6.5
+      hono: 4.6.6
       zod: 3.23.8
 
   '@humanwhocodes/config-array@0.13.0':
@@ -13017,10 +13017,10 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.4': {}
 
-  '@scalar/hono-api-reference@0.5.153(hono@4.6.5)':
+  '@scalar/hono-api-reference@0.5.153(hono@4.6.6)':
     dependencies:
       '@scalar/types': 0.0.14
-      hono: 4.6.5
+      hono: 4.6.6
 
   '@scalar/openapi-types@0.1.2': {}
 
@@ -13856,7 +13856,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.9
       tinyrainbow: 1.2.0
-      vitest: 2.1.2(@types/node@20.16.14)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
+      vitest: 2.1.2(@types/node@22.7.8)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
 
   '@vitest/utils@2.1.2':
     dependencies:
@@ -16855,7 +16855,7 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  hono@4.6.5: {}
+  hono@4.6.6: {}
 
   hookable@5.5.3: {}
 
