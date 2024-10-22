@@ -44,7 +44,7 @@
 		"@asteasolutions/zod-to-openapi": "^7.2.0",
 		"@hono/vite-build": "^1.1.0",
 		"@hono/vite-dev-server": "^0.16.0",
-		"@hono/zod-validator": "^0.3.0",
+		"@hono/zod-validator": "^0.4.0",
 		"@julr/vite-plugin-validate-env": "^1.1.1",
 		"@types/node": "^20.11.17",
 		"@vitest/ui": "2.1.2",
