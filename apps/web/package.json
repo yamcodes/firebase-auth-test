@@ -24,7 +24,7 @@
 		"@repo/fat-identity-nestjs": "workspace:*",
 		"@repo/fat-ui": "workspace:*",
 		"@repo/utilities": "workspace:*",
-		"@tanstack/react-form": "^0.33.0",
+		"@tanstack/react-form": "^0.34.0",
 		"@tanstack/react-query": "^4.36.1",
 		"@trpc/client": "10.45.2",
 		"@trpc/react-query": "10.45.2",
