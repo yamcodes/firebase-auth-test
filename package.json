@@ -20,6 +20,7 @@
 		"@biomejs/biome": "1.9.4",
 		"@changesets/cli": "^2.27.9",
 		"@repo/tsconfig": "workspace:*",
+		"changesets-changelog-clean": "^1.3.0",
 		"firebase-tools-with-isolate": "^13.4.0",
 		"prettier": "^3.0.0",
 		"rimraf": "^6.0.1",
