@@ -9,7 +9,6 @@ on:
       - main
 
 jobs:
-  test-
   test-build:
     name: Test build
     runs-on: 'ubuntu-latest'
