@@ -11,6 +11,7 @@
 		"deploy": "turbo run deploy",
 		"check": "biome check .",
 		"fix": "biome check --write .",
+		"test:ci": "turbo run test:ci",
 		"generate:workspace": "turbo gen workspace",
 		"root:clean": "rimraf node_modules",
 		"root:emulate": "firebase emulators:start"

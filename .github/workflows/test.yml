@@ -9,7 +9,24 @@ on:
       - main
 
 jobs:
-  test-build:
+  test:
+    name: Test
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: pnpm/action-setup@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run tests
+        run: pnpm run test:ci
+
+  build:
     name: Test build
     runs-on: 'ubuntu-latest'
     steps:
@@ -18,8 +35,6 @@ jobs:
       - name: Cache for Turbo
         uses: rharkor/caching-for-turbo@v1.5
       - uses: pnpm/action-setup@v3
-        with:
-          version: 8
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:

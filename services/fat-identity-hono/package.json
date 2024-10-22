@@ -20,6 +20,7 @@
 		"test:e2e": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:e2e:no-emulator'",
 		"test:no-emulator": "vitest --config test-config/vitest.config.ts --ui",
 		"test": "firebase emulators:exec --only firestore,auth --project fat-core-dev 'pnpm test:no-emulator'",
+		"test:ci": "vitest run --config test-config/vitest.integration.config.ts",
 		"changeset": "pnpm -w changeset"
 	},
 	"tsup": {
