@@ -13,7 +13,7 @@
 		"clean": "rimraf node_modules dist"
 	},
 	"dependencies": {
-		"@primer/react": "^36.16.0",
+		"@primer/react": "^37.0.0",
 		"@radix-ui/react-icons": "^1.3.0",
 		"@radix-ui/react-select": "^2.1.2",
 		"@radix-ui/react-slot": "^1.1.0",
