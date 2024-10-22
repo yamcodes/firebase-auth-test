@@ -93,7 +93,7 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react':
         specifier: ^4.0.0
-        version: 4.3.3(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))
+        version: 4.3.3(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
@@ -111,10 +111,10 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.0.0
-        version: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+        version: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))
+        version: 5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))
 
   apps/web:
     dependencies:
@@ -211,7 +211,7 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react':
         specifier: ^4.0.0
-        version: 4.3.3(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))
+        version: 4.3.3(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
@@ -226,10 +226,10 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.0.0
-        version: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+        version: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))
+        version: 5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))
 
   packages/fat-auth:
     dependencies:
@@ -428,7 +428,7 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^5.0.0
-        version: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+        version: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
 
   services/fat-identity:
     dependencies:
@@ -547,7 +547,7 @@ importers:
         version: 0.4.1(hono@4.6.6)(zod@3.23.8)
       '@julr/vite-plugin-validate-env':
         specifier: ^1.1.1
-        version: 1.1.1(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))(zod@3.23.8)
+        version: 1.1.1(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))(zod@3.23.8)
       '@types/node':
         specifier: ^20.11.17
         version: 20.16.14
@@ -574,13 +574,13 @@ importers:
         version: 4.26.1
       vite:
         specifier: ^5.4.8
-        version: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+        version: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
       vite-plugin-env-compatible:
         specifier: ^2.0.1
         version: 2.0.1
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))
+        version: 5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))
       vitest:
         specifier: ^2.0.0
         version: 2.1.2(@types/node@20.16.14)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
@@ -680,7 +680,7 @@ importers:
         version: 1.5.1(@swc/core@1.7.39)(rollup@4.24.0)(webpack-sources@3.2.3)
       vite-tsconfig-paths:
         specifier: ^5.0.1
-        version: 5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))
+        version: 5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))
       vitest:
         specifier: ^2.0.0
         version: 2.1.2(@types/node@20.16.14)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
@@ -9826,8 +9826,8 @@ packages:
       vite:
         optional: true
 
-  vite@5.4.8:
-    resolution: {integrity: sha512-FqrItQ4DT1NC4zCUqMB4c4AZORMKIa0m8/URVCZ77OZ/QSNeJ54bU1vrFADbDsuwfIPcgknRkmqakQcgnL4GiQ==}
+  vite@5.4.9:
+    resolution: {integrity: sha512-20OVpJHh0PAM0oSOELa5GaZNWeDjcAvQjGXy2Uyr+Tp+/D2/Hdz6NLgpJLsarPTA2QJ6v8mX2P1ZfbsSKvdMkg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -11885,12 +11885,12 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@julr/vite-plugin-validate-env@1.1.1(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))(zod@3.23.8)':
+  '@julr/vite-plugin-validate-env@1.1.1(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))(zod@3.23.8)':
     dependencies:
       '@poppinss/cliui': 6.4.1
       '@poppinss/validator-lite': 1.0.3
       unconfig: 0.3.13
-      vite: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+      vite: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
     optionalDependencies:
       zod: 3.23.8
 
@@ -13793,14 +13793,14 @@ snapshots:
       - supports-color
       - vitest
 
-  '@vitejs/plugin-react@4.3.3(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))':
+  '@vitejs/plugin-react@4.3.3(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))':
     dependencies:
       '@babel/core': 7.25.9
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.25.9)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.25.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+      vite: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -13829,21 +13829,21 @@ snapshots:
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))':
+  '@vitest/mocker@2.1.2(@vitest/spy@2.1.2)(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))':
     dependencies:
       '@vitest/spy': 2.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+      vite: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
 
-  '@vitest/mocker@2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))':
+  '@vitest/mocker@2.1.2(@vitest/spy@2.1.2)(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))':
     dependencies:
       '@vitest/spy': 2.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+      vite: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
 
   '@vitest/pretty-format@2.1.2':
     dependencies:
@@ -21134,7 +21134,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+      vite: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -21151,7 +21151,7 @@ snapshots:
       cac: 6.7.14
       debug: 4.3.7
       pathe: 1.1.2
-      vite: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+      vite: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -21168,29 +21168,29 @@ snapshots:
       dotenv: 8.2.0
       dotenv-expand: 5.1.0
 
-  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1)):
+  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.6.3)
     optionalDependencies:
-      vite: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+      vite: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1)):
+  vite-tsconfig-paths@5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.6.3)
     optionalDependencies:
-      vite: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+      vite: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.8(@types/node@20.16.14)(terser@5.34.1):
+  vite@5.4.9(@types/node@20.16.14)(terser@5.34.1):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -21200,7 +21200,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.34.1
 
-  vite@5.4.8(@types/node@22.7.8)(terser@5.34.1):
+  vite@5.4.9(@types/node@22.7.8)(terser@5.34.1):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -21213,7 +21213,7 @@ snapshots:
   vitest@2.1.2(@types/node@20.16.14)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1):
     dependencies:
       '@vitest/expect': 2.1.2
-      '@vitest/mocker': 2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@20.16.14)(terser@5.34.1))
+      '@vitest/mocker': 2.1.2(@vitest/spy@2.1.2)(vite@5.4.9(@types/node@20.16.14)(terser@5.34.1))
       '@vitest/pretty-format': 2.1.2
       '@vitest/runner': 2.1.2
       '@vitest/snapshot': 2.1.2
@@ -21228,7 +21228,7 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.8(@types/node@20.16.14)(terser@5.34.1)
+      vite: 5.4.9(@types/node@20.16.14)(terser@5.34.1)
       vite-node: 2.1.2(@types/node@20.16.14)(terser@5.34.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
@@ -21249,7 +21249,7 @@ snapshots:
   vitest@2.1.2(@types/node@22.7.8)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1):
     dependencies:
       '@vitest/expect': 2.1.2
-      '@vitest/mocker': 2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@22.7.8)(terser@5.34.1))
+      '@vitest/mocker': 2.1.2(@vitest/spy@2.1.2)(vite@5.4.9(@types/node@22.7.8)(terser@5.34.1))
       '@vitest/pretty-format': 2.1.2
       '@vitest/runner': 2.1.2
       '@vitest/snapshot': 2.1.2
@@ -21264,7 +21264,7 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.8(@types/node@22.7.8)(terser@5.34.1)
+      vite: 5.4.9(@types/node@22.7.8)(terser@5.34.1)
       vite-node: 2.1.2(@types/node@22.7.8)(terser@5.34.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
