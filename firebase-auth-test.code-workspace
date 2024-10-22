@@ -57,6 +57,7 @@
 		"cSpell.words": [
 			"asteasolutions",
 			"autoload",
+			"biomejs",
 			"consts",
 			"fastify",
 			"Firestore",
@@ -69,6 +70,7 @@
 			"tanstack",
 			"trpc",
 			"tsup",
+			"turborepo",
 			"typecheck",
 			"unplugin",
 			"yamcodes"
