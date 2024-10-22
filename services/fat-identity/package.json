@@ -2,7 +2,7 @@
 	"type": "module",
 	"name": "@repo/fat-identity",
 	"private": true,
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "This project was bootstrapped with Fastify-CLI.",
 	"main": "app.ts",
 	"directories": {
