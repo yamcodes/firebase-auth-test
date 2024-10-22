@@ -636,9 +636,6 @@ importers:
       '@swc/core':
         specifier: ^1.7.26
         version: 1.7.26
-      '@types/express':
-        specifier: ^4.17.17
-        version: 4.17.21
       '@types/node':
         specifier: ^20.3.1
         version: 20.16.10
@@ -13777,6 +13774,7 @@ snapshots:
       magic-string: 0.30.11
     optionalDependencies:
       vite: 5.4.8(@types/node@22.7.4)(terser@5.34.1)
+    optional: true
 
   '@vitest/pretty-format@2.1.2':
     dependencies:
@@ -13806,7 +13804,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.9
       tinyrainbow: 1.2.0
-      vitest: 2.1.2(@types/node@22.7.4)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
+      vitest: 2.1.2(@types/node@20.16.10)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
 
   '@vitest/utils@2.1.2':
     dependencies:
@@ -21471,6 +21469,7 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+    optional: true
 
   vite-plugin-env-compatible@2.0.1:
     dependencies:
@@ -21590,6 +21589,7 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+    optional: true
 
   w3c-xmlserializer@5.0.0:
     dependencies:
