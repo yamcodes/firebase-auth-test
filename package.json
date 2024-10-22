@@ -30,8 +30,5 @@
 	"engines": {
 		"node": "20"
 	},
-	"packageManager": "pnpm@9.12.2",
-	"dependencies": {
-		"path-to-regexp": ">=0.1.10"
-	}
+	"packageManager": "pnpm@9.12.2"
 }
