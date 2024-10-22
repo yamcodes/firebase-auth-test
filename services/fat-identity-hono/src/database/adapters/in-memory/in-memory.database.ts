@@ -1,6 +1,6 @@
+import crypto from "node:crypto";
 import type { z } from "zod";
 import type { IDatabase } from "../../database.interface";
-import crypto from "node:crypto";
 
 export class InMemoryDatabase implements IDatabase {
 	private storage: Record<string, Record<string, unknown>>;

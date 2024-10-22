@@ -1,6 +1,7 @@
 import { type OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Env as HonoEnv } from "hono";
 import { createMiddleware } from "hono/factory";
+import { HTTPException } from "hono/http-exception";
 import type { EmptyObject } from "type-fest";
 import { type IDatabase, firestore } from "~/database";
 import { createApp } from "~/lib/hono";
@@ -12,7 +13,6 @@ import {
 	GreetingMessageResponse,
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
-import { HTTPException } from "hono/http-exception";
 
 type Env = HonoEnv & {
 	Variables: {

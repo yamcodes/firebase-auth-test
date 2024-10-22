@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
 import { HTTPException } from "hono/http-exception";
-import { GreetingsService } from "./greetings.service";
+import pino from "pino";
+import { describe, expect, it } from "vitest";
 import { InMemoryDatabase } from "~/database/adapters/in-memory/in-memory.database";
 import { GreetingsRepository } from "./greetings.repository";
-import pino from "pino";
+import { GreetingsService } from "./greetings.service";
 
 describe("Greetings Service + Repository Integration Tests", () => {
 	const db = new InMemoryDatabase();
