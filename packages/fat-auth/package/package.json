@@ -4,7 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@faker-js/faker": "^9.0.0",
-		"firebase": "^10.11.0"
+		"firebase": "^11.0.0"
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.6",
