@@ -56,4 +56,11 @@ export class FirestoreDatabase implements IDatabase {
 		await batch.commit();
 		return snapshot.size;
 	}
+
+	async deleteOne(collection: string, id: string): Promise<number> {
+		const doc = await this.db.collection(collection).doc(id).get();
+		if (!doc.exists) return 0;
+		await doc.ref.delete();
+		return 1;
+	}
 }

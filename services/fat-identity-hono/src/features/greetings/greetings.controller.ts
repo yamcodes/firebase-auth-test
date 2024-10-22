@@ -1,6 +1,7 @@
 import { type OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 import type { Env as HonoEnv } from "hono";
 import { createMiddleware } from "hono/factory";
+import { HTTPException } from "hono/http-exception";
 import type { EmptyObject } from "type-fest";
 import { type IDatabase, firestore } from "~/database";
 import { createApp } from "~/lib/hono";
@@ -49,7 +50,8 @@ export class GreetingsController {
 			.route("/", this.getSpecialGreeting())
 			.route("/", this.getAllGreetings())
 			.route("/", this.getGreetingById())
-			.route("/", this.getHello());
+			.route("/", this.getHello())
+			.route("/", this.deleteGreetingById());
 	}
 
 	private getGoodbye() {
@@ -277,6 +279,42 @@ export class GreetingsController {
 			({ var: { service }, json }) => {
 				const message = service.getSpecialGreeting();
 				return json({ message }, 200);
+			},
+		);
+	}
+
+	private deleteGreetingById() {
+		return this.greetings.openapi(
+			createRoute({
+				method: "delete",
+				path: "/{id}",
+				summary: "Delete a greeting by ID",
+				description:
+					"Delete a specific greeting from the database using its ID",
+				tags: ["Greetings"],
+				request: { params: z.object({ id: GreetingId }) },
+				responses: {
+					204: {
+						description: "Greeting successfully deleted",
+					},
+					404: {
+						description: "Greeting not found",
+						content: {
+							"text/plain": {
+								schema: z.string().openapi({
+									example: "Greeting not found",
+								}),
+							},
+						},
+					},
+				},
+			}),
+			async ({ var: { service }, body, req }) => {
+				const { id } = req.valid("param");
+				const result = await service.deleteOne(id);
+				if (result === 0)
+					throw new HTTPException(404, { message: "Greeting not found" });
+				return body(null, 204);
 			},
 		);
 	}

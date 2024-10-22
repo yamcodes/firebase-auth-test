@@ -19,4 +19,9 @@ export interface IDatabase {
 	): Promise<Array<z.infer<T> & { id: string }>>;
 
 	deleteAll(collection: string): Promise<number>;
+
+	deleteOne<T extends z.ZodType>(
+		collection: string,
+		id: string,
+	): Promise<number>;
 }

@@ -5,7 +5,7 @@ export default mergeConfig(
 	sharedTestConfig,
 	defineConfig({
 		test: {
-			setupFiles: "./test/setup.e2e.ts",
+			setupFiles: "./test-config/setup.e2e.ts",
 			include: ["test/e2e/**/*.test.ts", "src/**/*.e2e.test.ts"],
 		},
 	}),

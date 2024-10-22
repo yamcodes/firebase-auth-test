@@ -107,4 +107,29 @@ describe("Greetings E2E Tests", () => {
 		expect(typeof body.message).toBe("string");
 		expect(body.message).toContain("Alice");
 	});
+
+	it("should delete a greeting by ID", async () => {
+		// before we delete, we should have 3 greetings
+		const response = await app.request("/greetings");
+		expect(response.status).toBe(200);
+		const greetings = await response.json();
+		expect(greetings.length).toBe(seedGreetings.length);
+
+		const deleteResponse = await app.request("/greetings/1", {
+			method: "DELETE",
+		});
+		expect(deleteResponse.status).toBe(204);
+
+		// after we delete, we should have 2 greetings
+		const getResponse = await app.request("/greetings");
+		expect(getResponse.status).toBe(200);
+		const greetingsAfter = await getResponse.json();
+		expect(greetingsAfter.length).toBe(seedGreetings.length - 1);
+
+		// deleting the same greeting again should return 404
+		const deleteResponse2 = await app.request("/greetings/1", {
+			method: "DELETE",
+		});
+		expect(deleteResponse2.status).toBe(404);
+	});
 });

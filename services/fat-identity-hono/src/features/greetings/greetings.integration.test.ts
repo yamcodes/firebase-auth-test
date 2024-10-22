@@ -1,24 +1,15 @@
-import type { BaseLogger } from "pino";
-import { describe, expect, it, vi } from "vitest";
-import { FirestoreDatabase } from "~/database";
+import { HTTPException } from "hono/http-exception";
+import pino from "pino";
+import { describe, expect, it } from "vitest";
+import { InMemoryDatabase } from "~/database/adapters/in-memory/in-memory.database";
 import { GreetingsRepository } from "./greetings.repository";
 import { GreetingsService } from "./greetings.service";
 
-describe("GreetingsService", () => {
-	const mockLogger: BaseLogger = {
-		debug: vi.fn(),
-		info: vi.fn(),
-		warn: vi.fn(),
-		error: vi.fn(),
-		level: "debug",
-		fatal: vi.fn(),
-		trace: vi.fn(),
-		silent: vi.fn(),
-	};
-
-	const mockDb = vi.mocked(new FirestoreDatabase());
-	const mockRepository = vi.mocked(new GreetingsRepository(mockDb));
-	const greetingsService = new GreetingsService(mockRepository, mockLogger);
+describe("Greetings Service + Repository Integration Tests", () => {
+	const db = new InMemoryDatabase();
+	const repo = new GreetingsRepository(db);
+	const logger = pino();
+	const greetingsService = new GreetingsService(repo, logger);
 
 	describe("getGreeting", () => {
 		it("should return a greeting with the given name", () => {
@@ -61,6 +52,29 @@ describe("GreetingsService", () => {
 			}
 			// Expect at least 2 different greetings out of 20 calls
 			expect(greetings.size).toBeGreaterThan(1);
+		});
+	});
+
+	describe("deleteOne", () => {
+		it("should delete a greeting and return the deleted count", async () => {
+			const createdGreeting = await repo.create({
+				name: "Test greeting",
+				greeting: "Test greeting",
+			});
+
+			const result = await greetingsService.deleteOne(createdGreeting.id);
+
+			expect(result).toBe(1);
+			const deletedGreeting = await repo.findOne(createdGreeting.id);
+			expect(deletedGreeting).toBeNull();
+		});
+
+		it("should handle the case when no greeting is deleted", async () => {
+			const nonExistentId = "456";
+
+			const result = await greetingsService.deleteOne(nonExistentId);
+
+			expect(result).toBe(0);
 		});
 	});
 });
