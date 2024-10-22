@@ -604,7 +604,7 @@ importers:
         version: 10.45.2
       nestjs-trpc:
         specifier: ^1.4.0
-        version: 1.5.1(@nestjs/common@10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@trpc/server@10.45.2)(reflect-metadata@0.2.2)(rxjs@7.8.1)(zod@3.23.8)
+        version: 1.5.2(@nestjs/common@10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@trpc/server@10.45.2)(reflect-metadata@0.2.2)(rxjs@7.8.1)(zod@3.23.8)
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
@@ -7392,8 +7392,8 @@ packages:
   nerf-dart@1.0.0:
     resolution: {integrity: sha512-EZSPZB70jiVsivaBLYDCyntd5eH8NTSMOn3rB+HxwdmKThGELLdYv8qVIMWvZEFy9w8ZZpW9h9OB32l1rGtj7g==}
 
-  nestjs-trpc@1.5.1:
-    resolution: {integrity: sha512-1tZv/KnwbrIbIvdO0iJLC12nenNXcVOik6DYWH0DZFJlu/7pct4G6b4EFtHhdKm2A4JZj49awZXPuS9lkhx8rA==}
+  nestjs-trpc@1.5.2:
+    resolution: {integrity: sha512-Na3k7VnOXiuKM5DPdVSbLOxI3q9OYe9NbT0V2z1jbX0okULrw+n9oHJO1t4ALEf3JeDKib0WLcHJ5JFUe00Khw==}
     peerDependencies:
       '@nestjs/common': ^9.3.8 || ^10.0.0
       '@nestjs/core': ^9.3.8 || ^10.0.0
@@ -13856,7 +13856,7 @@ snapshots:
       sirv: 2.0.4
       tinyglobby: 0.2.9
       tinyrainbow: 1.2.0
-      vitest: 2.1.2(@types/node@20.16.14)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
+      vitest: 2.1.2(@types/node@22.7.8)(@vitest/ui@2.1.2)(jsdom@25.0.1)(terser@5.34.1)
 
   '@vitest/utils@2.1.2':
     dependencies:
@@ -18380,7 +18380,7 @@ snapshots:
 
   nerf-dart@1.0.0: {}
 
-  nestjs-trpc@1.5.1(@nestjs/common@10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@trpc/server@10.45.2)(reflect-metadata@0.2.2)(rxjs@7.8.1)(zod@3.23.8):
+  nestjs-trpc@1.5.2(@nestjs/common@10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.5)(@trpc/server@10.45.2)(reflect-metadata@0.2.2)(rxjs@7.8.1)(zod@3.23.8):
     dependencies:
       '@nestjs/common': 10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 10.4.5(@nestjs/common@10.4.5(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.4)(encoding@0.1.13)(reflect-metadata@0.2.2)(rxjs@7.8.1)
