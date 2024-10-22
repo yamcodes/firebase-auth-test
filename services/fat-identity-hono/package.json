@@ -23,9 +23,7 @@
 		"changeset": "pnpm -w changeset"
 	},
 	"tsup": {
-		"entry": [
-			"src/client.ts"
-		],
+		"entry": ["src/client.ts"],
 		"dts": true
 	},
 	"dependencies": {
