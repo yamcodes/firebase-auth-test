@@ -300,16 +300,10 @@ export class GreetingsController {
 					404: {
 						description: "Greeting not found",
 						content: {
-							"application/json": {
-								schema: {
-									type: "object",
-									properties: {
-										message: {
-											type: "string",
-											example: "Greeting not found",
-										},
-									},
-								},
+							"text/plain": {
+								schema: z.string().openapi({
+									example: "Greeting not found",
+								}),
 							},
 						},
 					},
