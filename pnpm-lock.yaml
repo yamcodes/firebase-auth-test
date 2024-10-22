@@ -504,7 +504,7 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.13.1
-        version: 1.13.1(hono@4.6.6)
+        version: 1.13.2(hono@4.6.6)
       '@hono/swagger-ui':
         specifier: ^0.4.1
         version: 0.4.1(hono@4.6.6)
@@ -1848,8 +1848,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  '@hono/node-server@1.13.1':
-    resolution: {integrity: sha512-TSxE6cT5RHnawbjnveexVN7H2Dpn1YaLxQrCOLCUwD+hFbqbFsnJBgdWcYtASqtWVjA+Qgi8uqFug39GsHjo5A==}
+  '@hono/node-server@1.13.2':
+    resolution: {integrity: sha512-0w8nEmAyx0Ul0CQp8BL2VtAG4YVdpzXd/mvvM+l0G5Oq22pUyHS+KeFFPSY+czLOF5NAiV3MUNPD1n14Ol5svg==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
@@ -11624,7 +11624,7 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
-  '@hono/node-server@1.13.1(hono@4.6.6)':
+  '@hono/node-server@1.13.2(hono@4.6.6)':
     dependencies:
       hono: 4.6.6
 
@@ -11638,7 +11638,7 @@ snapshots:
 
   '@hono/vite-dev-server@0.16.0(hono@4.6.6)':
     dependencies:
-      '@hono/node-server': 1.13.1(hono@4.6.6)
+      '@hono/node-server': 1.13.2(hono@4.6.6)
       hono: 4.6.6
       minimatch: 9.0.5
 
