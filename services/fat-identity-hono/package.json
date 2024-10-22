@@ -36,7 +36,7 @@
 		"hono-pino": "^0.3.0",
 		"hono-pino-logger": "^1.0.0",
 		"pino": "^9.4.0",
-		"radashi": "12.2.0-beta.af825f4",
+		"radashi": "12.2.0-beta.ef0154b",
 		"ts-pattern": "^5.4.0",
 		"zod": "^3.23.4"
 	},
