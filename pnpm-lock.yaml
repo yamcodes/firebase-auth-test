@@ -524,8 +524,8 @@ importers:
         specifier: ^9.4.0
         version: 9.5.0
       radashi:
-        specifier: 12.2.0-beta.af825f4
-        version: 12.2.0-beta.af825f4
+        specifier: 12.2.0-beta.ef0154b
+        version: 12.2.0-beta.ef0154b
       ts-pattern:
         specifier: ^5.4.0
         version: 5.5.0
@@ -8170,8 +8170,8 @@ packages:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
 
-  radashi@12.2.0-beta.af825f4:
-    resolution: {integrity: sha512-qgHft4yu2ZPoHGEYEfqfsq1NMGoPq2Eo/r3QkbrJimNJ+63m8sDgISsQnTFjayC3pRCBr+FO2YIsORPs8pIiJA==}
+  radashi@12.2.0-beta.ef0154b:
+    resolution: {integrity: sha512-EpXUT8ZcitKw9zIvyki4iwFHkMUpMrgjMdJwhLzrtOOdwZ5CcrNQyNafRH6vii+6ukPlqm4bsrmsQn1r60fUVQ==}
     engines: {node: '>=16.0.0'}
 
   railroad-diagrams@1.0.0:
@@ -19205,7 +19205,7 @@ snapshots:
 
   quick-lru@5.1.1: {}
 
-  radashi@12.2.0-beta.af825f4: {}
+  radashi@12.2.0-beta.ef0154b: {}
 
   railroad-diagrams@1.0.0: {}
 
