@@ -22,4 +22,11 @@ export class GreetingsRepository {
 	async deleteAll(): Promise<number> {
 		return this.db.deleteAll("greetings");
 	}
+
+	/**
+	 * Delete a single greeting by ID and return the number of deleted documents
+	 */
+	async deleteOne(id: string): Promise<number> {
+		return this.db.deleteOne("greetings", id);
+	}
 }

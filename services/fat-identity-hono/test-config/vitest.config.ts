@@ -15,6 +15,7 @@ export const sharedTestConfig = mergeConfig(
 			environment: "node",
 			open: false,
 			env: loadEnv("test", process.cwd(), ""),
+			mockReset: true,
 		},
 	}),
 );

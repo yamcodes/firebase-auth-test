@@ -76,4 +76,11 @@ export class GreetingsService {
 		this.logger.debug({ deletedCount }, "All greetings deleted successfully");
 		return deletedCount;
 	}
+
+	async deleteOne(id: string): Promise<number> {
+		this.logger.debug({ id }, "Deleting greeting by ID");
+		const deletedCount = await this.greetingsRepository.deleteOne(id);
+		this.logger.debug({ deletedCount }, "Greeting deleted successfully");
+		return deletedCount;
+	}
 }

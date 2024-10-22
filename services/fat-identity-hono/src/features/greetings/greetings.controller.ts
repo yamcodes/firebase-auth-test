@@ -12,6 +12,7 @@ import {
 	GreetingMessageResponse,
 } from "./greetings.schema";
 import { GreetingsService } from "./greetings.service";
+import { HTTPException } from "hono/http-exception";
 
 type Env = HonoEnv & {
 	Variables: {
@@ -49,7 +50,8 @@ export class GreetingsController {
 			.route("/", this.getSpecialGreeting())
 			.route("/", this.getAllGreetings())
 			.route("/", this.getGreetingById())
-			.route("/", this.getHello());
+			.route("/", this.getHello())
+			.route("/", this.deleteGreetingById());
 	}
 
 	private getGoodbye() {
@@ -277,6 +279,48 @@ export class GreetingsController {
 			({ var: { service }, json }) => {
 				const message = service.getSpecialGreeting();
 				return json({ message }, 200);
+			},
+		);
+	}
+
+	private deleteGreetingById() {
+		return this.greetings.openapi(
+			createRoute({
+				method: "delete",
+				path: "/{id}",
+				summary: "Delete a greeting by ID",
+				description:
+					"Delete a specific greeting from the database using its ID",
+				tags: ["Greetings"],
+				request: { params: z.object({ id: GreetingId }) },
+				responses: {
+					204: {
+						description: "Greeting successfully deleted",
+					},
+					404: {
+						description: "Greeting not found",
+						content: {
+							"application/json": {
+								schema: {
+									type: "object",
+									properties: {
+										message: {
+											type: "string",
+											example: "Greeting not found",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			}),
+			async ({ var: { service }, body, req }) => {
+				const { id } = req.valid("param");
+				const result = await service.deleteOne(id);
+				if (result === 0)
+					throw new HTTPException(404, { message: "Greeting not found" });
+				return body(null, 204);
 			},
 		);
 	}
