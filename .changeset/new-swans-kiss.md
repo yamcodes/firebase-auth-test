@@ -1,5 +1,5 @@
 ---
-'fat-identity': patch
+'@repo/fat-identity': patch
 ---
 
 Setup Fastify adapter

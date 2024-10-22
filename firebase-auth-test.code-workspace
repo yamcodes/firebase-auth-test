@@ -70,7 +70,8 @@
 			"trpc",
 			"tsup",
 			"typecheck",
-			"unplugin"
+			"unplugin",
+			"yamcodes"
 		],
 		// keyboard shortcuts, cmd+[ or ] to navigate fporward and backward
 		"workbench.action.navigateForward": "cmd+]",
