@@ -4,9 +4,8 @@ import app from "~";
 describe("General Routes", () => {
 	it("should return health status", async () => {
 		const res = await app.request("/health");
-		expect(res.status).toBe(200);
-		const json = await res.json();
-		expect(json).toEqual({ status: "OK" });
+		expect(res.status).toBe(204);
+		expect(res.body).toEqual(null);
 	});
 
 	it("should return version", async () => {

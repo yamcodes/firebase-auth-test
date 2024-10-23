@@ -170,7 +170,7 @@ export class GreetingsController {
 			}),
 			async ({ var: { service }, json }) => {
 				const greetings = await service.getAllGreetings();
-				return json(greetings);
+				return json(greetings, 200);
 			},
 		);
 	}
