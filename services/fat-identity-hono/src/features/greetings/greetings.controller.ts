@@ -124,9 +124,7 @@ export class GreetingsController {
 					"Use this endpoint to save a new greeting. Use `%name` in the `greeting` field to include the name in the greeting.",
 				tags: ["Greetings"],
 				request: {
-					body: {
-						content: { "application/json": { schema: GreetingDto } },
-					},
+					body: { content: { "application/json": { schema: GreetingDto } } },
 				},
 				responses: {
 					201: {
@@ -136,11 +134,7 @@ export class GreetingsController {
 					500: {
 						description: "Server error",
 						content: {
-							"application/json": {
-								schema: z.object({
-									message: z.string(),
-								}),
-							},
+							"application/json": { schema: z.object({ message: z.string() }) },
 						},
 					},
 				},
@@ -243,9 +237,7 @@ export class GreetingsController {
 				responses: {
 					200: {
 						content: {
-							"application/json": {
-								schema: GreetingMessageResponse,
-							},
+							"application/json": { schema: GreetingMessageResponse },
 						},
 						description: "Successful response with a greeting message",
 					},
@@ -287,23 +279,19 @@ export class GreetingsController {
 		return this.greetings.openapi(
 			createRoute({
 				method: "delete",
-				path: "/{id}",
+				path: "/:id",
 				summary: "Delete a greeting by ID",
 				description:
 					"Delete a specific greeting from the database using its ID",
 				tags: ["Greetings"],
 				request: { params: z.object({ id: GreetingId }) },
 				responses: {
-					204: {
-						description: "Greeting successfully deleted",
-					},
+					204: { description: "Greeting successfully deleted" },
 					404: {
 						description: "Greeting not found",
 						content: {
 							"text/plain": {
-								schema: z.string().openapi({
-									example: "Greeting not found",
-								}),
+								schema: z.string().openapi({ example: "Greeting not found" }),
 							},
 						},
 					},
