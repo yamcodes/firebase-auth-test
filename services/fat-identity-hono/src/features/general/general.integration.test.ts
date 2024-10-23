@@ -6,10 +6,9 @@ describe("General Service", () => {
 	const logger = pino();
 	const service = new GeneralService(logger);
 	describe("getHealth", () => {
-		it("should return OK status", () => {
-			const result = service.getHealthStatus();
-			expect(result).toBeTypeOf("string");
-			expect(result).toEqual("OK");
+		it("should be healthy", () => {
+			const isHealthy = service.getIsHealthy();
+			expect(isHealthy).toBe(true);
 		});
 	});
 
