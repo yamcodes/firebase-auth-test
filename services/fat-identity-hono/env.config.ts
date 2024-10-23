@@ -23,6 +23,10 @@ const envSchema = z.object({
  * Schema to be validated against process.env, unrelated to Vite validation
  */
 export const processEnvSchema = z.object({
+	/**
+	 * Firebase config
+	 * See: https://firebase.google.com/docs/admin/setup#initialize-sdk
+	 */
 	FIREBASE_CONFIG: z.preprocess(
 		(val) => {
 			if (typeof val !== "string") return val;
