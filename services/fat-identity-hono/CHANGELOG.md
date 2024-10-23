@@ -1,5 +1,13 @@
 # @repo/fat-identity-hono
 
+## 1.1.1
+
+### Patch Changes
+
+- Fix health check _[`21f7fb8`](https://github.com/yamcodes/firebase-auth-test/commit/21f7fb8771506848fd0a443f9f5c425c522067ea) [@yamcodes](https://github.com/yamcodes)_
+
+  We've fixed the health check to return one of 204 or 503.
+
 ## 1.1.0
 
 ### Minor Changes
