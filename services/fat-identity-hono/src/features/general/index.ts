@@ -1,1 +1,1 @@
-export { general } from "./general.route";
+export { routes as general } from "./general.controller";

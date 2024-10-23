@@ -1,9 +1,13 @@
+import type { BaseLogger } from "pino";
 import { version } from "~/../package.json";
-import { logger } from "~/utils";
 
-export const getHealthStatus = () => "OK";
+export class GeneralService {
+	constructor(private readonly logger: BaseLogger) {}
+	getHealthStatus() {
+		return "OK";
+	}
 
-export const getVersion = () => {
-	logger.debug("Version", { version });
-	return version;
-};
+	getVersion() {
+		return version;
+	}
+}
