@@ -22,6 +22,8 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm test
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   build:
     name: Test build
