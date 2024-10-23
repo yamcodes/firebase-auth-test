@@ -1,4 +1,5 @@
 {
+	"$schema": "https://turbo.build/schema.json",
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
@@ -18,7 +19,7 @@
 		"clean": {
 			"cache": false
 		},
-		"test:ci": {},
+		"test": {},
 		"//#root:clean": {
 			"cache": false
 		},

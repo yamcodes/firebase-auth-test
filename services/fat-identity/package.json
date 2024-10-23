@@ -10,7 +10,7 @@
 	},
 	"exports": "./src/router.ts",
 	"scripts": {
-		"test": "pnpm build && tsc -p test/tsconfig.json && c8 tap --ts \"test/**/*.test.ts\"",
+		"test:old": "pnpm build && tsc -p tests/tsconfig.json && c8 tap --ts \"tests/**/*.test.ts\"",
 		"serve": "node dist/index.js | pino-pretty",
 		"build": "rimraf dist && tsup",
 		"build:watch": "tsup --watch",
