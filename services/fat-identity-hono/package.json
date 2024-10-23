@@ -15,12 +15,12 @@
 		"serve": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
 		"clean": "rm -rf node_modules",
-		"emulator": "firebase emulators:start --only firestore,auth",
+		"emulator": "firebase emulators:start --only firestore",
 		"test:integration": "vitest --config test-config/vitest.integration.config.ts",
 		"test:e2e:no-emulator": "vitest --config test-config/vitest.e2e.config.ts",
-		"test:e2e": "firebase emulators:exec --only firestore,auth 'pnpm test:e2e:no-emulator'",
+		"test:e2e": "firebase emulators:exec --only firestore 'pnpm test:e2e:no-emulator'",
 		"test:no-emulator": "vitest --config test-config/vitest.config.ts",
-		"test": "firebase emulators:exec --only firestore,auth 'pnpm test:no-emulator'",
+		"test": "firebase emulators:exec --only firestore 'pnpm test:no-emulator'",
 		"changeset": "pnpm -w changeset"
 	},
 	"tsup": {
