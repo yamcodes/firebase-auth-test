@@ -7,7 +7,6 @@
 		"test": "VITE_CJS_IGNORE_WARNING=true vitest",
 		"build": "pnpm typecheck && rm -rf dist && tsup",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src/",
 		"clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
 	},
 	"exports": {

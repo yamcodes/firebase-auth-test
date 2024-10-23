@@ -9,7 +9,6 @@
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.6",
-		"eslint": "^8.0.0",
 		"hooks": "workspace:*",
 		"tsup": "^8.0.2",
 		"@repo/utilities": "workspace:*"
