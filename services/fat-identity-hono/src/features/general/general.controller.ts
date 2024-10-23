@@ -1,10 +1,10 @@
 import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
+import type { Env as HonoEnv } from "hono";
+import { createMiddleware } from "hono/factory";
 import { z } from "zod";
 import { version } from "~/../package.json";
 import { createApp } from "~/lib/hono";
 import { GeneralService } from "./general.service";
-import { createMiddleware } from "hono/factory";
-import type { Env as HonoEnv } from "hono";
 
 type Env = HonoEnv & {
 	Variables: {

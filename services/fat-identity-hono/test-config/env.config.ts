@@ -40,12 +40,13 @@ export const processEnvSchema = z.object({
 			projectId: z.string(),
 		}),
 	),
-	FIRESTORE_EMULATOR_HOST: z.string().min(1),
-	FIRESTORE_EMULATOR_PORT: z
-		.string()
-		.regex(/^\d+$/)
-		.transform(Number)
-		.refine((n) => n >= 0 && n <= 65535),
+	/**
+	 * Host:Port for the Firestore emulator.
+	 * See: https://firebase.google.com/docs/emulator-suite/connect_firestore#admin_sdks
+	 */
+	FIRESTORE_EMULATOR_HOST: z.string().regex(/^[^:]+:[0-9]+$/, {
+		message: "FIRESTORE_EMULATOR_HOST must be in the format 'host:port'",
+	}),
 });
 
 export default defineConfig({
