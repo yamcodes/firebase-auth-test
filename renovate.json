@@ -12,7 +12,8 @@
 		}
 	],
 	"vulnerabilityAlerts": {
-		"enabled": true
+		"enabled": true,
+		"labels": ["security"]
 	},
 	"separateMajorMinor": false,
 	"osvVulnerabilityAlerts": true,
