@@ -75,8 +75,15 @@
 			"unplugin",
 			"yamcodes"
 		],
-		// keyboard shortcuts, cmd+[ or ] to navigate fporward and backward
+		// keyboard shortcuts, cmd+[ or ] to navigate forward and backward
 		"workbench.action.navigateForward": "cmd+]",
-		"workbench.action.navigateBack": "cmd+["
+		"workbench.action.navigateBack": "cmd+[",
+		"editor.defaultFormatter": "biomejs.biome",
+		"[jsonc]": {
+			"editor.defaultFormatter": "biomejs.biome"
+		}
+	},
+	"extensions": {
+		"recommendations": ["biomejs.biomejs-vscode"]
 	}
 }

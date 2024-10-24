@@ -1,0 +1,57 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "🚀 Develop (Integrated Terminal)",
+			"request": "launch",
+
+			"type": "node",
+			"runtimeExecutable": "pnpm",
+			"args": ["dev"],
+			"console": "integratedTerminal",
+
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "Local:   http://localhost:([0-9]+)/",
+				"uriFormat": "http://localhost:%s"
+			}
+		},
+		{
+			"name": "🚀 Develop (JavaScript Debug Terminal)",
+			"request": "launch",
+
+			"type": "node-terminal",
+			"command": "pnpm start",
+			"internalConsoleOptions": "neverOpen",
+
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "Local:   http://localhost:([0-9]+)/",
+				"uriFormat": "http://localhost:%s"
+			}
+		},
+		{
+			"name": "🧪 Test (Integrated Terminal)",
+			"request": "launch",
+
+			"type": "node",
+			"runtimeExecutable": "pnpm",
+			"args": ["test"],
+			"console": "integratedTerminal",
+			"autoAttachChildProcesses": true,
+			"smartStep": true,
+
+			"envFile": "${workspaceFolder}/.env.test"
+		},
+		{
+			"name": "🧪 Test (JavaScript Debug Terminal)",
+			"request": "launch",
+
+			"command": "pnpm test",
+			"type": "node-terminal",
+			"internalConsoleOptions": "neverOpen",
+
+			"envFile": "${workspaceFolder}/.env.test"
+		}
+	]
+}
