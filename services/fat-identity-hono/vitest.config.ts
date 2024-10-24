@@ -1,8 +1,8 @@
 import { loadEnv } from "vite";
 import { defineConfig, mergeConfig } from "vitest/config";
-import { validateProcessEnv } from "../vite-plugins/vite-validate-process-env";
-import { sharedConfig } from "../vite.config";
-import { processEnvSchema } from "./env.config";
+import { validateProcessEnv } from "./vite-plugins/vite-validate-process-env";
+import { sharedConfig } from "./vite.config";
+import { processEnvSchema } from "./test-config/env.config";
 
 /**
  * Config used by each test script (union)
