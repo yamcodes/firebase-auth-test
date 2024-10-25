@@ -8,6 +8,9 @@
 			"type": "node",
 			"runtimeExecutable": "pnpm",
 			"args": ["dev"],
+			"env": {
+				"LOG_LEVEL": "debug"
+			},
 			"console": "integratedTerminal",
 
 			"serverReadyAction": {
@@ -21,6 +24,9 @@
 			"request": "launch",
 
 			"type": "node-terminal",
+			"env": {
+				"LOG_LEVEL": "debug"
+			},
 			"command": "pnpm start",
 			"internalConsoleOptions": "neverOpen",
 
