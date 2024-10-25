@@ -20,7 +20,7 @@
 			}
 		},
 		{
-			"name": "🚀 Develop (JavaScript Debug Terminal)",
+			"name": "🚀 Develop (JavaScript Debug Terminal + Internal Browser)",
 			"request": "launch",
 
 			"type": "node-terminal",
@@ -29,7 +29,18 @@
 			},
 			"command": "pnpm start",
 			"internalConsoleOptions": "neverOpen",
+			"preLaunchTask": "Open Simple Browser"
+		},
+		{
+			"name": "🚀 Develop (JavaScript Debug Terminal + External Browser)",
+			"request": "launch",
 
+			"type": "node-terminal",
+			"env": {
+				"LOG_LEVEL": "debug"
+			},
+			"command": "pnpm start",
+			"internalConsoleOptions": "neverOpen",
 			"serverReadyAction": {
 				"action": "openExternally",
 				"pattern": "Local:   http://localhost:([0-9]+)/",
