@@ -2,4 +2,4 @@
 '@repo/fat-identity-hono': patch
 ---
 
-Fix text.
+Fix text..
