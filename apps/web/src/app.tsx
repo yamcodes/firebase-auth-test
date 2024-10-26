@@ -31,7 +31,7 @@ const AppContent = () => {
 		defaultValues: { myName: "John" },
 		onSubmit: async ({ value }) => {
 			toast({
-				title: "Name Said",
+				title: "Name has been said",
 				description: await sayMyNameMutation.mutateAsync({
 					name: value.myName,
 				}),

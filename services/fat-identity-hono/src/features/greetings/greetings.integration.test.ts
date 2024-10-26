@@ -20,7 +20,7 @@ describe("Greetings Service + Repository Integration Tests", () => {
 	describe("getSpecialGreeting", () => {
 		it("should return a special greeting", () => {
 			const result = greetingsService.getSpecialGreeting();
-			expect(result).toBe("Here's a special greeting just for you!");
+			expect(result).toBe("This is a special greeting just for you!");
 		});
 	});
 

@@ -11,7 +11,7 @@ export class GreetingsService {
 	) {}
 
 	getSpecialGreeting(): string {
-		return "Here's a special greeting just for you!";
+		return "This is a special greeting just for you!";
 	}
 
 	getGoodbye(): string {

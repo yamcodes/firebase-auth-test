@@ -14,7 +14,8 @@
 		"test": "turbo run test",
 		"generate:workspace": "turbo gen workspace",
 		"root:clean": "rimraf node_modules",
-		"root:emulate": "firebase emulators:start"
+		"root:emulate": "firebase emulators:start",
+		"changeset": "changeset"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
