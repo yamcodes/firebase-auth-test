@@ -2,10 +2,11 @@ name: Preview Deploy
 
 on:
   pull_request:
-    branches: []
-  #     - main
+    branches:
+      - main_fake # TODO: switch to 'main' 
+      # TODO: uncomment the below 2 lines
     # paths:
-    #   - services/fat-identity-hono/**
+      # - services/fat-identity-hono/**
 
 env:
   PROJECT_ID: fat-core-dev
