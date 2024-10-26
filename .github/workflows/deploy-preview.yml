@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - main
+    # paths:
+    #   - services/fat-identity-hono/**
 
 env:
   PROJECT_ID: fat-core-dev
@@ -45,7 +47,7 @@ jobs:
         with:
           service: ${{ env.SERVICE_NAME }}-${{ github.event.pull_request.number }}
           region: ${{ env.REGION }}
-          source: .
+          source: services/${{ env.SERVICE_NAME }}
           
       - name: Update deployment status (success)
         if: success()
