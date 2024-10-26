@@ -1,0 +1,75 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: fat-core-dev
+  REGION: europe-west3
+  SERVICE_NAME: fat-identity-hono
+
+jobs:
+  deploy-preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create GitHub deployment
+        uses: chrnorm/deployment-action@v2
+        id: deployment
+        with:
+          token: '${{ github.token }}'
+          environment: development
+          environment-url: https://${{ env.SERVICE_NAME }}-${{ github.event.pull_request.number }}-${{ env.PROJECT_ID }}.a.run.app
+          transient-environment: true
+
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: ${{ env.SERVICE_NAME }}-${{ github.event.pull_request.number }}
+          region: ${{ env.REGION }}
+          source: .
+          
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          state: 'success'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          state: 'failure'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}'
+            })
