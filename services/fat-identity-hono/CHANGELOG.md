@@ -1,5 +1,11 @@
 # @repo/fat-identity-hono
 
+## 1.1.2
+
+### Patch Changes
+
+- Fix text _[`c699903`](https://github.com/yamcodes/firebase-auth-test/commit/c699903acf30c13f0a590872b7fe8a79edc4bc05) [@yamcodes](https://github.com/yamcodes)_
+
 ## 1.1.1
 
 ### Patch Changes
