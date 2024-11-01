@@ -1,5 +1,21 @@
 # web
 
+## 0.0.3
+
+### Patch Changes
+
+<details><summary>Updated 1 dependency</summary>
+
+<small>
+
+[`209e10a`](https://github.com/yamcodes/firebase-auth-test/commit/209e10a7bdd588dd430eda08468e2753641ec27e)
+
+</small>
+
+- `@repo/fat-identity-hono@1.1.2`
+
+</details>
+
 ## 0.0.2
 
 ### Patch Changes
