@@ -33,7 +33,11 @@ export default defineConfig((configEnv) =>
 				/** Allow Vite to be used as the dev server for Hono (our server framework) */
 				dev({ entry }) as Plugin,
 				/** Allow Vite to build the Hono application */
-				build({ entry, emptyOutDir: false }) as Plugin,
+				build({
+					entry,
+					emptyOutDir: false,
+					external: ["firebase-admin"],
+				}) as Plugin,
 			],
 			/** We don't use rollup, this is just to silence a warning */
 			build: { rollupOptions: { input: entry } },
