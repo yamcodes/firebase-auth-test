@@ -26,8 +26,7 @@ steps:
       - build
       - '--no-cache'
       - '-t'
-      - >-
-        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - $_IMAGE_NAME
       - .
       - '-f'
       - services/fat-identity-hono/Dockerfile
@@ -39,8 +38,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - >-
-        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - $_IMAGE_NAME
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -48,8 +46,13 @@ steps:
       - run
       - deploy
       - $_SERVICE_NAME
-      - '--image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
-      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA'
+      - '--image=$_IMAGE_NAME'
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,
+        commit-sha=$COMMIT_SHA,
+        gcb-build-id=$BUILD_ID,
+        gcb-trigger-id=$_TRIGGER_ID,
+        short-sha=$SHORT_SHA
       - '--revision-suffix=commit-$SHORT_SHA'
       - '--no-traffic'
     id: deploy
@@ -88,10 +91,11 @@ steps:
     id: report-success
 
 images:
-  - >-
-    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+  - $_IMAGE_NAME
 
 options:
+  # automatically map all the substitutions to environment variables
+  # which are available throughout the entire build
   automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
   env:
@@ -104,6 +108,7 @@ substitutions:
   _SERVICE_NAME: fat-identity-hono
   _DEPLOY_REGION: europe-west3
   _GITHUB_ENVIRONMENT: development
+  _IMAGE_NAME: $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
