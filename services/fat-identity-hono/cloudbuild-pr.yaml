@@ -31,12 +31,14 @@ steps:
       - >-
         --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
       - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,pr-number=$_PR_NUMBER
       # TODO: We can even add a 'branch-name' label here, but it must be truncated to 63 characters and sanitized for special characters:
       # "The value can only contain lowercase letters, numeric characters, underscores and dashes. The value can be at most 63 characters long. International characters are allowed."
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
-      - '--revision-suffix=$SHORT_SHA'
+      - '--revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA'
+      - '--no-traffic'
+      - '--tag=pr-$_PR_NUMBER'
     id: Deploy
     entrypoint: gcloud
 
@@ -59,3 +61,4 @@ tags:
   - gcp-cloud-build-deploy-cloud-run-preview
   - gcp-cloud-build-deploy-cloud-run-managed-preview
   - fat-identity-hono-pr
+  - fat-identity-hono-pr-$_PR_NUMBER
