@@ -8,8 +8,7 @@ steps:
       - DESCRIPTION=Deploying to Google Cloud Run
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - create
+    args: [create]
     id: create-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
@@ -17,8 +16,7 @@ steps:
       - REPO_NAME=$REPO_NAME
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - in_progress
+    args: [in_progress]
     id: report-in-progress
 
   - name: gcr.io/cloud-builders/docker
@@ -36,9 +34,7 @@ steps:
     id: build
 
   - name: gcr.io/cloud-builders/docker
-    args:
-      - push
-      - $_IMAGE_URL
+    args: [push, $_IMAGE_URL]
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -48,15 +44,11 @@ steps:
       - $_SERVICE_NAME
       - '--image=$_IMAGE_URL'
       - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,
-        commit-sha=$COMMIT_SHA,
-        gcb-build-id=$BUILD_ID,
-        gcb-trigger-id=$_TRIGGER_ID,
-        short-sha=$SHORT_SHA
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA
       - '--revision-suffix=commit-$SHORT_SHA'
       - '--no-traffic'
-    id: deploy
     entrypoint: gcloud
+    id: deploy
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
@@ -86,12 +78,10 @@ steps:
       - REPO_NAME=$REPO_NAME
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - success
+    args: [success]
     id: report-success
 
-images:
-  - $_IMAGE_URL
+images: [$_IMAGE_URL]
 
 options:
   # automatically map all the substitutions to environment variables

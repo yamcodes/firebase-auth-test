@@ -8,8 +8,7 @@ steps:
       - DESCRIPTION=Deploying to Google Cloud Run
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - create
+    args: [create]
     id: create-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
@@ -17,8 +16,7 @@ steps:
       - REPO_NAME=$REPO_NAME
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - in_progress
+    args: [in_progress]
     id: report-in-progress
 
   - name: gcr.io/cloud-builders/docker
@@ -26,7 +24,7 @@ steps:
       - build
       - '--no-cache'
       - '-t'
-      - $_IMAGE_NAME
+      - $_IMAGE_URL
       - .
       - '-f'
       - services/fat-identity-hono/Dockerfile
@@ -36,9 +34,7 @@ steps:
     id: build
 
   - name: gcr.io/cloud-builders/docker
-    args:
-      - push
-      - $_IMAGE_NAME
+    args: [push, $_IMAGE_URL]
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -47,7 +43,7 @@ steps:
       - run
       - deploy
       - $_SERVICE_NAME
-      - '--image=$_IMAGE_NAME'
+      - '--image=$_IMAGE_URL'
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,
         commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,
@@ -75,12 +71,10 @@ steps:
       - REPO_NAME=$REPO_NAME
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
-    args:
-      - success
+    args: [success]
     id: report-success
 
-images:
-  - $_IMAGE_NAME
+images: [$_IMAGE_URL]
 
 options:
   # automatically map all the substitutions to environment variables
@@ -100,7 +94,7 @@ substitutions:
   _AR_REPO_NAME: cloud-run-preview
   _IMAGE_NAME: ${REPO_NAME}/${_SERVICE_NAME}:${SHORT_SHA}
   _IMAGE_URL: ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO_NAME}/${_IMAGE_NAME}
-  
+
 tags:
   - gcp-cloud-build-deploy-cloud-run-preview
   - gcp-cloud-build-deploy-cloud-run-managed-preview
