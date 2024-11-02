@@ -46,6 +46,7 @@ steps:
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
       - '--to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA=100'
+    entrypoint: gcloud
     id: UpdateTraffic
 
 images:
