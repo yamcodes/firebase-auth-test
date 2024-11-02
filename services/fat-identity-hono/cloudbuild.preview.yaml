@@ -58,23 +58,15 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
-      set -x  # Enable debug mode to see all commands
+      set -x  # Enable debug mode
       apt-get update && apt-get install -y jq
-      
-      echo "PR Number: $_PR_NUMBER"  # Verify PR number substitution
       
       echo "Getting service description..."
       gcloud run services describe $_SERVICE_NAME \
-        --format="json" \
-        --verbosity=debug > service_description.json
+        --format="json" > service_description.json
       
-      echo "Service Description Content:"
-      cat service_description.json
-      
-      echo "Attempting jq processing..."
-      cat service_description.json | jq '.status.traffic'  # Check traffic array
-      
-      URL=$(cat service_description.json | jq -r '.status.traffic[] | select(.tag == "pr-$_PR_NUMBER") | .url')
+      # Use --arg to properly pass the tag variable to jq
+      URL=$(cat service_description.json | jq -r --arg tag "pr-$_PR_NUMBER" '.status.traffic[] | select(.tag == $arg)')
       echo "Final URL: $URL"
       
       echo "$URL" > /workspace/deployer_environment_url
