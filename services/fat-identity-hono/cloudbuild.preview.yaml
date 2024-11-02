@@ -1,0 +1,100 @@
+# For info on gh-deployer, see: https://zentered.co/articles/preview-builds-with-cloud-run/
+
+steps:
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - TRANSIENT_ENVIRONMENT=true
+      - DESCRIPTION=Deploying to Google Cloud Run
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - create
+    id: create-report
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - in_progress
+    id: report-in-progress
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '--no-cache'
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
+      - .
+      - '-f'
+      - services/fat-identity-hono/Dockerfile
+    env:
+      # Enable Docker BuildKit for faster builds
+      - DOCKER_BUILDKIT=1
+    id: build
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
+    id: push
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: "sh"
+    args:
+      - "-c"
+      # TODO: We can speed things up by building an image with jq pre-installed
+      - |
+        apt-get update && apt-get install -y jq
+
+        gcloud run services update $_SERVICE_NAME \
+          --platform=managed \
+          --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA \
+          --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,pr-number=$_PR_NUMBER \
+          --region=$_DEPLOY_REGION \
+          --quiet \
+          --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA \
+          --no-traffic \
+          --tag=pr-$_PR_NUMBER
+
+        gcloud run services describe $_SERVICE_NAME \
+          --project=$PROJECT_ID \
+          --platform=managed \
+          --region=$_DEPLOY_REGION \
+          --format="json" | \
+          jq -r '.status.traffic[] | select(.tag == "pr-$_PR_NUMBER") | .url' > /workspace/deployer_environment_url
+    id: deploy
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - success
+    id: report-success
+
+images:
+  - >-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _TRIGGER_ID: ad037f34-04e2-45de-9b38-67ce0c0ab382
+  _AR_HOSTNAME: europe-west3-docker.pkg.dev
+  _PLATFORM: managed
+  _SERVICE_NAME: fat-identity-hono
+  _DEPLOY_REGION: europe-west3
+
+tags:
+  - gcp-cloud-build-deploy-cloud-run-preview
+  - gcp-cloud-build-deploy-cloud-run-managed-preview
+  - fat-identity-hono-pr
+  - fat-identity-hono-pr-$_PR_NUMBER

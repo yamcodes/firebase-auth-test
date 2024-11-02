@@ -1,0 +1,115 @@
+# For info on gh-deployer, see: https://zentered.co/articles/preview-builds-with-cloud-run/
+
+steps:
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - TRANSIENT_ENVIRONMENT=false
+      - DESCRIPTION=Deploying to Google Cloud Run
+      - ENVIRONMENT=development
+      - REF=$REF_NAME
+    args:
+      - create
+    id: create-report
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=development
+      - REF=$REF_NAME
+    args:
+      - in_progress
+    id: report-in-progress
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '--no-cache'
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - .
+      - '-f'
+      - services/fat-identity-hono/Dockerfile
+    env:
+      # Enable Docker BuildKit for faster builds
+      - DOCKER_BUILDKIT=1
+    id: build
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+    id: push
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: "sh"
+    args:
+      - "-c"
+      - |
+        gcloud run services update $_SERVICE_NAME \
+          --platform=managed \
+          --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
+          --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA \
+          --region=$_DEPLOY_REGION \
+          --quiet \
+          --revision-suffix=commit-$SHORT_SHA \
+          --no-traffic
+
+        gcloud run services describe $_SERVICE_NAME \
+          --project=$PROJECT_ID \
+          --platform=managed \
+          --region=$_DEPLOY_REGION \
+          --format="value(status.url)" > /workspace/deployer_environment_url
+    id: deploy
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        for i in {1..3}; do
+          echo "Attempt $i to update traffic..."
+          if gcloud run services update-traffic $_SERVICE_NAME \
+            --region=$_DEPLOY_REGION \
+            --quiet \
+            --to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA=100; then
+            echo "Traffic update successful"
+            exit 0
+          fi
+          echo "Traffic update failed, waiting 2 seconds before retry..."
+          sleep 2
+        done
+        echo "Failed to update traffic after 3 attempts"
+        exit 1
+    id: update-traffic
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=development
+      - REF=$REF_NAME
+    args:
+      - success
+    id: report-success
+
+images:
+  - >-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _TRIGGER_ID: ad037f34-04e2-45de-9b38-67ce0c0ab382
+  _AR_HOSTNAME: europe-west3-docker.pkg.dev
+  _PLATFORM: managed
+  _SERVICE_NAME: fat-identity-hono
+  _DEPLOY_REGION: europe-west3
+
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - fat-identity-hono
