@@ -11,7 +11,10 @@ WORKDIR /usr/src/app
 RUN pnpm install --frozen-lockfile
 # Then copy the rest of the source code
 COPY . /usr/src/app
-RUN pnpm build --filter=@repo/fat-identity-hono
+# Putting the "--filter" before the command uses pnpm filtering, whilst putting it after the command uses turborepo filtering
+# Read about pnpm filtering here: https://pnpm.io/filtering
+# Read about turborepo filtering here: https://turbo.build/repo/docs/core-concepts/monorepos/filtering
+RUN pnpm --filter=@repo/fat-identity-hono build:server
 RUN pnpm deploy --filter=@repo/fat-identity-hono --prod /prod/app
 
 FROM base
