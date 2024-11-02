@@ -57,21 +57,11 @@ steps:
     id: deploy
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    # TODO: create an image that already contains jq
     script: |
-      set -x  # Enable debug mode
       apt-get update && apt-get install -y jq
-      
-      echo "Getting service description..."
       gcloud run services describe $_SERVICE_NAME \
-        --format="json" > service_description.json
-      
-      echo "Traffic array content:"
-      cat service_description.json | jq -r '.status.traffic'
-      
-      URL=$(cat service_description.json | jq -r --arg tag "pr-$_PR_NUMBER" '.status.traffic[] | select(.tag == $tag) | .url')
-      echo "Final URL: $URL"
-      
-      echo "$URL" > /workspace/deployer_environment_url
+        --format="json" | jq -r --arg tag "pr-$_PR_NUMBER" '.status.traffic[] | select(.tag == $tag) | .url' > /workspace/deployer_environment_url
     id: attach-url-to-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
