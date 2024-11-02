@@ -58,6 +58,7 @@ steps:
           --no-traffic
 
         gcloud run services describe $_SERVICE_NAME \
+          --project=$PROJECT_ID \
           --platform=managed \
           --region=$_DEPLOY_REGION \
           --format="value(status.url)" > /workspace/deployer_environment_url
