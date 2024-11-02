@@ -1,0 +1,57 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '--no-cache'
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:pr-$PR_NUMBER
+      - .
+      - '-f'
+      - services/fat-identity-hono/Dockerfile
+    env:
+      - DOCKER_BUILDKIT=1
+    id: Build
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:pr-$PR_NUMBER
+    id: Push
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:pr-$PR_NUMBER
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,pr-number=$PR_NUMBER
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+      - '--revision-suffix=pr-$PR_NUMBER'
+    id: Deploy
+    entrypoint: gcloud
+
+images:
+  - >-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:pr-$PR_NUMBER
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _TRIGGER_ID: ad037f34-04e2-45de-9b38-67ce0c0ab382
+  _AR_HOSTNAME: europe-west3-docker.pkg.dev
+  _PLATFORM: managed
+  _SERVICE_NAME: fat-identity-hono
+  _DEPLOY_REGION: europe-west3
+  PR_NUMBER: $BRANCH_NAME  # Cloud Build automatically provides the PR number as part of $BRANCH_NAME
+tags:
+  - gcp-cloud-build-preview
+  - fat-identity-hono-pr
