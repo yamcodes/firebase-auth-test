@@ -9,6 +9,9 @@ steps:
       - .
       - '-f'
       - services/fat-identity-hono/Dockerfile.BlockKit
+    env:
+      # Enable Docker BuildKit for faster builds
+      - DOCKER_BUILDKIT=1
     id: Build
   - name: gcr.io/cloud-builders/docker
     args:
