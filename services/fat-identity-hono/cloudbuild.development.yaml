@@ -9,6 +9,7 @@ steps:
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
     args: [create]
+    waitFor: ['-']
     id: create-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
@@ -17,6 +18,7 @@ steps:
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
     args: [in_progress]
+    waitFor: ['create-report']
     id: report-in-progress
 
   - name: gcr.io/cloud-builders/docker
@@ -31,10 +33,12 @@ steps:
     env:
       # Enable Docker BuildKit for faster builds
       - DOCKER_BUILDKIT=1
+    waitFor: ['-']
     id: build
 
   - name: gcr.io/cloud-builders/docker
     args: [push, $_IMAGE_URL]
+    waitFor: ['build']
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -51,12 +55,14 @@ steps:
       - '--revision-suffix=commit-$SHORT_SHA'
       - '--no-traffic'
     entrypoint: gcloud
+    waitFor: ['push']
     id: deploy
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
       gcloud run services describe $_SERVICE_NAME \
         --format="value(status.url)" > /workspace/deployer_environment_url
+    waitFor: ['deploy']
     id: attach-url-to-report
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -75,6 +81,7 @@ steps:
       echo "Failed to update traffic after 3 attempts"
       exit 1
     timeout: 300s  # 5m limit
+    waitFor: ['deploy']
     id: update-traffic
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
@@ -85,6 +92,7 @@ steps:
     args: [success]
     id: report-success
 
+  # TODO: How do we report failure?
   # - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
   #   env:
   #     - REPO_NAME=$REPO_NAME
