@@ -34,8 +34,19 @@ steps:
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
+      - '--revision-suffix=commit-$SHORT_SHA'
     id: Deploy
     entrypoint: gcloud
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update-traffic
+      - $_SERVICE_NAME
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+      - '--to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA=100'
+    id: UpdateTraffic
 
 images:
   - >-
