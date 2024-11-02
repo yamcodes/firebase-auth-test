@@ -26,7 +26,7 @@ steps:
       - build
       - '--no-cache'
       - '-t'
-      - $_IMAGE_NAME
+      - $_IMAGE_URL
       - .
       - '-f'
       - services/fat-identity-hono/Dockerfile
@@ -38,7 +38,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - $_IMAGE_NAME
+      - $_IMAGE_URL
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -46,7 +46,7 @@ steps:
       - run
       - deploy
       - $_SERVICE_NAME
-      - '--image=$_IMAGE_NAME'
+      - '--image=$_IMAGE_URL'
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,
         commit-sha=$COMMIT_SHA,
@@ -91,7 +91,7 @@ steps:
     id: report-success
 
 images:
-  - $_IMAGE_NAME
+  - $_IMAGE_URL
 
 options:
   # automatically map all the substitutions to environment variables
@@ -108,7 +108,9 @@ substitutions:
   _SERVICE_NAME: fat-identity-hono
   _DEPLOY_REGION: europe-west3
   _GITHUB_ENVIRONMENT: development
-  _IMAGE_NAME: $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+  _AR_REPO_NAME: cloud-run-source-deploy
+  _IMAGE_NAME: $REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+  _IMAGE_URL: $_AR_HOSTNAME/$PROJECT_ID/$_AR_REPO_NAME/$_IMAGE_NAME
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
