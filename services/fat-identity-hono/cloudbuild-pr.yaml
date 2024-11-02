@@ -10,7 +10,7 @@ steps:
       - REF=$REF_NAME
     args:
       - create
-    id: ReportCreate
+    id: create-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
     env:
@@ -18,8 +18,8 @@ steps:
       - ENVIRONMENT=preview
       - REF=$REF_NAME
     args:
-      - pending
-    id: ReportPending
+      - in_progress
+    id: report-in-progress
 
   - name: gcr.io/cloud-builders/docker
     args:
@@ -34,23 +34,14 @@ steps:
     env:
       # Enable Docker BuildKit for faster builds
       - DOCKER_BUILDKIT=1
-    id: Build
+    id: build
 
   - name: gcr.io/cloud-builders/docker
     args:
       - push
       - >-
         $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
-    id: Push
-
-  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
-    env:
-      - REPO_NAME=$REPO_NAME
-      - ENVIRONMENT=preview
-      - REF=$REF_NAME
-    args:
-      - in_progress
-    id: ReportInProgress
+    id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
@@ -70,7 +61,7 @@ steps:
       - '--revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA'
       - '--no-traffic'
       - '--tag=pr-$_PR_NUMBER'
-    id: Deploy
+    id: deploy
     entrypoint: gcloud
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
@@ -85,7 +76,7 @@ steps:
       - '--filter'
       - '${_SERVICE_NAME}'
       - '--format=value(status.address.url)'
-    id: ReportEnvironmentUrl
+    id: report-environment-url
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
     env:
@@ -94,7 +85,7 @@ steps:
       - REF=$REF_NAME
     args:
       - success
-    id: ReportSuccess
+    id: report-success
 
 images:
   - >-
