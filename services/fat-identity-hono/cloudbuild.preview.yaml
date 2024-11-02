@@ -6,7 +6,7 @@ steps:
       - REPO_NAME=$REPO_NAME
       - TRANSIENT_ENVIRONMENT=true
       - DESCRIPTION=Deploying to Google Cloud Run
-      - ENVIRONMENT=preview
+      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
     args:
       - create
@@ -15,7 +15,7 @@ steps:
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
     env:
       - REPO_NAME=$REPO_NAME
-      - ENVIRONMENT=preview
+      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
     args:
       - in_progress
@@ -44,35 +44,30 @@ steps:
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: "sh"
     args:
-      - "-c"
-      # TODO: We can speed things up by building an image with jq pre-installed
-      - |
-        apt-get update && apt-get install -y jq
-
-        gcloud run services update $_SERVICE_NAME \
-          --platform=managed \
-          --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA \
-          --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,pr-number=$_PR_NUMBER \
-          --region=$_DEPLOY_REGION \
-          --quiet \
-          --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA \
-          --no-traffic \
-          --tag=pr-$_PR_NUMBER
-
-        gcloud run services describe $_SERVICE_NAME \
-          --project=$PROJECT_ID \
-          --platform=managed \
-          --region=$_DEPLOY_REGION \
-          --format="json" | \
-          jq -r '.status.traffic[] | select(.tag == "pr-$_PR_NUMBER") | .url' > /workspace/deployer_environment_url
+      - run
+      - deploy
+      - $_SERVICE_NAME
+      - '--image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA'
+      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,pr-number=$_PR_NUMBER'
+      - '--revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA'
+      - '--no-traffic'
+      - '--tag=pr-$_PR_NUMBER'
     id: deploy
+    entrypoint: gcloud
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    script: |
+      apt-get update && apt-get install -y jq
+      gcloud run services describe $_SERVICE_NAME \
+        --format="json" | \
+        jq -r '.status.traffic[] | select(.tag == "pr-$_PR_NUMBER") | .url' > /workspace/deployer_environment_url
+    id: attach-url-to-report
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
     env:
       - REPO_NAME=$REPO_NAME
-      - ENVIRONMENT=preview
+      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
       - REF=$REF_NAME
     args:
       - success
@@ -85,13 +80,16 @@ images:
 options:
   substitutionOption: ALLOW_LOOSE
   logging: CLOUD_LOGGING_ONLY
+  env:
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Make all commands --quiet
+    - CLOUDSDK_RUN_REGION=$_DEPLOY_REGION  # Use the same region for Cloud Run
 
 substitutions:
   _TRIGGER_ID: ad037f34-04e2-45de-9b38-67ce0c0ab382
   _AR_HOSTNAME: europe-west3-docker.pkg.dev
-  _PLATFORM: managed
   _SERVICE_NAME: fat-identity-hono
   _DEPLOY_REGION: europe-west3
+  _GITHUB_ENVIRONMENT: preview
 
 tags:
   - gcp-cloud-build-deploy-cloud-run-preview

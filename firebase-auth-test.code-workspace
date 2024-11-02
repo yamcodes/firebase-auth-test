@@ -59,6 +59,7 @@
 			"autoload",
 			"biomejs",
 			"BUILDKIT",
+			"CLOUDSDK",
 			"cloudsdktool",
 			"clsx",
 			"consts",
