@@ -78,7 +78,7 @@ images:
     $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
 
 options:
-  substitutionOption: ALLOW_LOOSE
+  automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
   env:
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Make all commands --quiet
