@@ -68,7 +68,7 @@ steps:
       echo "Traffic array content:"
       cat service_description.json | jq -r '.status.traffic'
       
-      URL=$(cat service_description.json | jq -r --arg tag "pr-$_PR_NUMBER" '.status.traffic[] | select(.tag == $arg) | .url')
+      URL=$(cat service_description.json | jq -r --arg tag "pr-$_PR_NUMBER" '.status.traffic[] | select(.tag == $tag) | .url')
       echo "Final URL: $URL"
       
       echo "$URL" > /workspace/deployer_environment_url
