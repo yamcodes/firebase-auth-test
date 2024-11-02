@@ -45,10 +45,7 @@ steps:
       - $_SERVICE_NAME
       - '--image=$_IMAGE_URL'
       - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,
-        commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,
-        gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,
-        pr-number=$_PR_NUMBER
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA,pr-number=$_PR_NUMBER
       - '--revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA'
       - '--no-traffic'
       - '--tag=pr-$_PR_NUMBER'
