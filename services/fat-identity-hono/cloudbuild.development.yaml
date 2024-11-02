@@ -43,8 +43,11 @@ steps:
       - deploy
       - $_SERVICE_NAME
       - '--image=$_IMAGE_URL'
-      - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,short-sha=$SHORT_SHA
+      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run'
+      - '--labels=commit-sha=$COMMIT_SHA'
+      - '--labels=gcb-build-id=$BUILD_ID'
+      - '--labels=gcb-trigger-id=$_TRIGGER_ID'
+      - '--labels=short-sha=$SHORT_SHA'
       - '--revision-suffix=commit-$SHORT_SHA'
       - '--no-traffic'
     entrypoint: gcloud
@@ -57,10 +60,16 @@ steps:
     id: attach-url-to-report
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    script: |
-      gcloud run services update-traffic $_SERVICE_NAME
-        --to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA=100
+    args:
+      - run
+      - services
+      - update-traffic
+      - $_SERVICE_NAME
+      - '--to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA=100'
+    entrypoint: gcloud
     id: update-traffic
+    retryable: true
+    timeout: 1200s
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
     env:

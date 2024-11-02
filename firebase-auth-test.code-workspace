@@ -75,6 +75,7 @@
 			"openapi",
 			"pino",
 			"radashi",
+			"retryable",
 			"tailwindcss",
 			"tanstack",
 			"trpc",
