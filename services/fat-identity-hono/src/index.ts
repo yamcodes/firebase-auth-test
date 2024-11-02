@@ -42,10 +42,13 @@ app.doc("/docs/json", {
 		version,
 	},
 	tags: [
-		{ name: "General", description: "General endpoints (No prefix)" },
+		{
+			name: "General",
+			description: "General server operations\n\n**Prefix**: `/`",
+		},
 		{
 			name: "Greetings",
-			description: "Greetings endpoints (Prefix: `/greetings`)",
+			description: "Manage greetings\n\n**Prefix**: `/greetings`",
 		},
 	],
 });
