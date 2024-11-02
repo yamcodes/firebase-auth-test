@@ -4,13 +4,10 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 FROM base AS build
-# Copy package files first for better layer caching
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml /usr/src/app/
-COPY services/fat-identity-hono/package.json /usr/src/app/services/fat-identity-hono/
-WORKDIR /usr/src/app
-RUN pnpm install --frozen-lockfile
-# Then copy the rest of the source code
+# Copy from the root of the build context
 COPY . /usr/src/app
+WORKDIR /usr/src/app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Putting the "--filter" before the command uses pnpm filtering, whilst putting it after the command uses turborepo filtering
 # Read about pnpm filtering here: https://pnpm.io/filtering
 # Read about turborepo filtering here: https://turbo.build/repo/docs/core-concepts/monorepos/filtering
