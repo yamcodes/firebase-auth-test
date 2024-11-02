@@ -43,7 +43,7 @@ steps:
         $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
     id: push
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  - name: 'gcr.io/cloud-builders/gcloud'  # This image comes with jq pre-installed
     entrypoint: "sh"
     args:
       - "-c"
