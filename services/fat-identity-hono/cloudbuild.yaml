@@ -81,8 +81,17 @@ steps:
     id: UpdateTraffic
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    script: >-
-      gcloud run services list --project $PROJECT_ID --region $_DEPLOY_REGION --filter $_SERVICE_NAME --format "value(status.address.url)" > /workspace/deployer_environment_url
+    args:
+      - run
+      - services
+      - list
+      - '--project'
+      - '${PROJECT_ID}'
+      - '--region'
+      - '${_DEPLOY_REGION}'
+      - '--filter'
+      - '${_SERVICE_NAME}'
+      - '--format=value(status.address.url)'
     id: ReportEnvironmentUrl
 
   - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
