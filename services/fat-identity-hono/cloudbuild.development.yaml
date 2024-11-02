@@ -109,8 +109,8 @@ substitutions:
   _DEPLOY_REGION: europe-west3
   _GITHUB_ENVIRONMENT: development
   _AR_REPO_NAME: cloud-run-source-deploy
-  _IMAGE_NAME: $REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
-  _IMAGE_URL: $_AR_HOSTNAME/$PROJECT_ID/$_AR_REPO_NAME/$_IMAGE_NAME
+  _IMAGE_NAME: ${REPO_NAME}/${_SERVICE_NAME}:${COMMIT_SHA}
+  _IMAGE_URL: ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO_NAME}/${_IMAGE_NAME}
 
 tags:
   - gcp-cloud-build-deploy-cloud-run
