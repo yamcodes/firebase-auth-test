@@ -1,4 +1,26 @@
+# For info on gh-deployer, see: https://zentered.co/articles/preview-builds-with-cloud-run/
+
 steps:
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - TRANSIENT_ENVIRONMENT=true
+      - DESCRIPTION=Deploying to Google Cloud Run
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - create
+    id: ReportCreate
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - pending
+    id: ReportPending
+
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -21,6 +43,15 @@ steps:
         $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
     id: Push
 
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - in_progress
+    id: ReportInProgress
+
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     args:
       - run
@@ -41,6 +72,20 @@ steps:
       - '--tag=pr-$_PR_NUMBER'
     id: Deploy
     entrypoint: gcloud
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    script: >-
+      gcloud run services list --project $PROJECT_ID --region $_DEPLOY_REGION --filter $_SERVICE_NAME --format "value(status.address.url)" > /workspace/deployer_environment_url
+    id: ReportEnvironmentUrl
+
+  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
+    env:
+      - REPO_NAME=$REPO_NAME
+      - ENVIRONMENT=preview
+      - REF=$REF_NAME
+    args:
+      - success
+    id: ReportSuccess
 
 images:
   - >-
