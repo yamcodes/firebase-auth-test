@@ -42,8 +42,14 @@ app.doc("/docs/json", {
 		version,
 	},
 	tags: [
-		{ name: "General", description: "General endpoints" },
-		{ name: "Greetings", description: "Greetings endpoints" },
+		{
+			name: "General",
+			description: "General server operations\n\n**Prefix**: `/`",
+		},
+		{
+			name: "Greetings",
+			description: "Manage greetings\n\n**Prefix**: `/greetings`",
+		},
 	],
 });
 
