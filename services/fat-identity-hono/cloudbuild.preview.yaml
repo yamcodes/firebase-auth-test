@@ -43,11 +43,14 @@ steps:
         $_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA
     id: push
 
-  - name: 'gcr.io/cloud-builders/gcloud'  # This image comes with jq pre-installed
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: "sh"
     args:
       - "-c"
+      # TODO: We can speed things up by building an image with jq pre-installed
       - |
+        apt-get update && apt-get install -y jq
+
         gcloud run services update $_SERVICE_NAME \
           --platform=managed \
           --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-preview/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA \
