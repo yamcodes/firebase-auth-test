@@ -44,11 +44,11 @@ app.doc("/docs/json", {
 	tags: [
 		{
 			name: "General",
-			description: "General server operations\n\n**Prefix**: `/`",
+			description: "General server operations.\n\n**Prefix**: `/`",
 		},
 		{
 			name: "Greetings",
-			description: "Manage greetings\n\n**Prefix**: `/greetings`",
+			description: "Manage greetings.\n\n**Prefix**: `/greetings`",
 		},
 	],
 });
