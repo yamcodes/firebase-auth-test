@@ -57,8 +57,10 @@
 		"cSpell.words": [
 			"asteasolutions",
 			"autoload",
+			"automap",
 			"biomejs",
 			"BUILDKIT",
+			"CLOUDSDK",
 			"cloudsdktool",
 			"clsx",
 			"consts",
@@ -73,6 +75,7 @@
 			"openapi",
 			"pino",
 			"radashi",
+			"retryable",
 			"tailwindcss",
 			"tanstack",
 			"trpc",
