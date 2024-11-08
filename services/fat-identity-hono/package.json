@@ -15,7 +15,7 @@
 		"serve": "node dist/index.js",
 		"typecheck": "tsc --noEmit",
 		"clean": "rm -rf node_modules",
-		"emulator": "firebase emulators:start --only firestore",
+		"emulator": "firebase emulators:start --only firestore --project=demo-fat-core",
 		"test:integration": "vitest --config test-config/vitest.integration.config.ts",
 		"test:e2e:no-emulator": "vitest --config test-config/vitest.e2e.config.ts",
 		"test:e2e": "firebase emulators:exec --only firestore 'pnpm test:e2e:no-emulator'",
