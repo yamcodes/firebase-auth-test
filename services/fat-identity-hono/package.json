@@ -19,7 +19,7 @@
 		"test:integration": "pnpm -w test -- --project fat-identity-hono.integration",
 		"test:e2e:no-emulator": "pnpm -w test -- --project fat-identity-hono.e2e",
 		"test:e2e": "firebase emulators:exec --only firestore 'pnpm test:e2e:no-emulator'",
-		"test:no-emulator": "pnpm -w test -- --project fat-identity-hono",
+		"test:no-emulator": "pnpm -w test -- --project fat-identity-hono.integration --project fat-identity-hono.e2e",
 		"test": "firebase emulators:exec --only firestore 'pnpm test:no-emulator'",
 		"changeset": "pnpm -w changeset"
 	},
