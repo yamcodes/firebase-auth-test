@@ -28,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-firebase-emulators-
       - name: Run tests
-        run: pnpm test
+        run: pnpm emulator:test
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
