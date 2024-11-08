@@ -7,6 +7,7 @@ This directory contains test configuration files for the project.
 - `env.config.ts`: Environment variable configuration
 - `setup.e2e.ts`: End-to-end (E2E) test setup
 - `vitest.*.config.ts`: Vitest configurations for specific test modes (e.g., E2E, integration)
+- `vitest.config.ts`: Main Vitest configuration
 
 > [!NOTE]
-> The main `vitest.config.ts` file is located in the project root directory for compatibility with tools like the Vitest VS Code extension, which may not support configuration files in subdirectories.
+> You'll notice that `.env.test` is not here: that's in the root of the `fat-identity-hono` project.
