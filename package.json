@@ -12,6 +12,7 @@
 		"check": "biome check .",
 		"fix": "biome check --write .",
 		"test": "vitest",
+		"emulator:test": "firebase emulators:exec --only firestore 'pnpm test'",
 		"generate:workspace": "turbo gen workspace",
 		"root:clean": "rimraf node_modules",
 		"root:emulate": "firebase emulators:start",
