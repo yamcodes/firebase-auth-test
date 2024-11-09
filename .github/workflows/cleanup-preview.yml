@@ -49,7 +49,7 @@ jobs:
       - name: Set Matrix Output
         id: prepare
         run: |
-          MATRIX=$(cat services_matrix.json | sed 's/ //g')
+          MATRIX=$(echo $(cat services_matrix.json) | sed 's/ //g')
           echo "services_matrix=$MATRIX" >> $GITHUB_OUTPUT
 
       - name: Debug Matrix
