@@ -34,12 +34,12 @@ jobs:
         run: |
           AFFECTED_SERVICE=""
           while IFS= read -r service; do
-            SERVICE_NAME=$(echo "$service" | yq e '.name' -)
-            SERVICE_PATH=$(echo "$service" | yq e '.path' -)
-            PROJECT_ID=$(echo "$service" | yq e '.project_id' -)
-            REGION=$(echo "$service" | yq e '.region' -)
-            ENVIRONMENT=$(echo "$service" | yq e '.environment' -)
-
+            SERVICE_NAME=$(yq e ".services[$service].name" .github/preview-deployments.config.yml)
+            SERVICE_PATH=$(yq e ".services[$service].path" .github/preview-deployments.config.yml)
+            PROJECT_ID=$(yq e ".services[$service].project_id" .github/preview-deployments.config.yml)
+            REGION=$(yq e ".services[$service].region" .github/preview-deployments.config.yml)
+            ENVIRONMENT=$(yq e ".services[$service].environment" .github/preview-deployments.config.yml)
+      
             # Check if any changed file matches the service path
             if grep -q "^$SERVICE_PATH" changed_files.txt; then
               echo "service=$SERVICE_NAME" >> "$GITHUB_OUTPUT"
@@ -48,7 +48,7 @@ jobs:
               echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
               break
             fi
-          done <<< "$(yq e '.services[]' .github/preview-deployments.config.yml)"
+          done <<< "$(yq e '.services | keys | .[]' .github/preview-deployments.config.yml)"
 
       - name: Google Auth
         id: auth
