@@ -43,7 +43,7 @@ jobs:
               SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
-          echo "services_matrix=$(jq -c . <<< \"[${SERVICES[@]}]\")" | sed 's/"/\\"/g' >> "$GITHUB_OUTPUT"
+          echo "services_matrix=$(jq -c --argjson services "[${SERVICES[@]}]" '$services' )" >> "$GITHUB_OUTPUT"
       - name: Debug Services Matrix
         run: |
           echo "Services Matrix: ${{ steps.determine.outputs.services_matrix }}"
