@@ -1,5 +1,8 @@
 name: Cleanup Deployment Preview
 
+env:
+  ACTIONS_STEP_DEBUG: true
+
 on:
   pull_request:
     types: [closed]
@@ -43,11 +46,19 @@ jobs:
             fi
           done
 
+      - name: Debug Outputs
+        run: |
+          echo "Service: ${{ steps.determine_service.outputs.service }}"
+          echo "Project ID: ${{ steps.determine_service.outputs.project_id }}"
+          echo "Region: ${{ steps.determine_service.outputs.region }}"
+          echo "Environment: ${{ steps.determine_service.outputs.environment }}"
+          echo "Secret Name: ${{ steps.determine_service.outputs.secret_name }}"
+
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ steps.determine_service.outputs.project_id }}
-          credentials_json: ${{ secrets[steps.determine_service.outputs.secret_name] }}
+          credentials_json: ${{ secrets[ steps.determine_service.outputs.secret_name ] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
