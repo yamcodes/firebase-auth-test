@@ -50,7 +50,7 @@ jobs:
         id: set_matrix
         run: |
           TASKS=$(echo $(cat services_matrix.json) | sed 's/ //g')
-          echo "services_matrix=$TASKS" >> $GITHUB_OUTPUT
+          echo "::set-output name=services_matrix::$TASKS"
 
   cleanup:
     name: Cleanup Services
