@@ -12,7 +12,6 @@ jobs:
     outputs:
       services_found: ${{ steps.determine_services.outputs.services_found }}
       services_matrix: ${{ steps.determine_services.outputs.services_matrix }}
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,20 +52,33 @@ jobs:
           done
           
           echo "services_found=$SERVICES_FOUND" >> "$GITHUB_OUTPUT"
-          echo "services_matrix=$(echo ${SERVICES[@]} | jq -c '.')" >> "$GITHUB_OUTPUT"
+          echo "services_matrix=$(echo "${SERVICES[@]}" | jq -c '.')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Service Matrix
+        if: steps.determine_services.outputs.services_found == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: services_matrix
+          path: services_matrix.json
 
   cleanup:
     name: Cleanup Services
     needs: determine_services
     runs-on: ubuntu-latest
     if: needs.determine_services.outputs.services_found == 'true'
+    
     strategy:
       matrix:
         service_data: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
-
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download Service Matrix
+        uses: actions/download-artifact@v3
+        with:
+          name: services_matrix
 
       - name: Google Auth
         uses: google-github-actions/auth@v2
