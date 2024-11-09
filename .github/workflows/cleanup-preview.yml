@@ -1,12 +1,17 @@
 name: Cleanup Deployment Preview
+
 on:
   pull_request:
     types: [closed]
 
 jobs:
-  cleanup:
-    name: Cleanup Deployment Preview
+  determine_services:
+    name: Determine Affected Services
     runs-on: ubuntu-latest
+    
+    outputs:
+      services_found: ${{ steps.determine_services.outputs.services_found }}
+      services_matrix: ${{ steps.determine_services.outputs.services_matrix }}
     
     steps:
       - name: Checkout repository
@@ -26,35 +31,56 @@ jobs:
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
           echo "$CHANGED_FILES" > changed_files.txt
 
-      - name: Determine Affected Service
-        id: determine_service
+      - name: Determine Affected Services
+        id: determine_services
         run: |
+          SERVICES_FOUND=false
+          SERVICES=()
+          
           SERVICES_COUNT=$(yq e '.services | length' .github/preview-deployments.config.yml || echo 0)
-      
           for i in $(seq 0 $((SERVICES_COUNT - 1))); do
-            if grep -q "^$(yq e ".services[$i].path" .github/preview-deployments.config.yml)" changed_files.txt; then
-              echo "service=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-              echo "project_id=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-              echo "region=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-              echo "environment=$(yq e ".services[$i].environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-              echo "sa_key_secret_name=$(yq e ".services[$i].sa_key_secret_name" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-              break
+            SERVICE_PATH=$(yq e ".services[$i].path" .github/preview-deployments.config.yml)
+            if grep -q "^$SERVICE_PATH" changed_files.txt; then
+              SERVICE_NAME=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)
+              PROJECT_ID=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)
+              REGION=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)
+              ENVIRONMENT=$(yq e ".services[$i].environment" .github/preview-deployments.config.yml)
+              SA_KEY_SECRET_NAME=$(yq e ".services[$i].sa_key_secret_name" .github/preview-deployments.config.yml)
+              
+              SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"environment\":\"$ENVIRONMENT\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
+              SERVICES_FOUND=true
             fi
           done
+          
+          echo "services_found=$SERVICES_FOUND" >> "$GITHUB_OUTPUT"
+          echo "services_matrix=$(echo ${SERVICES[@]} | jq -c '.')" >> "$GITHUB_OUTPUT"
+
+  cleanup:
+    name: Cleanup Services
+    needs: determine_services
+    runs-on: ubuntu-latest
+    if: needs.determine_services.outputs.services_found == 'true'
+    strategy:
+      matrix:
+        service_data: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ steps.determine_service.outputs.project_id }}
-          credentials_json: ${{ secrets[ steps.determine_service.outputs.sa_key_secret_name ] }}
+          project_id: ${{ matrix.service_data.project_id }}
+          credentials_json: ${{ secrets[matrix.service_data.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ steps.determine_service.outputs.project_id }}
-          
+          project_id: ${{ matrix.service_data.project_id }}
+
       - name: Remove Cloud Run Tag
         run: |
-          gcloud run services update-traffic ${{ steps.determine_service.outputs.service }} \
-            --region=${{ steps.determine_service.outputs.region }} \
+          gcloud run services update-traffic ${{ matrix.service_data.service }} \
+            --region=${{ matrix.service_data.region }} \
             --remove-tags=pr-${{ github.event.pull_request.number }}
