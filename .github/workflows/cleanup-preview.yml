@@ -8,8 +8,6 @@ jobs:
   determine_services:
     name: Determine Affected Services
     runs-on: ubuntu-latest
-    # outputs:
-    #   services_matrix: ${{ steps.set_matrix.outputs.services_matrix }}
     
     outputs:
       matrix: ${{ steps.prepare.outputs.json }}
@@ -45,6 +43,7 @@ jobs:
             fi
           done
       
+      # See: https://stackoverflow.com/a/69169075
       - name: Prepare matrix JSON Object
         id: prepare
         uses: nickofthyme/object-remap@v2.0.0
@@ -61,8 +60,8 @@ jobs:
     needs: determine_services
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        service_data: ${{ fromJson(needs.determine_services.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.determine_services.outputs.matrix) }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
