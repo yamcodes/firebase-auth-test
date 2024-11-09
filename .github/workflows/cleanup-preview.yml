@@ -64,34 +64,50 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check Deployment Status Using API
-        id: check_deployment_status
+      - name: Wait for Deployment to Complete Using Deployments API
+        id: wait_for_deployment
+        env:
+          ENVIRONMENT: pr-${{ github.event.pull_request.number }}
+          MAX_RETRIES: 10
+          RETRY_DELAY: 180
         run: |
-          MAX_RETRIES=10
-          AVG_DEPLOYMENT_TIME=180
-          RETRY_DELAY=$AVG_DEPLOYMENT_TIME
           COUNT=0
-          DEPLOYMENT_STATUS="in_progress"
+          DEPLOYMENT_FOUND=false
 
-          while [[ "$DEPLOYMENT_STATUS" == "in_progress" && $COUNT -lt $MAX_RETRIES ]]; do
+          while [[ "$DEPLOYMENT_FOUND" == "false" && $COUNT -lt $MAX_RETRIES ]]; do
             RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/deployments?ref=${{ github.head_ref }}")
 
-            DEPLOYMENT_STATUS=$(echo "$RESPONSE" | jq -r '.[0].statuses[0].state')
+            # Filter deployments for the target environment
+            DEPLOYMENT=$(echo "$RESPONSE" | jq -c ".[] | select(.environment == \"$ENVIRONMENT\")")
 
-            if [[ "$DEPLOYMENT_STATUS" == "success" ]]; then
-              echo "Deployment is complete."
-              break
+            if [[ -n "$DEPLOYMENT" ]]; then
+              DEPLOYMENT_FOUND=true
+              DEPLOYMENT_STATUS_URL=$(echo "$DEPLOYMENT" | jq -r '.statuses_url')
+              
+              # Check deployment status
+              STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github+json" \
+                "$DEPLOYMENT_STATUS_URL" | jq -r '.[0].state')
+                
+              if [[ "$STATUS" == "success" ]]; then
+                echo "Deployment is complete."
+                break
+              else
+                echo "Deployment not yet complete, retrying in $RETRY_DELAY seconds..."
+                sleep $RETRY_DELAY
+                COUNT=$((COUNT + 1))
+              fi
+            else
+              echo "No active deployment found for environment $ENVIRONMENT. Retrying..."
+              sleep $RETRY_DELAY
+              COUNT=$((COUNT + 1))
             fi
-
-            echo "Deployment not complete. Average deployment time is $AVG_DEPLOYMENT_TIME seconds. Retrying in $RETRY_DELAY seconds..."
-            sleep $RETRY_DELAY
-            COUNT=$((COUNT+1))
           done
 
-          if [[ "$DEPLOYMENT_STATUS" != "success" ]]; then
-            echo "Deployment did not complete despite retrying. Cleanup has failed."
+          if [[ "$DEPLOYMENT_FOUND" == "false" ]]; then
+            echo "Deployment did not complete after $MAX_RETRIES retries. Exiting cleanup."
             exit 1
           fi
 
