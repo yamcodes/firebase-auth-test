@@ -52,7 +52,12 @@ jobs:
           done
           
           echo "services_found=$SERVICES_FOUND" >> "$GITHUB_OUTPUT"
-          echo "services_matrix=$(echo "${SERVICES[@]}" | jq -c '.')" >> "$GITHUB_OUTPUT"
+          
+          # Create the JSON file only if services are found
+          if [[ "$SERVICES_FOUND" == "true" ]]; then
+            echo "${SERVICES[@]}" | jq -c '.' > services_matrix.json
+            echo "services_matrix=$(cat services_matrix.json)" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Upload Service Matrix
         if: steps.determine_services.outputs.services_found == 'true'
