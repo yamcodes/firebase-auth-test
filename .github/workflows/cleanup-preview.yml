@@ -97,7 +97,6 @@ jobs:
       
               if [[ "$DEPLOYMENT_STATUS_URL" == "success" ]]; then
                 NO_SUCCESS=false
-                break
               elif [[ "$DEPLOYMENT_STATUS_URL" == "in_progress" ]]; then
                 echo "Deployment $DEPLOYMENT is still in progress."
                 ANY_IN_PROGRESS=true
