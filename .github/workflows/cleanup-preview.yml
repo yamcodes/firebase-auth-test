@@ -55,6 +55,11 @@ jobs:
           region: ${{ steps.determine.outputs.region }}
           sa_key_secret_name: ${{ steps.determine.outputs.sa_key_secret_name }}
 
+      - name: Debug the matrix outputs
+        run: |
+          echo "Matrix: ${{ steps.determine.outputs.matrix }}"
+          echo "fromJson: ${{ fromJson(steps.determine.outputs.matrix) }}"
+
   cleanup:
     name: Cleanup Services
     needs: determine_services
@@ -69,16 +74,16 @@ jobs:
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ matrix.service_data.project_id }}
-          credentials_json: ${{ secrets[matrix.service_data.sa_key_secret_name] }}
+          project_id: ${{ matrix.project_id }}
+          credentials_json: ${{ secrets[matrix.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ matrix.service_data.project_id }}
+          project_id: ${{ matrix.project_id }}
 
       - name: Remove Cloud Run Tag
         run: |
-          gcloud run services update-traffic ${{ matrix.service_data.service }} \
-            --region=${{ matrix.service_data.region }} \
+          gcloud run services update-traffic ${{ matrix.service }} \
+            --region=${{ matrix.region }} \
             --remove-tags=pr-${{ github.event.pull_request.number }}
