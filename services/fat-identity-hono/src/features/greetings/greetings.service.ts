@@ -14,10 +14,6 @@ export class GreetingsService {
 		return "This is a special greeting just for you!";
 	}
 
-	getGoodbye(): string {
-		return "Goodbye!";
-	}
-
 	getRandomGreeting(name: string): string {
 		const greetings = [
 			`Hello, ${name}!`,
@@ -26,10 +22,6 @@ export class GreetingsService {
 			`Welcome, ${name}!`,
 		];
 		return greetings[Math.floor(Math.random() * greetings.length)];
-	}
-
-	getGreeting(name: string): string {
-		return `Hello, ${name}!`;
 	}
 
 	async createGreeting(greetingDto: GreetingDto): Promise<Greeting> {
