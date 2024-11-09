@@ -31,18 +31,28 @@ jobs:
       - name: Determine Affected Services
         id: determine
         run: |
+          # enable debugging
+          set -x
           SERVICES=()
           SERVICES_COUNT=$(yq e '.services | length' .github/preview-deployments.config.yml || echo 0)
           for i in $(seq 0 $((SERVICES_COUNT - 1))); do
             SERVICE_PATH=$(yq e ".services[$i].path" .github/preview-deployments.config.yml)
+            echo "SERVICE_PATH: $SERVICE_PATH"
             if grep -q "^$SERVICE_PATH" changed_files.txt; then
               SERVICE_NAME=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)
               PROJECT_ID=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)
               REGION=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)
               SA_KEY_SECRET_NAME=$(yq e ".services[$i].sa_key_secret_name" .github/preview-deployments.config.yml)
+              echo "SERVICE_NAME: $SERVICE_NAME"
+              echo "PROJECT_ID: $PROJECT_ID"
+              echo "REGION: $REGION"
+              echo "SA_KEY_SECRET_NAME: $SA_KEY_SECRET_NAME"
               SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
+            else
+              echo "SERVICE_PATH: $SERVICE_PATH not found in changed files"
             fi
           done
+          echo "Constructed Services: ${SERVICES[@]}"
           echo "services_matrix=$(jq -c --argjson services "[${SERVICES[@]}]" '$services' )" >> "$GITHUB_OUTPUT"
       - name: Debug Services Matrix
         run: |
