@@ -8,11 +8,10 @@ jobs:
   cleanup:
     name: Cleanup Deployment Preview
     runs-on: ubuntu-latest
-    environment: development
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,29 +31,23 @@ jobs:
         id: determine_service
         run: |
           SERVICES_COUNT=$(yq e '.services | length' .github/preview-deployments.config.yml || echo 0)
-
+      
           for i in $(seq 0 $((SERVICES_COUNT - 1))); do
-            SERVICE_NAME=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)
-            SERVICE_PATH=$(yq e ".services[$i].path" .github/preview-deployments.config.yml)
-            PROJECT_ID=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)
-            REGION=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)
-            ENVIRONMENT=$(yq e ".services[$i].environment" .github/preview-deployments.config.yml)
-
-            if grep -q "^$SERVICE_PATH" changed_files.txt; then
-              echo "service=$SERVICE_NAME" >> "$GITHUB_OUTPUT"
-              echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
-              echo "region=$REGION" >> "$GITHUB_OUTPUT"
-              echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+            if grep -q "^$(yq e ".services[$i].path" .github/preview-deployments.config.yml)" changed_files.txt; then
+              echo "service=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+              echo "project_id=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+              echo "region=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+              echo "environment=$(yq e ".services[$i].environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+              echo "secret_name=$(yq e ".services[$i].secret_name" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
               break
             fi
           done
 
       - name: Google Auth
-        id: auth
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ steps.determine_service.outputs.project_id }}
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets[steps.determine_service.outputs.secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1

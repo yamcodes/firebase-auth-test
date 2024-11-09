@@ -24,7 +24,7 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Create GitHub deployment
         uses: chrnorm/deployment-action@v2
@@ -36,7 +36,6 @@ jobs:
           transient-environment: true
 
       - name: Google Auth
-        id: auth
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ env.PROJECT_ID }}
