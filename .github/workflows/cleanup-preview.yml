@@ -62,7 +62,8 @@ jobs:
     needs: determine_services
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.determine_services.outputs.matrix) }}
+      matrix: 
+        service_data: ${{ fromJson(needs.determine_services.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
