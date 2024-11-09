@@ -50,10 +50,10 @@ jobs:
         with:
           __case: snake
           # Feel free to ignore the errors here, the key-values are dynamic
-          service: ${{ steps.determine.outputs.service }}
-          project_id: ${{ steps.determine.outputs.project_id }}
-          region: ${{ steps.determine.outputs.region }}
-          sa_key_secret_name: ${{ steps.determine.outputs.sa_key_secret_name }}
+          include.*.service: ${{ steps.determine.outputs.service }}
+          include.*.project_id: ${{ steps.determine.outputs.project_id }}
+          include.*.region: ${{ steps.determine.outputs.region }}
+          include.*.sa_key_secret_name: ${{ steps.determine.outputs.sa_key_secret_name }}
 
       - name: Debug the matrix outputs
         run: |
