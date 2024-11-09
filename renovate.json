@@ -9,6 +9,10 @@
 			"groupName": "all dependencies",
 			"groupSlug": "all",
 			"matchPackageNames": ["*"]
+		},
+		{
+			"matchPackageNames": ["c8", "tap", "@tanstack/react-query", "@repo/*"],
+			"enabled": false
 		}
 	],
 	"vulnerabilityAlerts": {
