@@ -1,8 +1,4 @@
 name: Cleanup Deployment Preview
-
-env:
-  ACTIONS_STEP_DEBUG: true
-
 on:
   pull_request:
     types: [closed]
@@ -45,14 +41,6 @@ jobs:
               break
             fi
           done
-
-      - name: Debug Outputs
-        run: |
-          echo "Service: ${{ steps.determine_service.outputs.service }}"
-          echo "Project ID: ${{ steps.determine_service.outputs.project_id }}"
-          echo "Region: ${{ steps.determine_service.outputs.region }}"
-          echo "Environment: ${{ steps.determine_service.outputs.environment }}"
-          echo "Secret Name: ${{ steps.determine_service.outputs.secret_name }}"
 
       - name: Google Auth
         uses: google-github-actions/auth@v2
