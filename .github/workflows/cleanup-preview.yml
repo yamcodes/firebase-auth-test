@@ -75,6 +75,35 @@ jobs:
         with:
           project_id: ${{ matrix.service_data.project_id }}
 
+      
+      - name: Wait for Deployment to Complete
+        id: wait_for_deployment
+        run: |
+          MAX_RETRIES=10
+          RETRY_DELAY=180  # Average deployment time
+          COUNT=0
+          DEPLOYMENT_STATUS="Unknown"
+
+          while [[ "$DEPLOYMENT_STATUS" != "True" && $COUNT -lt $MAX_RETRIES ]]; do
+            DEPLOYMENT_STATUS=$(gcloud run services describe ${{ matrix.service_data.service }} \
+              --region=${{ matrix.service_data.region }} \
+              --format='value(status.conditions[?(@.type=="Ready")].status)')
+
+            if [[ "$DEPLOYMENT_STATUS" == "True" ]]; then
+              echo "Deployment is complete."
+              break
+            fi
+
+            echo "Deployment not ready yet, retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+            COUNT=$((COUNT+1))
+          done
+
+          if [[ "$DEPLOYMENT_STATUS" != "True" ]]; then
+            echo "Deployment did not complete in time. Exiting cleanup."
+            exit 1
+          fi
+
       - name: Remove Cloud Run Tag
         run: |
           gcloud run services update-traffic ${{ matrix.service_data.service }} \
