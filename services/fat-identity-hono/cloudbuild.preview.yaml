@@ -108,7 +108,7 @@ substitutions:
   _AR_HOSTNAME: europe-west3-docker.pkg.dev
   _SERVICE_NAME: fat-identity-hono
   _DEPLOY_REGION: europe-west3
-  _GITHUB_ENVIRONMENT: pr-$_PR_NUMBER
+  _GITHUB_ENVIRONMENT: pr-${_PR_NUMBER}
   _AR_REPO_NAME: cloud-run-preview
   _IMAGE_NAME: ${REPO_NAME}/${_SERVICE_NAME}:${SHORT_SHA}
   _IMAGE_URL: ${_AR_HOSTNAME}/${PROJECT_ID}/${_AR_REPO_NAME}/${_IMAGE_NAME}
