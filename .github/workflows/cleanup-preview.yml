@@ -9,7 +9,7 @@ jobs:
     name: Determine Affected Services
     runs-on: ubuntu-latest
     outputs:
-      services_matrix: ${{ steps.prepare.outputs.services_matrix }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     
     steps:
       - name: Checkout repository
@@ -44,25 +44,26 @@ jobs:
               SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
-          echo "${SERVICES[@]}" | jq -c '.' > services_matrix.json
+          # Explicitly wrap SERVICES in array brackets to ensure JSON array format
+          echo "[${SERVICES[@]}]" | jq -c '.' > services_matrix.json
 
       - name: Set Matrix Output
-        id: prepare
+        id: set-matrix
         run: |
           MATRIX=$(echo $(cat services_matrix.json) | sed 's/ //g')
-          echo "services_matrix=$MATRIX" >> $GITHUB_OUTPUT
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
       - name: Debug Matrix
         run: |
-          echo "Matrix: ${{ steps.prepare.outputs.services_matrix }}"
+          echo "Matrix: ${{ steps.set-matrix.outputs.matrix }}"
 
   cleanup:
     name: Cleanup Services
     needs: determine_services
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        service_data: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
+      matrix: ${{ fromJson(needs.determine_services.outputs.matrix) }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
