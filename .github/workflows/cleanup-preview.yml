@@ -1,4 +1,4 @@
-name: Cleanup Deployment Preview
+name: Cleanup deployment preview
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   determine_services:
-    name: Determine Affected Services
+    name: Determine affected services
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set_matrix.outputs.matrix }}
@@ -22,13 +22,13 @@ jobs:
           sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
 
-      - name: Get Changed Files
+      - name: Get changed files
         id: get_changed_files
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
           git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }} > changed_files.txt
 
-      - name: Determine Affected Services
+      - name: Determine affected services
         id: determine
         run: |
           SERVICES=()
@@ -53,7 +53,7 @@ jobs:
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
   cleanup:
-    name: Cleanup Services
+    name: Cleanup services
     needs: determine_services
     runs-on: ubuntu-latest
     strategy:
@@ -64,8 +64,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Wait for Deployment to Complete Using Deployments API
-        id: wait_for_deployment
+      - name: Wait for deployments to complete
+        id: wait_for_deployments
         env:
           ENVIRONMENT: pr-${{ github.event.pull_request.number }}
           MAX_RETRIES: 10
@@ -90,6 +90,7 @@ jobs:
       
             # Check the status of each deployment
             for DEPLOYMENT in $(echo "$DEPLOYMENTS" | jq -r '.id'); do
+              ANY_IN_PROGRESS=false
               DEPLOYMENT_STATUS_URL=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github+json" \
                 "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT/statuses" \
@@ -120,21 +121,21 @@ jobs:
             echo "no_successful_deployments=false" >> $GITHUB_OUTPUT
           fi
       
-      - name: Google Auth
+      - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
-        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
+        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
         with:
           project_id: ${{ matrix.service.project_id }}
           credentials_json: ${{ secrets[matrix.service.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
+        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
         with:
           project_id: ${{ matrix.service.project_id }}
 
-      - name: Remove Cloud Run Tag
-        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
+      - name: Remove Cloud Run tag
+        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
         run: |
           gcloud run services update-traffic ${{ matrix.service.name }} \
             --region=${{ matrix.service.region }} \
