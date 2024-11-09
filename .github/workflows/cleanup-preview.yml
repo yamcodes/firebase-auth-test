@@ -44,7 +44,6 @@ jobs:
           done
 
       - name: Google Auth
-        id: auth
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ steps.determine_service.outputs.project_id }}

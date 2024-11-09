@@ -36,7 +36,6 @@ jobs:
           transient-environment: true
 
       - name: Google Auth
-        id: auth
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ env.PROJECT_ID }}
