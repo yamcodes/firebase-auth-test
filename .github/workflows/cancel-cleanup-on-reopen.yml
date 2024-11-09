@@ -15,7 +15,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const runs = await github.actions.listWorkflowRuns({
+            const runs = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'cleanup-preview.yml',
@@ -35,13 +35,13 @@ jobs:
             fi
           done
           echo "No active cleanup jobs found for this PR."
-
+      # This is a comment -->
       - name: Cancel Cleanup Workflow
         if: steps.check_cleanup.outputs.run_id
         uses: actions/github-script@v7
         with:
           script: |
-            await github.actions.cancelWorkflowRun({
+            await github.rest.actions.cancelWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: ${{ steps.check_cleanup.outputs.run_id }}
