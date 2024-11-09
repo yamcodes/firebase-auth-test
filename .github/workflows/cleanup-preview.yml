@@ -1,0 +1,56 @@
+name: Cleanup Cloud Run PR Environment
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    name: Cleanup Cloud Run PR Environment
+    runs-on: ubuntu-latest
+    environment: development
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Install yq
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip
+          pip3 install yq
+  
+      - name: Get Changed Files
+        id: changed_files
+        run: |
+          echo "Fetching changed files..."
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          echo "CHANGED_FILES=$CHANGED_FILES" >> "$GITHUB_OUTPUT"
+  
+      - name: Determine Affected Service
+        id: determine_service
+        run: |
+          for service in $(yq e '.services[].name' .github/preview-deployments.config.yml); do
+            echo "service=$service" >> "$GITHUB_OUTPUT"
+            echo "project_id=$(yq e ".services[] | select(.name == \"$service\") | .project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+            echo "region=$(yq e ".services[] | select(.name == \"$service\") | .region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+            echo "environment=$(yq e ".services[] | select(.name == \"$service\") | .environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+            break
+          done
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ steps.determine_service.outputs.project_id }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ steps.determine_service.outputs.project_id }}
+          
+      - name: Remove Cloud Run Tag
+        run: |
+          gcloud run services update-traffic ${{ steps.determine_service.outputs.service }} \
+            --region=${{ steps.determine_service.outputs.region }} \
+            --remove-tags=pr-${{ github.event.pull_request.number }}

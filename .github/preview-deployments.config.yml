@@ -1,0 +1,5 @@
+services:
+  - name: fat-identity-hono
+    region: europe-west3
+    environment: development
+    project_id: fat-core-dev
