@@ -29,16 +29,26 @@ jobs:
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
           echo "$CHANGED_FILES" > changed_files.txt
   
+      - name: Check Config File Exists
+        run: |
+          echo "Checking if .github/preview-deployments.config.yml exists..."
+          ls -la .github/
+          cat .github/preview-deployments.config.yml || echo "File not found!"
+        
       - name: Determine Affected Service
         id: determine_service
         run: |
           AFFECTED_SERVICE=""
-          while IFS= read -r service; do
-            SERVICE_NAME=$(yq e ".services[$service].name" .github/preview-deployments.config.yml)
-            SERVICE_PATH=$(yq e ".services[$service].path" .github/preview-deployments.config.yml)
-            PROJECT_ID=$(yq e ".services[$service].project_id" .github/preview-deployments.config.yml)
-            REGION=$(yq e ".services[$service].region" .github/preview-deployments.config.yml)
-            ENVIRONMENT=$(yq e ".services[$service].environment" .github/preview-deployments.config.yml)
+          SERVICES_COUNT=$(yq e '.services | length' .github/preview-deployments.config.yml)
+          for i in $(seq 0 $((SERVICES_COUNT - 1))); do
+            SERVICE_NAME=$(yq e ".services[$i].name // \"\"" .github/preview-deployments.config.yml)
+            SERVICE_PATH=$(yq e ".services[$i].path // \"\"" .github/preview-deployments.config.yml)
+            PROJECT_ID=$(yq e ".services[$i].project_id // \"\"" .github/preview-deployments.config.yml)
+            REGION=$(yq e ".services[$i].region // \"\"" .github/preview-deployments.config.yml)
+            ENVIRONMENT=$(yq e ".services[$i].environment // \"\"" .github/preview-deployments.config.yml)
+      
+            # Debugging output to verify variables are set correctly
+            echo "Checking service: $SERVICE_NAME at path: $SERVICE_PATH"
       
             # Check if any changed file matches the service path
             if grep -q "^$SERVICE_PATH" changed_files.txt; then
@@ -48,7 +58,7 @@ jobs:
               echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
               break
             fi
-          done <<< "$(yq e '.services | keys | .[]' .github/preview-deployments.config.yml)"
+          done
 
       - name: Google Auth
         id: auth
