@@ -73,9 +73,9 @@ jobs:
         run: |
           COUNT=0
           NO_SUCCESS=true
-          ANY_IN_PROGRESS=false
       
           while [[ $COUNT -lt $MAX_RETRIES ]]; do
+            ANY_IN_PROGRESS=false
             RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/deployments?ref=${{ github.head_ref }}")
@@ -90,7 +90,6 @@ jobs:
       
             # Check the status of each deployment
             for DEPLOYMENT in $(echo "$DEPLOYMENTS" | jq -r '.id'); do
-              ANY_IN_PROGRESS=false
               DEPLOYMENT_STATUS_URL=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github+json" \
                 "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT/statuses" \
