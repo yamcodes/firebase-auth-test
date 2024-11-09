@@ -40,7 +40,7 @@ jobs:
               PROJECT_ID=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)
               REGION=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)
               SA_KEY_SECRET_NAME=$(yq e ".services[$i].sa_key_secret_name" .github/preview-deployments.config.yml)
-              SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
+              SERVICES+=("{\"name\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
           # Create JSON array output for matrix strategy
@@ -58,54 +58,56 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service_data: ${{ fromJson(needs.determine_services.outputs.matrix) }}
+        service: ${{ fromJson(needs.determine_services.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Google Auth
-        uses: google-github-actions/auth@v2
-        with:
-          project_id: ${{ matrix.service_data.project_id }}
-          credentials_json: ${{ secrets[matrix.service_data.sa_key_secret_name] }}
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ matrix.service_data.project_id }}
-
-      
-      - name: Wait for Deployment to Complete
-        id: wait_for_deployment
+      - name: Check Deployment Status Using API
+        id: check_deployment_status
         run: |
           MAX_RETRIES=10
-          RETRY_DELAY=180  # Average deployment time
+          AVG_DEPLOYMENT_TIME=180
+          RETRY_DELAY=$AVG_DEPLOYMENT_TIME
           COUNT=0
-          DEPLOYMENT_STATUS="Unknown"
+          DEPLOYMENT_STATUS="in_progress"
 
-          while [[ "$DEPLOYMENT_STATUS" != "True" && $COUNT -lt $MAX_RETRIES ]]; do
-            DEPLOYMENT_STATUS=$(gcloud run services describe ${{ matrix.service_data.service }} \
-              --region=${{ matrix.service_data.region }} \
-              --format='value(status.conditions[?(@.type=="Ready")].status)')
+          while [[ "$DEPLOYMENT_STATUS" == "in_progress" && $COUNT -lt $MAX_RETRIES ]]; do
+            RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/deployments?ref=${{ github.head_ref }}")
 
-            if [[ "$DEPLOYMENT_STATUS" == "True" ]]; then
+            DEPLOYMENT_STATUS=$(echo "$RESPONSE" | jq -r '.[0].statuses[0].state')
+
+            if [[ "$DEPLOYMENT_STATUS" == "success" ]]; then
               echo "Deployment is complete."
               break
             fi
 
-            echo "Deployment not ready yet, retrying in $RETRY_DELAY seconds..."
+            echo "Deployment not complete. Average deployment time is $AVG_DEPLOYMENT_TIME seconds. Retrying in $RETRY_DELAY seconds..."
             sleep $RETRY_DELAY
             COUNT=$((COUNT+1))
           done
 
-          if [[ "$DEPLOYMENT_STATUS" != "True" ]]; then
-            echo "Deployment did not complete in time. Exiting cleanup."
+          if [[ "$DEPLOYMENT_STATUS" != "success" ]]; then
+            echo "Deployment did not complete despite retrying. Cleanup has failed."
             exit 1
           fi
 
+      - name: Google Auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ matrix.service.project_id }}
+          credentials_json: ${{ secrets[matrix.service.sa_key_secret_name] }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ matrix.service.project_id }}
+
       - name: Remove Cloud Run Tag
         run: |
-          gcloud run services update-traffic ${{ matrix.service_data.service }} \
-            --region=${{ matrix.service_data.region }} \
+          gcloud run services update-traffic ${{ matrix.service.name }} \
+            --region=${{ matrix.service.region }} \
             --remove-tags=pr-${{ github.event.pull_request.number }}
