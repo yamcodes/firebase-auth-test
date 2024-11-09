@@ -53,7 +53,9 @@ jobs:
             fi
           done
           echo "Constructed Services: ${SERVICES[@]}"
-          echo "services_matrix=$(jq -c --argjson services "[${SERVICES[@]}]" '$services' )" >> "$GITHUB_OUTPUT"
+          echo "${SERVICES[@]}" | jq -c '.' > services_matrix.json
+          echo "services_matrix=$(cat services_matrix.json)" >> "$GITHUB_OUTPUT"
+
       - name: Debug Services Matrix
         run: |
           echo "Services Matrix: ${{ steps.determine.outputs.services_matrix }}"
