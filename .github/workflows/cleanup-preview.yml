@@ -49,7 +49,7 @@ jobs:
           credentials_json: ${{ secrets[ steps.determine_service.outputs.sa_key_secret_name ] }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ steps.determine_service.outputs.project_id }}
           
