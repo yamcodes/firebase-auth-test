@@ -30,7 +30,6 @@ jobs:
               console.log("Found active workflow runs:", relatedRuns);
             }
             return relatedRuns;
-          result-encoding: string
 
       - name: Cancel Cleanup Workflows
         if: steps.list_workflows.outputs.result != '[]'
@@ -40,8 +39,8 @@ jobs:
         with:
           script: |
             const { WORKFLOW_RUN_IDS } = process.env;
-            console.log(`Cancelling ${WORKFLOW_RUN_IDS.length} workflow run(s) for branch: ${context.payload.pull_request.head.ref}`);
-            for (const run_id of WORKFLOW_RUN_IDS) {
+            console.log(`Cancelling ${run_ids.length} workflow run(s) for branch: ${context.payload.pull_request.head.ref}`);
+            for (const run_id of run_ids) {
               await github.rest.actions.cancelWorkflowRun({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
