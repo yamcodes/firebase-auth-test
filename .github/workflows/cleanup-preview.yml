@@ -43,8 +43,10 @@ jobs:
               SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
-          echo "services_matrix=$(jq -c . <<< \"[${SERVICES[@]}]\")" >> "$GITHUB_OUTPUT"
-
+          echo "services_matrix=$(jq -c . <<< \"[${SERVICES[@]}]\")" | sed 's/"/\\"/g' >> "$GITHUB_OUTPUT"
+      - name: Debug Services Matrix
+        run: |
+          echo "Services Matrix: ${{ steps.determine.outputs.services_matrix }}"
       # - name: Upload Service Matrix
       #   if: steps.determine_services.outputs.services_found == 'true'
       #   uses: actions/upload-artifact@v3
@@ -58,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
+        service: ${{fromJson(needs.determine_services.outputs.services_matrix)}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
