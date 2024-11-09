@@ -13,7 +13,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+        with:
+          fetch-depth: 0
+
       - name: Install yq
         run: |
           sudo apt-get update && sudo apt-get install -y python3-pip
@@ -23,18 +25,26 @@ jobs:
         id: changed_files
         run: |
           echo "Fetching changed files..."
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
           echo "CHANGED_FILES=$CHANGED_FILES" >> "$GITHUB_OUTPUT"
   
       - name: Determine Affected Service
         id: determine_service
         run: |
-          for service in $(yq e '.services[].name' .github/preview-deployments.config.yml); do
-            echo "service=$service" >> "$GITHUB_OUTPUT"
-            echo "project_id=$(yq e ".services[] | select(.name == \"$service\") | .project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-            echo "region=$(yq e ".services[] | select(.name == \"$service\") | .region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-            echo "environment=$(yq e ".services[] | select(.name == \"$service\") | .environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-            break
+          AFFECTED_SERVICE=""
+          for file in $CHANGED_FILES; do
+            for service in $(yq e '.services[].name' .github/preview-deployments.config.yml); do
+              SERVICE_PATH=$(yq e ".services[] | select(.name == \"$service\") | .path" .github/preview-deployments.config.yml)
+              if [[ "$file" == "$SERVICE_PATH"* ]]; then
+                AFFECTED_SERVICE=$service
+                echo "service=$service" >> "$GITHUB_OUTPUT"
+                echo "project_id=$(yq e ".services[] | select(.name == \"$service\") | .project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+                echo "region=$(yq e ".services[] | select(.name == \"$service\") | .region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+                echo "environment=$(yq e ".services[] | select(.name == \"$service\") | .environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
+                break 2
+              fi
+            done
           done
 
       - name: Google Auth
