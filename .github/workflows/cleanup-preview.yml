@@ -1,4 +1,4 @@
-name: Cleanup Cloud Run PR Environment
+name: Cleanup Deployment Preview
 
 on:
   pull_request:
@@ -27,25 +27,28 @@ jobs:
           echo "Fetching changed files..."
           git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
-          echo "CHANGED_FILES=$CHANGED_FILES" >> "$GITHUB_OUTPUT"
+          echo "$CHANGED_FILES" > changed_files.txt
   
       - name: Determine Affected Service
         id: determine_service
         run: |
           AFFECTED_SERVICE=""
-          for file in $CHANGED_FILES; do
-            for service in $(yq e '.services[].name' .github/preview-deployments.config.yml); do
-              SERVICE_PATH=$(yq e ".services[] | select(.name == \"$service\") | .path" .github/preview-deployments.config.yml)
-              if [[ "$file" == "$SERVICE_PATH"* ]]; then
-                AFFECTED_SERVICE=$service
-                echo "service=$service" >> "$GITHUB_OUTPUT"
-                echo "project_id=$(yq e ".services[] | select(.name == \"$service\") | .project_id" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-                echo "region=$(yq e ".services[] | select(.name == \"$service\") | .region" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-                echo "environment=$(yq e ".services[] | select(.name == \"$service\") | .environment" .github/preview-deployments.config.yml)" >> "$GITHUB_OUTPUT"
-                break 2
-              fi
-            done
-          done
+          while IFS= read -r service; do
+            SERVICE_NAME=$(echo "$service" | yq e '.name' -)
+            SERVICE_PATH=$(echo "$service" | yq e '.path' -)
+            PROJECT_ID=$(echo "$service" | yq e '.project_id' -)
+            REGION=$(echo "$service" | yq e '.region' -)
+            ENVIRONMENT=$(echo "$service" | yq e '.environment' -)
+
+            # Check if any changed file matches the service path
+            if grep -q "^$SERVICE_PATH" changed_files.txt; then
+              echo "service=$SERVICE_NAME" >> "$GITHUB_OUTPUT"
+              echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
+              echo "region=$REGION" >> "$GITHUB_OUTPUT"
+              echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+              break
+            fi
+          done <<< "$(yq e '.services[]' .github/preview-deployments.config.yml)"
 
       - name: Google Auth
         id: auth
