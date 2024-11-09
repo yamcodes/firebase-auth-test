@@ -72,57 +72,69 @@ jobs:
           RETRY_DELAY: 180
         run: |
           COUNT=0
-          DEPLOYMENT_FOUND=false
-
-          while [[ "$DEPLOYMENT_FOUND" == "false" && $COUNT -lt $MAX_RETRIES ]]; do
+          NO_SUCCESS=true
+          ANY_IN_PROGRESS=false
+      
+          while [[ $COUNT -lt $MAX_RETRIES ]]; do
             RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/deployments?ref=${{ github.head_ref }}")
-
+      
             # Filter deployments for the target environment
-            DEPLOYMENT=$(echo "$RESPONSE" | jq -c ".[] | select(.environment == \"$ENVIRONMENT\")")
-
-            if [[ -n "$DEPLOYMENT" ]]; then
-              DEPLOYMENT_FOUND=true
-              DEPLOYMENT_STATUS_URL=$(echo "$DEPLOYMENT" | jq -r '.statuses_url')
-              
-              # Check deployment status
-              STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github+json" \
-                "$DEPLOYMENT_STATUS_URL" | jq -r '.[0].state')
-                
-              if [[ "$STATUS" == "success" ]]; then
-                echo "Deployment is complete."
-                break
-              else
-                echo "Deployment not yet complete, retrying in $RETRY_DELAY seconds..."
-                sleep $RETRY_DELAY
-                COUNT=$((COUNT + 1))
-              fi
-            else
-              echo "No active deployment found for environment $ENVIRONMENT. Retrying..."
-              sleep $RETRY_DELAY
-              COUNT=$((COUNT + 1))
+            DEPLOYMENTS=$(echo "$RESPONSE" | jq -c ".[] | select(.environment == \"$ENVIRONMENT\")")
+      
+            if [[ -z "$DEPLOYMENTS" ]]; then
+              echo "No active deployments found for environment $ENVIRONMENT."
+              break
             fi
+      
+            # Check the status of each deployment
+            for DEPLOYMENT in $(echo "$DEPLOYMENTS" | jq -r '.id'); do
+              DEPLOYMENT_STATUS_URL=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${{ github.repository }}/deployments/$DEPLOYMENT/statuses" \
+                | jq -r '.[0].state')
+      
+              if [[ "$DEPLOYMENT_STATUS_URL" == "success" ]]; then
+                NO_SUCCESS=false
+                break
+              elif [[ "$DEPLOYMENT_STATUS_URL" == "in_progress" ]]; then
+                echo "Deployment $DEPLOYMENT is still in progress."
+                ANY_IN_PROGRESS=true
+              fi
+            done
+      
+            if [[ "$ANY_IN_PROGRESS" == "true" ]]; then
+              echo "Some deployments are still in progress. Retrying in $RETRY_DELAY seconds... ($((COUNT+1))/$MAX_RETRIES)"
+              sleep $RETRY_DELAY
+            fi
+            COUNT=$((COUNT + 1))
           done
-
-          if [[ "$DEPLOYMENT_FOUND" == "false" ]]; then
-            echo "Deployment did not complete after $MAX_RETRIES retries. Exiting cleanup."
-            exit 1
+      
+          # Final evaluation
+          if [[ "$NO_SUCCESS" == "true" ]]; then
+            echo "No successful deployments after $MAX_RETRIES retries. Skipping cleanup."
+            echo "no_successful_deployments=true" >> $GITHUB_OUTPUT
+          else
+            echo "At least one deployment succeeded. Proceeding with cleanup."
+            echo "no_successful_deployments=false" >> $GITHUB_OUTPUT
           fi
-
+      
       - name: Google Auth
         uses: google-github-actions/auth@v2
+        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
         with:
           project_id: ${{ matrix.service.project_id }}
           credentials_json: ${{ secrets[matrix.service.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
+        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
         with:
           project_id: ${{ matrix.service.project_id }}
 
       - name: Remove Cloud Run Tag
+        if: steps.wait_for_deployment.outputs.no_successful_deployments == 'false'
         run: |
           gcloud run services update-traffic ${{ matrix.service.name }} \
             --region=${{ matrix.service.region }} \
