@@ -72,7 +72,7 @@ jobs:
           RETRY_DELAY: 180
         run: |
           COUNT=0
-          NO_SUCCESS=true
+          ANY_SUCCESS=false
       
           while [[ $COUNT -lt $MAX_RETRIES ]]; do
             ANY_IN_PROGRESS=false
@@ -96,7 +96,8 @@ jobs:
                 | jq -r '.[0].state')
       
               if [[ "$DEPLOYMENT_STATUS_URL" == "success" ]]; then
-                NO_SUCCESS=false
+                echo "Deployment $DEPLOYMENT succeeded."
+                ANY_SUCCESS=true
               elif [[ "$DEPLOYMENT_STATUS_URL" == "in_progress" ]]; then
                 echo "Deployment $DEPLOYMENT is still in progress."
                 ANY_IN_PROGRESS=true
@@ -104,36 +105,45 @@ jobs:
             done
       
             if [[ "$ANY_IN_PROGRESS" == "true" ]]; then
-              echo "Some deployments are still in progress. Retrying in $RETRY_DELAY seconds... ($((COUNT+1))/$MAX_RETRIES)"
+              echo "($((COUNT+1))/$MAX_RETRIES) Some deployments are still in progress. Retrying in $RETRY_DELAY seconds..."
               sleep $RETRY_DELAY
             fi
             COUNT=$((COUNT + 1))
           done
       
           # Final evaluation
-          if [[ "$NO_SUCCESS" == "true" ]]; then
+          if [[ "$ANY_SUCCESS" == "false" ]]; then
             echo "No successful deployments after $MAX_RETRIES retries. Skipping cleanup."
-            echo "no_successful_deployments=true" >> $GITHUB_OUTPUT
+            echo "any_successful_deployments=false" >> $GITHUB_OUTPUT
           else
             echo "At least one deployment succeeded. Proceeding with cleanup."
-            echo "no_successful_deployments=false" >> $GITHUB_OUTPUT
+            echo "any_successful_deployments=true" >> $GITHUB_OUTPUT
           fi
       
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
-        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
         with:
           project_id: ${{ matrix.service.project_id }}
           credentials_json: ${{ secrets[matrix.service.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
         with:
           project_id: ${{ matrix.service.project_id }}
 
+      # This is necessary in case the PR was reopened during the cleanup action
+      - name: Verify the PR is closed before removing the tag
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
+        run: |
+          if [[ ${{ github.event.pull_request.state }} != "closed" ]]; then
+            echo "PR has been reopened. Skipping cleanup."
+            exit 0
+          fi
+
       - name: Remove Cloud Run tag
-        if: steps.wait_for_deployments.outputs.no_successful_deployments == 'false'
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
         run: |
           gcloud run services update-traffic ${{ matrix.service.name }} \
             --region=${{ matrix.service.region }} \
