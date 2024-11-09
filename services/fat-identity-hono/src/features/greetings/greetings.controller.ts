@@ -174,7 +174,7 @@ export class GreetingsController {
 			createRoute({
 				method: "get",
 				path: "/:id",
-				summary: "Get a saved greeting",
+				summary: "Get a greeting by its ID",
 				description: "Retrieve a specific greeting by its ID",
 				tags: ["Greetings"],
 				request: { params: z.object({ id: GreetingId }) },

@@ -1,0 +1,48 @@
+name: Cancel Cleanup on PR Reopen
+
+on:
+  pull_request:
+    types: [reopened]
+
+jobs:
+  cancel_cleanup:
+    name: Cancel Cleanup if Running
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List Running Workflows
+        id: list_workflows
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runs = await github.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'cleanup-preview.yml',
+              status: 'in_progress'
+            });
+            return runs.data.workflow_runs
+
+      - name: Check for Cleanup Jobs Related to PR
+        id: check_cleanup
+        run: |
+          echo "Checking for running cleanup workflows related to PR #${{ github.event.pull_request.number }}..."
+          for run in "${{ steps.list_workflows.outputs.result }}"; do
+            if [[ "${run.head_branch}" == "${{ github.event.pull_request.head.ref }}" ]]; then
+              echo "Found an active cleanup job with ID ${run.id} for this PR."
+              echo "run_id=${run.id}" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
+          echo "No active cleanup jobs found for this PR."
+
+      - name: Cancel Cleanup Workflow
+        if: steps.check_cleanup.outputs.run_id
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.actions.cancelWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ steps.check_cleanup.outputs.run_id }}
+            })
