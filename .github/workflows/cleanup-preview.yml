@@ -9,8 +9,8 @@ jobs:
     name: Determine Affected Services
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    
+      matrix: ${{ steps.set_matrix.outputs.matrix }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,8 +26,7 @@ jobs:
         id: get_changed_files
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
-          echo "$CHANGED_FILES" > changed_files.txt
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }} > changed_files.txt
 
       - name: Determine Affected Services
         id: determine
@@ -44,25 +43,21 @@ jobs:
               SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
-          # Explicitly wrap SERVICES in array brackets to ensure JSON array format
+          # Create JSON array output for matrix strategy
           echo "[${SERVICES[@]}]" | jq -c '.' > services_matrix.json
 
       - name: Set Matrix Output
-        id: set-matrix
+        id: set_matrix
         run: |
           MATRIX=$(echo $(cat services_matrix.json) | sed 's/ //g')
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-
-      - name: Debug Matrix
-        run: |
-          echo "Matrix: ${{ steps.set-matrix.outputs.matrix }}"
 
   cleanup:
     name: Cleanup Services
     needs: determine_services
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
+      matrix:
         service_data: ${{ fromJson(needs.determine_services.outputs.matrix) }}
 
     steps:
