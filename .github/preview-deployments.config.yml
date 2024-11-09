@@ -1,3 +1,5 @@
+# This file is used to configure cleaning up preview deployments via the `cleanup-preview.yml` workflow.
+
 services:
   - name: fat-identity-hono
     region: europe-west3

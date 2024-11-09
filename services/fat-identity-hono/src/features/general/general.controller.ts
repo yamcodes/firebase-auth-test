@@ -82,7 +82,7 @@ export class GeneralController {
 			}),
 			({ json, var: { service } }) => {
 				const version = service.getVersion();
-				return json({ version });
+				return json({ version }, 200);
 			},
 		);
 	}
