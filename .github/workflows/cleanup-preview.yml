@@ -8,34 +8,30 @@ jobs:
   determine_services:
     name: Determine Affected Services
     runs-on: ubuntu-latest
-    
     outputs:
-      services_found: ${{ steps.determine_services.outputs.services_found }}
-      services_matrix: ${{ steps.determine_services.outputs.services_matrix }}
+      services_matrix: ${{ steps.determine.outputs.services_matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install yq (latest)
+      - name: Install yq
         run: |
           sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
 
       - name: Get Changed Files
-        id: changed_files
+        id: get_changed_files
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} ${{ github.sha }})
           echo "$CHANGED_FILES" > changed_files.txt
 
       - name: Determine Affected Services
-        id: determine_services
+        id: determine
         run: |
-          SERVICES_FOUND=false
           SERVICES=()
-          
           SERVICES_COUNT=$(yq e '.services | length' .github/preview-deployments.config.yml || echo 0)
           for i in $(seq 0 $((SERVICES_COUNT - 1))); do
             SERVICE_PATH=$(yq e ".services[$i].path" .github/preview-deployments.config.yml)
@@ -43,61 +39,43 @@ jobs:
               SERVICE_NAME=$(yq e ".services[$i].name" .github/preview-deployments.config.yml)
               PROJECT_ID=$(yq e ".services[$i].project_id" .github/preview-deployments.config.yml)
               REGION=$(yq e ".services[$i].region" .github/preview-deployments.config.yml)
-              ENVIRONMENT=$(yq e ".services[$i].environment" .github/preview-deployments.config.yml)
               SA_KEY_SECRET_NAME=$(yq e ".services[$i].sa_key_secret_name" .github/preview-deployments.config.yml)
-              
-              SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"environment\":\"$ENVIRONMENT\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
-              SERVICES_FOUND=true
+              SERVICES+=("{\"service\":\"$SERVICE_NAME\", \"project_id\":\"$PROJECT_ID\", \"region\":\"$REGION\", \"sa_key_secret_name\":\"$SA_KEY_SECRET_NAME\"}")
             fi
           done
-          
-          echo "services_found=$SERVICES_FOUND" >> "$GITHUB_OUTPUT"
-          
-          # Create the JSON file only if services are found
-          if [[ "$SERVICES_FOUND" == "true" ]]; then
-            echo "${SERVICES[@]}" | jq -c '.' > services_matrix.json
-            echo "services_matrix=$(cat services_matrix.json)" >> "$GITHUB_OUTPUT"
-          fi
+          echo "services_matrix=$(jq -c . <<< \"[${SERVICES[@]}]\")" >> "$GITHUB_OUTPUT"
 
-      - name: Upload Service Matrix
-        if: steps.determine_services.outputs.services_found == 'true'
-        uses: actions/upload-artifact@v3
-        with:
-          name: services_matrix
-          path: services_matrix.json
+      # - name: Upload Service Matrix
+      #   if: steps.determine_services.outputs.services_found == 'true'
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: services_matrix
+      #     path: services_matrix.json
 
   cleanup:
     name: Cleanup Services
     needs: determine_services
     runs-on: ubuntu-latest
-    if: needs.determine_services.outputs.services_found == 'true'
-    
     strategy:
       matrix:
-        service_data: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
-      
+        service: ${{ fromJson(needs.determine_services.outputs.services_matrix) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download Service Matrix
-        uses: actions/download-artifact@v3
-        with:
-          name: services_matrix
-
       - name: Google Auth
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ matrix.service_data.project_id }}
-          credentials_json: ${{ secrets[matrix.service_data.sa_key_secret_name] }}
+          project_id: ${{ matrix.service.project_id }}
+          credentials_json: ${{ secrets[matrix.service.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ matrix.service_data.project_id }}
+          project_id: ${{ matrix.service.project_id }}
 
       - name: Remove Cloud Run Tag
         run: |
-          gcloud run services update-traffic ${{ matrix.service_data.service }} \
-            --region=${{ matrix.service_data.region }} \
+          gcloud run services update-traffic ${{ matrix.service.service }} \
+            --region=${{ matrix.service.region }} \
             --remove-tags=pr-${{ github.event.pull_request.number }}
