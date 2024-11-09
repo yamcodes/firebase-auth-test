@@ -57,8 +57,8 @@ jobs:
 
       - name: Debug the matrix outputs
         run: |
-          echo "Matrix: ${{ steps.determine.outputs.matrix }}"
-          echo "fromJson: ${{ fromJson(steps.determine.outputs.matrix) }}"
+          echo "Matrix: ${{ steps.prepare.outputs.json }}"
+          echo "fromJson: ${{ fromJson(steps.prepare.outputs.json) }}"
 
   cleanup:
     name: Cleanup Services
