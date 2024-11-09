@@ -75,7 +75,7 @@ jobs:
           credentials_json: ${{ secrets[matrix.service_data.sa_key_secret_name] }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ matrix.service_data.project_id }}
 
