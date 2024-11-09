@@ -30,7 +30,6 @@ jobs:
               console.log("Found active workflow runs:", relatedRuns);
             }
             return relatedRuns;
-          result-encoding: string
 
       - name: Cancel Cleanup Workflows
         if: steps.list_workflows.outputs.result != '[]'
