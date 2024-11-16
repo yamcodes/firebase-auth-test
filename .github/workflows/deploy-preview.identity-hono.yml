@@ -66,6 +66,12 @@ jobs:
             commit-sha=${{ github.sha }}
             pr-number=${{ github.event.pull_request.number }}
 
+      - name: Check if the service requires authentication
+        id: check_require_auth
+        uses: mikefarah/yq@v4
+        with:
+          cmd: yq '.services[] | select(.name == "'${{ env.SERVICE_NAME }}'").require_auth' .github/preview-deployments.config.yml
+
       - name: Comment PR
         uses: actions/github-script@v7
         with:
@@ -76,12 +82,15 @@ jobs:
               repo: context.repo.repo,
             });
 
-            const existingComment = comments.find(comment => comment.body.includes(steps.deploy.outputs.url));
-
+            const existingComment = comments.find(comment => comment.body.includes("${{ steps.deploy.outputs.url }}"));
+            const requireAuth = ${{ steps.check_require_auth.outputs.result }} === "true";
             let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
-
+            
             if (existingComment) {
               commentBody += `\n\n**Updated to commit:** ${{ github.sha }}`;
+            }
+            if (requireAuth) {
+              commentBody += `\n\n**Note:** This preview requires authentication.`;
             }
 
             if (existingComment) {
