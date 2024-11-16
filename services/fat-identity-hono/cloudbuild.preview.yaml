@@ -63,7 +63,7 @@ steps:
           --revision-suffix=$$REVISION_SUFFIX \
           --no-traffic \
           --tag=pr-$_PR_NUMBER \
-          --description "Repo: $_HEAD_REPO_URL, Commit: $_HEAD_REPO_URL/pull/$_PR_NUMBER/commits/$SHORT_SHA, PR: #$_PR_NUMBER, SHA: $SHORT_SHA"
+          --description "Repo:\n$_HEAD_REPO_URL"
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
