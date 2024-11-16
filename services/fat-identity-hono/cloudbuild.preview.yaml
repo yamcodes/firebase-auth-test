@@ -40,21 +40,27 @@ steps:
     id: push
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: gcloud
     args:
-      - run
-      - deploy
-      - $_SERVICE_NAME
-      - '--image=$_IMAGE_URL'
-      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run'
-      - '--labels=commit-sha=$COMMIT_SHA'
-      - '--labels=gcb-build-id=$BUILD_ID'
-      - '--labels=gcb-trigger-id=$_TRIGGER_ID'
-      - '--labels=short-sha=$SHORT_SHA'
-      - '--labels=pr-number=$_PR_NUMBER'
-      - '--revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA'
-      - '--no-traffic'
-      - '--tag=pr-$_PR_NUMBER'
+      - '-c'
+      - |
+        RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)
+        echo "RANDOM_SUFFIX=${RANDOM_SUFFIX}" >> /workspace/random_suffix.env
+    id: generate-random-suffix
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    script: |
+      source /workspace/random_suffix.env
+      gcloud run deploy $_SERVICE_NAME \
+        --image=$_IMAGE_URL \
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
+        --labels=commit-sha=$COMMIT_SHA \
+        --labels=gcb-build-id=$BUILD_ID \
+        --labels=gcb-trigger-id=$_TRIGGER_ID \
+        --labels=short-sha=$SHORT_SHA \
+        --labels=pr-number=$_PR_NUMBER \
+        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$RANDOM_SUFFIX \
+        --no-traffic \
+        --tag=pr-$_PR_NUMBER
     waitFor: ['push']
     id: deploy
 
