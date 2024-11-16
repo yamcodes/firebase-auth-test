@@ -62,13 +62,13 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ env.SERVICE_NAME }}-${{ github.event.pull_request.number }}
+          service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
           image: ${{ env.ARTIFACT_REGISTRY_REPO_URL }}/app:${{ github.sha }}
           no_traffic: true
           tag: pr-${{ github.event.pull_request.number }}
           labels: |
-            managed-by=gcp-cloud-build-deploy-cloud-run
+            managed-by=github-actions
             commit-sha=${{ github.sha }}
             pr-number=${{ github.event.pull_request.number }}
           
