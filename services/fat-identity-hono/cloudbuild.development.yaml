@@ -59,9 +59,7 @@ steps:
           --labels=gcb-build-id=$BUILD_ID \
           --labels=gcb-trigger-id=$_TRIGGER_ID \
           --labels=short-sha=$SHORT_SHA \
-          --revision-suffix=$$REVISION_SUFFIX \
-          --no-traffic \
-          --tag=$_PR_NUMBER
+          --revision-suffix=$$REVISION_SUFFIX
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
