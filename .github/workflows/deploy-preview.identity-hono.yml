@@ -32,7 +32,7 @@ jobs:
         id: deployment
         with:
           token: '${{ github.token }}'
-          environment: pr-${{ github.event.pull_request.number }}
+          environment: pr-${{ github.event.pull_request.number }}---${{ env.SERVICE_NAME }}
           transient-environment: true
 
       - name: Google Auth
@@ -57,6 +57,13 @@ jobs:
       - name: Push the docker image to Artifact Registry
         run: |
           docker push ${{ env.ARTIFACT_REGISTRY_REPO_URL }}/app:${{ github.sha }}
+
+      - name: Mark the deployment as in_progress
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          state: 'in_progress'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
 
       - name: Deploy to Cloud Run
         id: deploy
