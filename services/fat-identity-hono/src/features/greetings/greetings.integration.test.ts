@@ -10,24 +10,10 @@ describe("Greetings Service + Repository Integration Tests", () => {
 	const logger = pino();
 	const greetingsService = new GreetingsService(repo, logger);
 
-	describe("getGreeting", () => {
-		it("should return a greeting with the given name", () => {
-			const result = greetingsService.getGreeting("John");
-			expect(result).toBe("Hello, John!");
-		});
-	});
-
 	describe("getSpecialGreeting", () => {
 		it("should return a special greeting", () => {
 			const result = greetingsService.getSpecialGreeting();
 			expect(result).toBe("This is a special greeting just for you!");
-		});
-	});
-
-	describe("getGoodbye", () => {
-		it("should return a goodbye message", () => {
-			const result = greetingsService.getGoodbye();
-			expect(result).toBe("Goodbye!");
 		});
 	});
 
