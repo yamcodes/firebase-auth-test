@@ -44,7 +44,7 @@ app.doc("/docs/json", {
 	tags: [
 		{
 			name: "General",
-			description: "General server operations.\n\n**Prefix**: `/`",
+			description: "General operations.\n\n**Prefix**: `/`",
 		},
 		{
 			name: "Greetings",
