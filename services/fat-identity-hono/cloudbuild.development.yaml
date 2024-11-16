@@ -51,20 +51,7 @@ steps:
       - '-c'
       - |
         source /workspace/random_suffix.env
-        # print the contents of the file
-        cat /workspace/random_suffix.env
-        # Print the random suffix
-        echo "Random Suffix: $${RANDOM_SUFFIX}"
-        # Construct the revision suffix
         REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
-        # Output the service name and revision suffix for debugging
-        echo "Service Name: $_SERVICE_NAME"
-        echo "Revision Suffix: $$REVISION_SUFFIX"
-        # Ensure the revision suffix is valid
-        if [[ ! "$$REVISION_SUFFIX" =~ ^[a-z][a-z0-9-]*[a-z0-9]$ ]]; then
-          echo "Invalid revision suffix: $$REVISION_SUFFIX"
-          exit 1
-        fi
         gcloud run deploy $_SERVICE_NAME \
           --image=$_IMAGE_URL \
           --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
