@@ -50,12 +50,12 @@ steps:
     script: |
       . /workspace/random_suffix.env
       # Construct the revision suffix
-      REVISION_SUFFIX="pr-${_PR_NUMBER}-commit-${SHORT_SHA}-${RANDOM_SUFFIX}"
+      REVISION_SUFFIX="pr-${_PR_NUMBER}-commit-${SHORT_SHA}-$RANDOM_SUFFIX"
       # Output the service name and revision suffix for debugging
       echo "Service Name: $_SERVICE_NAME"
       echo "Revision Suffix: $REVISION_SUFFIX"
       # Ensure the revision suffix is valid
-      if [[ ! "$REVISION_SUFFIX" =~ ^[a-z][a-z0-9-]*[a-z0-9]$ ]]; then
+      if [ ! "$REVISION_SUFFIX" =~ ^[a-z][a-z0-9-]*[a-z0-9]$ ]; then
         echo "Invalid revision suffix: $REVISION_SUFFIX"
         exit 1
       fi
