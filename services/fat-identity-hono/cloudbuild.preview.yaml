@@ -63,7 +63,7 @@ steps:
           --revision-suffix=$$REVISION_SUFFIX \
           --no-traffic \
           --tag=pr-$_PR_NUMBER \
-          --description "Repo: \n $_HEAD_REPO_URL"
+          --description "Identity Service written in Hono $_HEAD_REPO_URL"
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
