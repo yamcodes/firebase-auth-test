@@ -1,8 +1,8 @@
 import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { general } from "~/features/general";
-import { greetings } from "~/features/greetings";
+import { general } from "~/resources/general";
+import { greetings } from "~/resources/greetings";
 import { createApp } from "~/lib/hono";
 import { logger } from "~/middleware/logger";
 import { version } from "./../package.json";
