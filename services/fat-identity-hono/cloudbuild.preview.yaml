@@ -41,9 +41,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
-      # Generate a random 3-letter suffix
-      RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)
-      echo "RANDOM_SUFFIX=$${RANDOM_SUFFIX}" > /workspace/random_suffix.env
+      echo "RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)" > /workspace/random_suffix.env
     id: generate-random-suffix
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
