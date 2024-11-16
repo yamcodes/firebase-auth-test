@@ -56,7 +56,7 @@ steps:
         # Print the random suffix
         echo "Random Suffix: $${RANDOM_SUFFIX}"
         # Construct the revision suffix
-        REVISION_SUFFIX="pr-${_PR_NUMBER:-0}-commit-${SHORT_SHA}-$${RANDOM_SUFFIX}"
+        REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
         # Output the service name and revision suffix for debugging
         echo "Service Name: $_SERVICE_NAME"
         echo "Revision Suffix: $$REVISION_SUFFIX"
@@ -72,10 +72,9 @@ steps:
           --labels=gcb-build-id=$BUILD_ID \
           --labels=gcb-trigger-id=$_TRIGGER_ID \
           --labels=short-sha=$SHORT_SHA \
-          --labels=pr-number=${_PR_NUMBER:-0} \
           --revision-suffix=$$REVISION_SUFFIX \
           --no-traffic \
-          --tag=pr-${_PR_NUMBER:-0}
+          --tag=$_PR_NUMBER
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
@@ -85,7 +84,7 @@ steps:
       - '-c'
       - |
         source /workspace/random_suffix.env
-        REVISION_SUFFIX="pr-${_PR_NUMBER:-0}-commit-${SHORT_SHA}-$${RANDOM_SUFFIX}"
+        REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
         for i in {1..3}; do
           echo "Attempt $i to update traffic..."
           if gcloud run services update-traffic $_SERVICE_NAME \
