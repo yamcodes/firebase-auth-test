@@ -61,7 +61,7 @@ steps:
           --labels=gcb-trigger-id=$_TRIGGER_ID \
           --labels=short-sha=$SHORT_SHA \
           --labels=pr-number=$_PR_NUMBER \
-          --revision-suffix=$${REVISION_SUFFIX} \
+          --revision-suffix=$$REVISION_SUFFIX \
           --no-traffic \
           --tag=pr-$_PR_NUMBER
     waitFor: ['push', 'generate-random-suffix']
