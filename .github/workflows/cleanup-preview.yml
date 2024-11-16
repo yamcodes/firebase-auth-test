@@ -67,7 +67,7 @@ jobs:
       - name: Wait for deployments to complete
         id: wait_for_deployments
         env:
-          ENVIRONMENT: preview-${{ matrix.service.name }}
+          ENVIRONMENT: preview---${{ matrix.service.name }}
           MAX_RETRIES: 10
           RETRY_DELAY: 180
         run: |
