@@ -44,7 +44,7 @@ jobs:
             fi
           done
           # Create JSON array output for matrix strategy
-          echo "[${SERVICES[@]}]" | jq -c '.' > services_matrix.json
+          echo "${SERVICES[@]}" | jq -c --slurp '.' > services_matrix.json
 
       - name: Set Matrix Output
         id: set_matrix
