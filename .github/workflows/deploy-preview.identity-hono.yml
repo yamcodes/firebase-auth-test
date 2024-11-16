@@ -83,9 +83,9 @@ jobs:
             });
 
             const existingComment = comments.find(comment => comment.body.includes("${{ steps.deploy.outputs.url }}"));
-            const requireAuth = ${{ steps.check_require_auth.outputs.result }} === "true";
+            const requireAuth = "${{ steps.check_require_auth.outputs.result }}" === "true";
             let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
-            
+
             if (existingComment) {
               commentBody += `\n\n**Updated to commit:** ${{ github.sha }}`;
             }
