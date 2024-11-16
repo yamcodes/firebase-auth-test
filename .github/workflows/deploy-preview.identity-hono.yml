@@ -70,9 +70,32 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}'
-            })
+            });
+
+            const existingComment = comments.find(comment => comment.body.includes(steps.deploy.outputs.url));
+
+            let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
+
+            if (existingComment) {
+              commentBody += `\n\n**Updated to commit:** ${{ github.sha }}`;
+            }
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody,
+              });
+            }
