@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import app from "~";
 import { db } from "~/config/firebase";
 import { logger } from "~/utils";
