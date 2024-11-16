@@ -53,7 +53,7 @@ steps:
       - |
         . /workspace/random_suffix.env
         # Construct the revision suffix
-        REVISION_SUFFIX="pr-${_PR_NUMBER:-0}-commit-${SHORT_SHA}-${RANDOM_SUFFIX}"
+        REVISION_SUFFIX="pr-${_PR_NUMBER:-0}-commit-${SHORT_SHA}-$${RANDOM_SUFFIX}"
         # Output the service name and revision suffix for debugging
         echo "Service Name: $_SERVICE_NAME"
         echo "Revision Suffix: $REVISION_SUFFIX"
