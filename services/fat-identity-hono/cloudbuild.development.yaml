@@ -90,7 +90,7 @@ steps:
           echo "Attempt $i to update traffic..."
           if gcloud run services update-traffic $_SERVICE_NAME \
             --platform=managed \
-            --to-revisions=$${REVISION_SUFFIX}=100; then
+            --to-revisions=$_SERVICE_NAME-$${REVISION_SUFFIX}=100; then
             echo "Traffic update successful"
             exit 0
           fi
