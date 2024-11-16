@@ -76,7 +76,7 @@ jobs:
               repo: context.repo.repo,
             });
 
-            const existingComment = comments.find(comment => comment.body.includes(steps.deploy.outputs.url));
+            const existingComment = comments.find(comment => comment.body.includes("${{ steps.deploy.outputs.url }}"));
 
             let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
 
