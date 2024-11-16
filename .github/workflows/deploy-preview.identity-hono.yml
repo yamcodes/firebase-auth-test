@@ -52,6 +52,14 @@ jobs:
         run: |
           docker push ${{ env.ARTIFACT_REGISTRY_REPO_URL }}/app:${{ github.sha }}
 
+      - name: Generate 3 letter random string
+        id: generate_random_suffix
+        run: echo "RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Get short sha
+        id: get_short_sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
@@ -61,6 +69,7 @@ jobs:
           image: ${{ env.ARTIFACT_REGISTRY_REPO_URL }}/app:${{ github.sha }}
           no_traffic: true
           tag: pr-${{ github.event.pull_request.number }}
+          suffix: pr-${{ github.event.pull_request.number }}-commit-${{ steps.get_short_sha.outputs.SHORT_SHA }}-${{ steps.generate_random_suffix.outputs.RANDOM_SUFFIX }}
           labels: |
             managed-by=github-actions
             commit-sha=${{ github.sha }}
