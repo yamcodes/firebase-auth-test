@@ -44,7 +44,7 @@ jobs:
             fi
           done
           # Create JSON array output for matrix strategy
-          echo "[${SERVICES[@]}]" | jq -c '.' > services_matrix.json
+          echo "${SERVICES[@]}" | jq -c --slurp '.' > services_matrix.json
 
       - name: Set Matrix Output
         id: set_matrix
@@ -67,7 +67,7 @@ jobs:
       - name: Wait for deployments to complete
         id: wait_for_deployments
         env:
-          ENVIRONMENT: pr-${{ github.event.pull_request.number }}
+          ENVIRONMENT: pr-${{ github.event.pull_request.number }}---${{ matrix.service.name }}
           MAX_RETRIES: 10
           RETRY_DELAY: 180
         run: |
@@ -141,6 +141,15 @@ jobs:
             echo "PR has been reopened. Skipping cleanup."
             exit 0
           fi
+
+      - name: Delete GitHub Environment
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
+        run: |
+          gh api /repos/$REPOSITORY/environments/$ENVIRONMENT --method DELETE
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ENVIRONMENT: pr-${{ github.event.pull_request.number }}---${{ matrix.service.name }}
 
       - name: Remove Cloud Run tag
         if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
