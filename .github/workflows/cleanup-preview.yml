@@ -142,6 +142,15 @@ jobs:
             exit 0
           fi
 
+      - name: Delete GitHub Environment
+        if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
+        run: |
+          gh api /repos/$REPOSITORY/environments/$ENVIRONMENT --method DELETE
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ENVIRONMENT: pr-${{ github.event.pull_request.number }}---${{ matrix.service.name }}
+
       - name: Remove Cloud Run tag
         if: steps.wait_for_deployments.outputs.any_successful_deployments == 'true'
         run: |
