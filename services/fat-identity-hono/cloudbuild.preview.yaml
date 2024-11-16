@@ -82,7 +82,7 @@ steps:
       - REPO_NAME=$REPO_NAME
       - ENVIRONMENT=$_GITHUB_ENVIRONMENT---$_SERVICE_NAME
       - REF=$REF_NAME
-    args: [success]
+    args: [success, "", "https://console.cloud.google.com/cloud-build/builds/$BUILD_ID?project=$PROJECT_ID"]
     id: report-success
 
   # TODO: How do we report failure?
