@@ -49,6 +49,16 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
       . /workspace/random_suffix.env
+      # Construct the revision suffix
+      REVISION_SUFFIX="pr-${_PR_NUMBER}-commit-${SHORT_SHA}-${RANDOM_SUFFIX}"
+      # Output the service name and revision suffix for debugging
+      echo "Service Name: $_SERVICE_NAME"
+      echo "Revision Suffix: $REVISION_SUFFIX"
+      # Ensure the revision suffix is valid
+      if [[ ! "$REVISION_SUFFIX" =~ ^[a-z][a-z0-9-]*[a-z0-9]$ ]]; then
+        echo "Invalid revision suffix: $REVISION_SUFFIX"
+        exit 1
+      fi
       gcloud run deploy $_SERVICE_NAME \
         --image=$_IMAGE_URL \
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
@@ -56,8 +66,10 @@ steps:
         --labels=gcb-build-id=$BUILD_ID \
         --labels=gcb-trigger-id=$_TRIGGER_ID \
         --labels=short-sha=$SHORT_SHA \
-        --revision-suffix=commit-$SHORT_SHA-$${RANDOM_SUFFIX} \
-        --no-traffic
+        --labels=pr-number=$_PR_NUMBER \
+        --revision-suffix=$REVISION_SUFFIX \
+        --no-traffic \
+        --tag=pr-$_PR_NUMBER
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
