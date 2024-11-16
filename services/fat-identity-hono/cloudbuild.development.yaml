@@ -51,7 +51,11 @@ steps:
     args:
       - '-c'
       - |
-        . /workspace/random_suffix.env
+        source /workspace/random_suffix.env
+        # print the contents of the file
+        cat /workspace/random_suffix.env
+        # Print the random suffix
+        echo "Random Suffix: $${RANDOM_SUFFIX}"
         # Construct the revision suffix
         REVISION_SUFFIX="pr-${_PR_NUMBER:-0}-commit-${SHORT_SHA}-$${RANDOM_SUFFIX}"
         # Output the service name and revision suffix for debugging
