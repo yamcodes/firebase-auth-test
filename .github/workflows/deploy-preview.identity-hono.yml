@@ -87,7 +87,7 @@ jobs:
             let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
 
             if (existingComment) {
-              commentBody += `\n\n**Updated to commit:** ${{ github.sha }}`;
+              commentBody += `\n\n**Updated to commit:** ${{ github.event.pull_request.head.sha }}`;
             }
             if (requireAuth) {
               commentBody += `\n\n**Note:** This preview requires authentication.`;
