@@ -9,8 +9,9 @@ env:
   PROJECT_ID: fat-core-dev
   REGION: europe-west3
   SERVICE_NAME: fat-identity-hono-gh
-  DIR: services/fat-identity-hono-gh
-  ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run-preview/firebase-auth-test/fat-identity-hono
+  DIR: services/fat-identity-hono
+  DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
+  ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run-preview/firebase-auth-test/fat-identity-hono-gh
 
 jobs:
   deploy-preview:
@@ -47,7 +48,7 @@ jobs:
       
       - name: Authenticate Docker with Google Cloud Artifact Registry
         run: |
-          gcloud auth configure-docker ${{ env.ARTIFACT_REGISTRY_REPO_URL }}
+          gcloud auth configure-docker ${{ env.DOCKER_AUTH_URL }}
 
       - name: Build Docker image
         run: |
