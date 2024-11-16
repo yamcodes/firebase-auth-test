@@ -2,16 +2,13 @@ name: Deploy preview
 
 on:
   pull_request:
-    branches:
-      - main_fake # TODO: switch to 'main' 
-      # TODO: uncomment the below 2 lines
-    # paths:
-      # - services/fat-identity-hono/**
+    paths:
+      - services/fat-identity-hono/**
 
 env:
   PROJECT_ID: fat-core-dev
   REGION: europe-west3
-  SERVICE_NAME: fat-identity-hono
+  SERVICE_NAME: fat-identity-hono-gh
 
 jobs:
   deploy-preview:
@@ -39,7 +36,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ env.PROJECT_ID }}
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
 
       - name: Deploy to Cloud Run
         id: deploy
