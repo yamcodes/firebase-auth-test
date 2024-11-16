@@ -18,7 +18,7 @@ jobs:
     name: Deploy Preview
     runs-on: ubuntu-latest
     environment:
-      name: preview
+      name: preview---fat-identity-hono-gh
       url: ${{ steps.deploy.outputs.url }}
     permissions:
       contents: read
