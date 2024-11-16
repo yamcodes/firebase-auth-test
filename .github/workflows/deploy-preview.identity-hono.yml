@@ -17,7 +17,9 @@ jobs:
   deploy-preview:
     name: Deploy Preview
     runs-on: ubuntu-latest
-    environment: development
+    environment:
+      name: pr-${{ github.event.pull_request.number }}---fat-identity-hono-gh
+      url: ${{ steps.deploy.outputs.url }}
     permissions:
       contents: read
       deployments: write
@@ -26,14 +28,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Create GitHub deployment
-        uses: chrnorm/deployment-action@v2
-        id: deployment
-        with:
-          token: '${{ github.token }}'
-          environment: pr-${{ github.event.pull_request.number }}---${{ env.SERVICE_NAME }}
-          transient-environment: true
 
       - name: Google Auth
         uses: 'google-github-actions/auth@v2'
@@ -58,13 +52,6 @@ jobs:
         run: |
           docker push ${{ env.ARTIFACT_REGISTRY_REPO_URL }}/app:${{ github.sha }}
 
-      - name: Mark the deployment as in_progress
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: '${{ github.token }}'
-          state: 'in_progress'
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
@@ -78,22 +65,6 @@ jobs:
             managed-by=github-actions
             commit-sha=${{ github.sha }}
             pr-number=${{ github.event.pull_request.number }}
-          
-      - name: Update deployment status (success)
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: '${{ github.token }}'
-          state: 'success'
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
-          environment-url: ${{ steps.deploy.outputs.url }}
-
-      - name: Update deployment status (failure)
-        if: failure()
-        uses: chrnorm/deployment-status@v2
-        with:
-          token: '${{ github.token }}'
-          state: 'failure'
-          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
 
       - name: Comment PR
         uses: actions/github-script@v7
