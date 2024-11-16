@@ -43,7 +43,7 @@ steps:
     script: |
       # Generate a random 3-letter suffix
       RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)
-      echo "RANDOM_SUFFIX=$RANDOM_SUFFIX" > /workspace/random_suffix.env
+      echo "RANDOM_SUFFIX=$${RANDOM_SUFFIX}" > /workspace/random_suffix.env
     id: generate-random-suffix
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
@@ -57,7 +57,7 @@ steps:
         --labels=gcb-trigger-id=$_TRIGGER_ID \
         --labels=short-sha=$SHORT_SHA \
         --labels=pr-number=$_PR_NUMBER \
-        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$RANDOM_SUFFIX \
+        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$${RANDOM_SUFFIX} \
         --no-traffic \
         --tag=pr-$_PR_NUMBER
     waitFor: ['push', 'generate-random-suffix']
