@@ -60,7 +60,7 @@ steps:
           --labels=gcb-build-id=$BUILD_ID \
           --labels=gcb-trigger-id=$_TRIGGER_ID \
           --labels=short-sha=$SHORT_SHA \
-          --revision-suffix=commit-$SHORT_SHA-$RANDOM_SUFFIX \
+          --revision-suffix=commit-$SHORT_SHA-$$RANDOM_SUFFIX \
           --no-traffic
     waitFor: ['push']
     id: deploy
@@ -83,7 +83,7 @@ steps:
           echo "Attempt $i to update traffic..."
           if gcloud run services update-traffic $_SERVICE_NAME \
             --platform=managed \
-            --to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA-$RANDOM_SUFFIX=100; then
+            --to-revisions=$_SERVICE_NAME-commit-$SHORT_SHA-$$RANDOM_SUFFIX=100; then
             echo "Traffic update successful"
             exit 0
           fi

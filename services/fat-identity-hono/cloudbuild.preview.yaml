@@ -58,7 +58,7 @@ steps:
         --labels=gcb-trigger-id=$_TRIGGER_ID \
         --labels=short-sha=$SHORT_SHA \
         --labels=pr-number=$_PR_NUMBER \
-        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$RANDOM_SUFFIX \
+        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$$RANDOM_SUFFIX \
         --no-traffic \
         --tag=pr-$_PR_NUMBER
     waitFor: ['push']
