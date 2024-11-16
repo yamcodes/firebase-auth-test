@@ -44,38 +44,12 @@ export class GreetingsController {
 	get routes() {
 		return this.greetings
 			.route("/", this.deleteAllGreetings())
-			.route("/", this.getGoodbye())
 			.route("/", this.getRandomGreeting())
 			.route("/", this.postGreeting())
 			.route("/", this.getSpecialGreeting())
 			.route("/", this.getAllGreetings())
 			.route("/", this.getGreetingById())
-			.route("/", this.getHello())
 			.route("/", this.deleteGreetingById());
-	}
-
-	private getGoodbye() {
-		return this.greetings.openapi(
-			createRoute({
-				method: "get",
-				path: "/goodbye",
-				summary: "Get a goodbye message",
-				description: "Retrieve a farewell message",
-				tags: ["Greetings"],
-				responses: {
-					200: {
-						content: {
-							"application/json": { schema: GreetingMessageResponse },
-						},
-						description: "Successful response with a goodbye message",
-					},
-				},
-			}),
-			({ var: { service }, json }) => {
-				const message = service.getGoodbye();
-				return json({ message }, 200);
-			},
-		);
 	}
 
 	private getRandomGreeting() {
@@ -214,39 +188,6 @@ export class GreetingsController {
 			async ({ var: { service }, body }) => {
 				await service.deleteAllGreetings();
 				return body(null, 204);
-			},
-		);
-	}
-
-	private getHello() {
-		return this.greetings.openapi(
-			createRoute({
-				method: "get",
-				path: "/hello/:name",
-				summary: "Get a hello greeting",
-				description: "Use this endpoint to get a personalized hello greeting",
-				tags: ["Greetings"],
-				request: {
-					params: z.object({
-						name: z.string().openapi({
-							description: "The name of the person to greet",
-							example: "John",
-						}),
-					}),
-				},
-				responses: {
-					200: {
-						content: {
-							"application/json": { schema: GreetingMessageResponse },
-						},
-						description: "Successful response with a greeting message",
-					},
-				},
-			}),
-			({ var: { service }, json, req }) => {
-				const { name } = req.valid("param");
-				const message = service.getGreeting(name);
-				return json({ message }, 200);
 			},
 		);
 	}
