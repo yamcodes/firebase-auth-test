@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set_matrix.outputs.matrix }}
-    permissions: 
-      contents: read
-      environments: write
-      deployments: write
-      id-token: write
 
     steps:
       - name: Checkout repository
