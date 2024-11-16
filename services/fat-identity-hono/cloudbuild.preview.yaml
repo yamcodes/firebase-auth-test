@@ -48,7 +48,7 @@ steps:
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
-      source /workspace/random_suffix.env
+      . /workspace/random_suffix.env
       gcloud run deploy $_SERVICE_NAME \
         --image=$_IMAGE_URL \
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
@@ -57,7 +57,7 @@ steps:
         --labels=gcb-trigger-id=$_TRIGGER_ID \
         --labels=short-sha=$SHORT_SHA \
         --labels=pr-number=$_PR_NUMBER \
-        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$${RANDOM_SUFFIX} \
+        --revision-suffix=pr-$_PR_NUMBER-commit-$SHORT_SHA-$RANDOM_SUFFIX \
         --no-traffic \
         --tag=pr-$_PR_NUMBER
     waitFor: ['push', 'generate-random-suffix']
@@ -66,7 +66,6 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     script: |
       apt-get update && apt-get install -y jq
-      source /workspace/random_suffix.env
       gcloud run services describe $_SERVICE_NAME \
         --format="json" \
         | jq -r \
