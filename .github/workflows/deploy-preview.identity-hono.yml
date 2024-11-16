@@ -90,7 +90,12 @@ jobs:
               commentBody += `\n\n**Updated to commit:** ${{ github.event.pull_request.head.sha }}`;
             }
             if (requireAuth) {
-              commentBody += `\n\n**Note:** This preview requires authentication.`;
+              commentBody += `\n\n**Note:** This preview requires authentication. ` +
+                             `To access it locally, use the command below:\n` +
+                             `\`\`\`bash\n` +
+                             `gcloud run services proxy ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --tag=pr-${{ github.event.pull_request.number }}\n` +
+                             `\`\`\`\n` +
+                             `For more details, see [the guide in the Cloud Run Documentation](https://cloud.google.com/run/docs/authenticating/developers?hl=en#proxy).`;
             }
 
             if (existingComment) {

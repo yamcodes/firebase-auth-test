@@ -11,3 +11,4 @@ services:
     project_id: fat-core-dev
     path: services/fat-identity-hono
     sa_key_secret_name: GCP_SA_KEY_FAT_CORE_DEV
+    require_auth: true
