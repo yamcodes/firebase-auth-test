@@ -61,7 +61,8 @@ steps:
           --labels=pr-number=$_PR_NUMBER \
           --revision-suffix=$$REVISION_SUFFIX \
           --no-traffic \
-          --tag=pr-$_PR_NUMBER
+          --tag=pr-$_PR_NUMBER \
+          --description "Repo: $REPO_URL, Commit: $COMMIT_URL, PR: $_PR_NAME, SHA: $SHORT_SHA"
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
