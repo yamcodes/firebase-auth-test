@@ -84,18 +84,16 @@ jobs:
 
             const existingComment = comments.find(comment => comment.body.includes("${{ steps.deploy.outputs.url }}"));
             const requireAuth = "${{ steps.check_require_auth.outputs.result }}" === "true";
-            let commentBody = `🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}`;
+            let commentBody = `🚀 **Deployment preview for _${{ env.SERVICE_NAME }}_ ready!**\n\n` +
+                              `✅ Preview\n${{ steps.deploy.outputs.url }}\n\n` +
+                              `Built with commit ${{ github.event.pull_request.head.sha }}.\n`;
 
-            if (existingComment) {
-              commentBody += `\n\n**Updated to commit:** ${{ github.event.pull_request.head.sha }}`;
-            }
             if (requireAuth) {
-              commentBody += `\n\n**Note:** This preview requires authentication. ` +
-                             `To access it locally, use the command below:\n` +
-                             `\`\`\`bash\n` +
-                             `gcloud run services proxy ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --tag=pr-${{ github.event.pull_request.number }}\n` +
-                             `\`\`\`\n` +
-                             `For more details, see [the guide in the Cloud Run Documentation](https://cloud.google.com/run/docs/authenticating/developers?hl=en#proxy).`;
+              commentBody += `\n> [!NOTE]\n> This preview requires authentication. To access it locally, run the following:\n` +
+                             `> \`\`\`bash\n` +
+                             `> gcloud run services proxy ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --tag=pr-${{ github.event.pull_request.number }}\n` +
+                             `> \`\`\`\n` +
+                             `> ###### For more details, see [the guide in the Cloud Run Documentation](https://cloud.google.com/run/docs/authenticating/developers?hl=en#proxy).`;
             }
 
             if (existingComment) {
