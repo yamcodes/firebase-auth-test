@@ -68,7 +68,6 @@ jobs:
             echo ""
             echo "==================== Build Logs ===================="
             echo "View the build logs at: $LOG_URL"
-            ././..View the build logs at: https://console.cloud.google.com/cloud-build/builds/07bd6076-a391-4340-94c2-16671bd6ae47?project=422746965484
             echo "===================================================="
           fi
 
