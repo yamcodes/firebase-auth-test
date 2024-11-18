@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [closed]
 
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   determine_services:
     name: Determine affected services
