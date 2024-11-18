@@ -1,0 +1,48 @@
+name: Deploy `identity-hono-gh`
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: fat-core-dev
+  REGION: europe-west3
+  SERVICE_NAME: fat-identity-hono-gh
+  DIR: services/fat-identity-hono
+  DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
+  ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run/firebase-auth-test/fat-identity-hono-hybrid
+  TRIGGER_NAME: fat-identity-hono-hybrid
+  BRANCH_NAME: main
+
+jobs:
+  deploy-preview:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: development---fat-identity-hono-hybrid
+      # TODO: how can we grab the url from the deploy step?
+      # url: ${{ steps.deploy.outputs.url }}
+    permissions:
+      contents: read
+      deployments: write
+      id-token: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
+
+      - name: Setup GCloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+      
+      - name: Invoke the manual trigger
+        run: |
+          gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.REGION }} --branch=${{ env.BRANCH_NAME }}
