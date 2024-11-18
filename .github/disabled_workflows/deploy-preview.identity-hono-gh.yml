@@ -3,9 +3,7 @@ name: Deploy preview identity-hono-gh
 on:
   pull_request:
     paths:
-      # TODO: uncomment if using this workflow
-      # - services/fat-identity-hono/**
-      - non/existing/path
+      - services/fat-identity-hono/**
 
 env:
   PROJECT_ID: fat-core-dev
@@ -14,6 +12,12 @@ env:
   DIR: services/fat-identity-hono
   DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run-preview/firebase-auth-test/fat-identity-hono-gh
+
+
+
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy-preview:
