@@ -63,13 +63,14 @@ jobs:
           # Extract Log URL
           LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
           if [ -z "$LOG_URL" ]; then
-            echo "WARNING: Failed to extract LOG_URL from the output. Proceeding without it."
-          else
-            echo ""
-            echo "==================== Build Logs ===================="
-            echo "View the build logs at:\n$LOG_URL"
-            echo "===================================================="
+            LOG_URL="(log URL not available)"
           fi
+          echo ""
+          echo "==================== Build Logs ===================="
+          echo "View the build logs at:"
+          echo $LOG_URL
+          echo "===================================================="
+          echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
 
       - name: Poll Build Status
         id: poll-build-status
@@ -84,14 +85,16 @@ jobs:
               echo "✅ Build succeeded!"
               echo ""
               echo "==================== Build Logs ===================="
-              echo "View the build logs at:\n$LOG_URL"
+              echo "View the build logs at:"
+              echo $LOG_URL
               echo "===================================================="
               exit 0
             elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
               echo "❌ Build failed or cancelled."
               echo ""
               echo "==================== Build Logs ===================="
-              echo "View the build logs at:\n$LOG_URL"
+              echo "View the build logs at:"
+              echo $LOG_URL
               echo "===================================================="
               exit 1
             fi
@@ -101,7 +104,8 @@ jobs:
           echo "❌ Build did not complete within the expected time."
           echo ""
           echo "==================== Build Logs ===================="
-          echo "View the build logs at:\n$LOG_URL"
+          echo "View the build logs at:
+          echo $LOG_URL
           echo "===================================================="
           exit 1
 
@@ -113,7 +117,8 @@ jobs:
             --region=${{ env.REGION }} \
             --format='value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed service is available at:\n$SERVICE_URL"
+          echo "🚀 Deployed service is available at:"
+          echo $SERVICE_URL
 
       - name: Comment PR
         uses: actions/github-script@v7
