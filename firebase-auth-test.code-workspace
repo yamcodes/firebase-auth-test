@@ -65,6 +65,7 @@
 			"cloudsdktool",
 			"clsx",
 			"consts",
+			"elif",
 			"fastify",
 			"Firestore",
 			"gcloud",

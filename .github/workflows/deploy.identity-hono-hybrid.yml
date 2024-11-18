@@ -22,8 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: development---fat-identity-hono-hybrid
-      # TODO: how can we grab the url from the deploy step?
-      # url: ${{ steps.deploy.outputs.url }}
+      url: ${{ steps.fetch-service-url.outputs.service_url }}
     permissions:
       contents: read
       deployments: write
@@ -45,5 +44,37 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
       
       - name: Invoke the manual trigger
+        id: trigger-build
         run: |
-          gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }}
+          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }})
+          BUILD_ID=$(echo "$OUTPUT" | grep -oP '(?<=id: ).*')
+          echo "BUILD_ID=${BUILD_ID}" >> $GITHUB_OUTPUT
+
+      - name: Poll Build Status
+        id: poll-build-status
+        run: |
+          for i in {1..30}; do
+            STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
+            echo "Build status: $STATUS"
+            if [[ "$STATUS" == "SUCCESS" ]]; then
+              exit 0
+            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
+              echo "Build failed or cancelled"
+              exit 1
+            fi
+            sleep 10 # wait 10 seconds before checking again
+          done
+          echo "Build did not complete within the expected time"
+          exit 1
+
+      - name: Fetch Service URL
+        id: fetch-service-url
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --platform=managed \
+            --region=${{ env.REGION }} \
+            --format='value(status.url)')
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+
+      - name: Output Service URL
+        run: echo "Deployed service is available at ${{ steps.fetch-service-url.outputs.service_url }}"
