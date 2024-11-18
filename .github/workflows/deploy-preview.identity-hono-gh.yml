@@ -1,4 +1,4 @@
-name: Deploy preview
+name: Deploy preview identity-hono-gh
 
 on:
   pull_request:

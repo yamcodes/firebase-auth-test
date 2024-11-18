@@ -44,6 +44,7 @@ steps:
     script: |
       echo "RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)" > /workspace/random_suffix.env
     id: generate-random-suffix
+    waitFor: ['-']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: /bin/bash
