@@ -34,18 +34,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Google Auth
+      - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ env.PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
 
-      - name: Setup GCloud
+      - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.PROJECT_ID }}
-      
-      - name: Invoke the manual trigger
+        
+      - name: Trigger Cloud Build deployment
         id: trigger-build
         run: |
           OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
@@ -65,51 +65,37 @@ jobs:
           if [ -z "$LOG_URL" ]; then
             LOG_URL="(log URL not available)"
           fi
-          echo ""
-          echo "==================== Build Logs ===================="
-          echo "View the build logs at:"
-          echo $LOG_URL
-          echo "===================================================="
           echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
 
-      - name: Poll Build Status
+      - name: Poll Cloud Build deployment status
         id: poll-build-status
         run: |
           MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
           LOG_URL=${{ steps.trigger-build.outputs.log_url }}
+          
+          echo "📋 Cloud Build logs"
+          echo $LOG_URL
+          echo ""
 
           for i in $(seq 1 $MAX_RETRIES); do
             STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
             echo "Build status: $STATUS"
             if [[ "$STATUS" == "SUCCESS" ]]; then
               echo "✅ Build succeeded!"
-              echo ""
-              echo "==================== Build Logs ===================="
-              echo "View the build logs at:"
-              echo $LOG_URL
-              echo "===================================================="
               exit 0
             elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
               echo "❌ Build failed or cancelled."
-              echo ""
-              echo "==================== Build Logs ===================="
-              echo "View the build logs at:"
-              echo $LOG_URL
-              echo "===================================================="
+              echo "Check the logs for more details: $LOG_URL"
               exit 1
             fi
             sleep ${{ env.POLL_INTERVAL_SECONDS }}
           done
 
           echo "❌ Build did not complete within the expected time."
-          echo ""
-          echo "==================== Build Logs ===================="
-          echo "View the build logs at:"
-          echo $LOG_URL
-          echo "===================================================="
+          echo "Check the logs for more details: $LOG_URL"
           exit 1
 
-      - name: Output Service URL
+      - name: Output service URL
         id: output-service-url
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
