@@ -70,12 +70,12 @@ jobs:
       - name: Poll Cloud Build deployment status
         id: poll-build-status
         run: |
+          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
+          LOG_URL=${{ steps.trigger-build.outputs.log_url }}
+          
           echo "📋 Cloud Build logs"
           echo $LOG_URL
           echo ""
-
-          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
-          LOG_URL=${{ steps.trigger-build.outputs.log_url }}
 
           for i in $(seq 1 $MAX_RETRIES); do
             STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
