@@ -15,6 +15,8 @@ env:
   TRIGGER_NAME: fat-identity-hono-hybrid
   BRANCH_NAME: main
   TRIGGER_REGION: global
+  POLLING_TIMEOUT_SECONDS: 300
+  POLL_INTERVAL_SECONDS: 10
 
 jobs:
   deploy-preview:
@@ -49,17 +51,34 @@ jobs:
           OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
           echo "Full output:"
           echo "$OUTPUT"
+
+          # Extract Build ID
           BUILD_ID=$(echo "$OUTPUT" | jq -r '.metadata.build.id')
           if [ -z "$BUILD_ID" ]; then
-            echo "Failed to extract BUILD_ID from output"
+            echo "ERROR: Failed to extract BUILD_ID from the output. Cannot proceed."
             exit 1
           fi
+          echo "Build ID: $BUILD_ID"
           echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
-          
+
+          # Extract Log URL
+          LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
+          if [ -z "$LOG_URL" ]; then
+            echo "WARNING: Failed to extract LOG_URL from the output. Proceeding without it."
+          else
+            echo "Log URL: $LOG_URL"
+            echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
+            echo ""
+            echo "==================== Build Logs ===================="
+            echo "View the build logs at: $LOG_URL"
+            echo "===================================================="
+          fi
+
       - name: Poll Build Status
         id: poll-build-status
         run: |
-          for i in {1..30}; do
+          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
+          for i in $(seq 1 $MAX_RETRIES); do
             STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
             echo "Build status: $STATUS"
             if [[ "$STATUS" == "SUCCESS" ]]; then
@@ -68,7 +87,7 @@ jobs:
               echo "Build failed or cancelled"
               exit 1
             fi
-            sleep 10 # wait 10 seconds before checking again
+            sleep ${{ env.POLL_INTERVAL_SECONDS }} # wait before checking again
           done
           echo "Build did not complete within the expected time"
           exit 1
