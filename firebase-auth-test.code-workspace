@@ -60,6 +60,7 @@
 			"automap",
 			"biomejs",
 			"BUILDKIT",
+			"cloudrun",
 			"CLOUDSDK",
 			"cloudsdktool",
 			"clsx",
