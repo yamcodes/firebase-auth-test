@@ -18,6 +18,10 @@ env:
   POLL_INTERVAL_SECONDS: 10
   REQUIRE_AUTH: true
 
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-preview:
     name: Deploy Preview
