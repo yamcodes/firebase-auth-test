@@ -65,6 +65,11 @@ options:
   # which are available throughout the entire build
   automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
+
+  # Must be manually set due to the manual trigger.
+  # See https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values#dynamic_substitutions
+  dynamicSubstitutions: true
+
   env:
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Make all commands --quiet
     - CLOUDSDK_RUN_REGION=$_DEPLOY_REGION  # Use the same region for Cloud Run
