@@ -48,7 +48,11 @@ jobs:
       - name: Trigger Cloud Build deployment
         id: trigger-build
         run: |
-          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ github.event.pull_request.head.ref }} --format=json)
+          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} \
+            --region=${{ env.TRIGGER_REGION }} \
+            --branch=${{ github.event.pull_request.head.ref }} \
+            --format=json \
+            --substitutions=_PR_NUMBER=${{ github.event.pull_request.number }})
           echo "Full output:"
           echo "$OUTPUT"
 

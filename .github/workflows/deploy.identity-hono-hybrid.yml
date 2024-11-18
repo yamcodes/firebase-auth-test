@@ -103,5 +103,5 @@ jobs:
             --region=${{ env.REGION }} \
             --format='value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-          echo "🚀 Deployed service is available at:"
+          echo "🚀 Service deployed"
           echo $SERVICE_URL
