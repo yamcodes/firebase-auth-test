@@ -3,7 +3,9 @@ name: Deploy preview identity-hono-gh
 on:
   pull_request:
     paths:
-      - services/fat-identity-hono/**
+      # TODO: uncomment if using this workflow
+      # - services/fat-identity-hono/**
+      - non/existing/path
 
 env:
   PROJECT_ID: fat-core-dev
