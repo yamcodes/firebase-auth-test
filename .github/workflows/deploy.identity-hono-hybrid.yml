@@ -46,10 +46,16 @@ jobs:
       - name: Invoke the manual trigger
         id: trigger-build
         run: |
-          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }})
-          BUILD_ID=$(echo "$OUTPUT" | grep -oP '(?<=id: ).*')
-          echo "BUILD_ID=${BUILD_ID}" >> $GITHUB_OUTPUT
-
+          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
+          echo "Full output:"
+          echo "$OUTPUT"
+          BUILD_ID=$(echo "$OUTPUT" | jq -r '.metadata.build.id')
+          if [ -z "$BUILD_ID" ]; then
+            echo "Failed to extract BUILD_ID from output"
+            exit 1
+          fi
+          echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
+          
       - name: Poll Build Status
         id: poll-build-status
         run: |
