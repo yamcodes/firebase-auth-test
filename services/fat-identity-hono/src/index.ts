@@ -48,7 +48,7 @@ app.doc("/docs/json", {
 		},
 		{
 			name: "Greetings",
-			description: "Manage greetings.\n\n**Prefix**: `/greetings`",
+			description: "Manage your greetings.\n\n**Prefix**: `/greetings`",
 		},
 	],
 });
