@@ -72,7 +72,7 @@ jobs:
         run: |
           MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
           LOG_URL=${{ steps.trigger-build.outputs.log_url }}
-          
+
           echo "📋 Cloud Build logs"
           echo $LOG_URL
           echo ""

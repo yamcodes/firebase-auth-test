@@ -13,6 +13,10 @@ env:
   DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run-preview/firebase-auth-test/fat-identity-hono-gh
 
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-preview:
     name: Deploy Preview
