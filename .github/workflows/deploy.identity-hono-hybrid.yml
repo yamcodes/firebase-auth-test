@@ -1,0 +1,107 @@
+name: Deploy identity-hono-hybrid
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: fat-core-dev
+  REGION: europe-west3
+  SERVICE_NAME: fat-identity-hono-hybrid
+  DIR: services/fat-identity-hono
+  DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
+  ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run/firebase-auth-test/fat-identity-hono-hybrid
+  TRIGGER_NAME: fat-identity-hono-hybrid
+  BRANCH_NAME: main
+  TRIGGER_REGION: global
+  POLLING_TIMEOUT_SECONDS: 300
+  POLL_INTERVAL_SECONDS: 10
+
+jobs:
+  deploy-preview:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: development---fat-identity-hono-hybrid
+      url: ${{ steps.output-service-url.outputs.service_url }}
+    permissions:
+      contents: read
+      deployments: write
+      id-token: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+        
+      - name: Trigger Cloud Build deployment
+        id: trigger-build
+        run: |
+          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
+          echo "Full output:"
+          echo "$OUTPUT"
+
+          # Extract Build ID
+          BUILD_ID=$(echo "$OUTPUT" | jq -r '.metadata.build.id')
+          if [ -z "$BUILD_ID" ]; then
+            echo "ERROR: Failed to extract BUILD_ID from the output. Cannot proceed."
+            exit 1
+          fi
+          echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
+
+          # Extract Log URL
+          LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
+          if [ -z "$LOG_URL" ]; then
+            LOG_URL="(log URL not available)"
+          fi
+          echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
+
+      - name: Poll Cloud Build deployment status
+        id: poll-build-status
+        run: |
+          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
+          LOG_URL=${{ steps.trigger-build.outputs.log_url }}
+
+          echo "📋 Cloud Build logs"
+          echo $LOG_URL
+          echo ""
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
+            echo "Build status: $STATUS"
+            if [[ "$STATUS" == "SUCCESS" ]]; then
+              echo "✅ Build succeeded!"
+              exit 0
+            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
+              echo "❌ Build failed or cancelled."
+              echo "Check the logs for more details: $LOG_URL"
+              exit 1
+            fi
+            sleep ${{ env.POLL_INTERVAL_SECONDS }}
+          done
+
+          echo "❌ Build did not complete within the expected time."
+          echo "Check the logs for more details: $LOG_URL"
+          exit 1
+
+      - name: Output service URL
+        id: output-service-url
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --platform=managed \
+            --region=${{ env.REGION }} \
+            --format='value(status.url)')
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "🚀 Service deployed"
+          echo $SERVICE_URL

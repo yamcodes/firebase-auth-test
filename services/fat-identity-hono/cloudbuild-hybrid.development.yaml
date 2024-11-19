@@ -1,26 +1,4 @@
-# For info on gh-deployer, see: https://zentered.co/articles/preview-builds-with-cloud-run/
-
 steps:
-  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
-    env:
-      - REPO_NAME=$REPO_NAME
-      - TRANSIENT_ENVIRONMENT=false
-      - DESCRIPTION=Deploying to Google Cloud Run
-      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
-      - REF=$REF_NAME
-    args: [create]
-    waitFor: ['-']
-    id: create-report
-
-  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
-    env:
-      - REPO_NAME=$REPO_NAME
-      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
-      - REF=$REF_NAME
-    args: [in_progress]
-    waitFor: ['create-report']
-    id: report-in-progress
-
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -88,25 +66,6 @@ steps:
     waitFor: ['deploy']
     id: update-traffic
 
-  - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
-    env:
-      - REPO_NAME=$REPO_NAME
-      - ENVIRONMENT=$_GITHUB_ENVIRONMENT
-      - REF=$REF_NAME
-    args: [success]
-    id: report-success
-
-  # TODO: How do we report failure?
-  # - name: 'europe-west3-docker.pkg.dev/fat-core-dev/docker/gh-deployer:latest'
-  #   env:
-  #     - REPO_NAME=$REPO_NAME
-  #     - ENVIRONMENT=$_GITHUB_ENVIRONMENT
-  #     - REF=$REF_NAME
-  #   args: [failure]
-  #   waitFor: ['create-report', 'report-in-progress', 'build', 'push', 'deploy', 'attach-url-to-report', 'update-traffic']
-  #   status: FAILURE
-  #   id: report-failure
-
 images: [$_IMAGE_URL]
 
 options:
@@ -114,6 +73,11 @@ options:
   # which are available throughout the entire build
   automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
+
+  # Must be manually set due to the manual trigger.
+  # See https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values#dynamic_substitutions
+  dynamicSubstitutions: true
+  
   env:
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Make all commands --quiet
     - CLOUDSDK_RUN_REGION=$_DEPLOY_REGION  # Use the same region for Cloud Run
