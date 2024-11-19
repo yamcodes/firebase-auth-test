@@ -38,7 +38,7 @@ export type AppType = typeof routes;
 app.doc("/docs/json", {
 	openapi: "3.0.0",
 	info: {
-		title: "fat-identity Docs",
+		title: "THE BEST DOCS EVER",
 		version,
 	},
 	tags: [
