@@ -109,7 +109,11 @@ jobs:
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
             --platform=managed \
             --region=${{ env.REGION }} \
-            --format='value(status.url)')
+            --format="json" \
+            | jq -r \
+            --arg tag "pr-${{ github.event.pull_request.number }}" \
+            '.status.traffic[] | select(.tag == $tag) | .url')
+
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
           echo "🚀 Service deployed"
           echo $SERVICE_URL
