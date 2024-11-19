@@ -1,5 +1,11 @@
 # @repo/fat-identity-hono
 
+## 2.0.0
+
+### Major Changes
+
+- Remove unused hello and goodbye endpoints _[`#128`](https://github.com/yamcodes/firebase-auth-test/pull/128) [`197363b`](https://github.com/yamcodes/firebase-auth-test/commit/197363b33de0550c995e501e323b9c5f5f790090) [@yamcodes](https://github.com/yamcodes)_
+
 ## 1.1.2
 
 ### Patch Changes
