@@ -46,23 +46,11 @@ steps:
     waitFor: ['push', 'generate-random-suffix']
     id: deploy
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    script: |
-      apt-get update && apt-get install -y jq
-      gcloud run services describe $_SERVICE_NAME \
-        --format="json" \
-        | jq -r \
-        --arg tag "pr-$_PR_NUMBER" \
-        '.status.traffic[] | select(.tag == $tag) | .url' \
-        > /workspace/deployer_environment_url
-    waitFor: ['deploy']
-    id: attach-url-to-report
-
 images: [$_IMAGE_URL]
 
 options:
-  # automatically map all the substitutions to environment variables
-  # which are available throughout the entire build
+  # Automatically map all the substitutions to environment variables, available throughout the entire build
+  # See https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values#map_substitutions_automatically
   automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
 
