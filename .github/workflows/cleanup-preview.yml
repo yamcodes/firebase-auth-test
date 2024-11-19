@@ -108,10 +108,13 @@ jobs:
               fi
             done
       
-            if [[ "$ANY_IN_PROGRESS" == "true" ]]; then
-              echo "($((COUNT+1))/$MAX_RETRIES) Some deployments are still in progress. Retrying in $RETRY_DELAY seconds..."
-              sleep $RETRY_DELAY
+            if [[ "$ANY_IN_PROGRESS" == "false" ]]; then
+              echo "All deployments completed."
+              break
             fi
+
+            echo "($((COUNT+1))/$MAX_RETRIES) Some deployments are still in progress. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
             COUNT=$((COUNT + 1))
           done
       
