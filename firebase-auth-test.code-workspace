@@ -25,8 +25,8 @@
 			"path": "services/fat-identity"
 		},
 		{
-			"name": "fat-identity-hono.service",
-			"path": "services/fat-identity-hono"
+			"name": "fat-identity-fastify.service",
+			"path": "services/fat-identity-fastify"
 		},
 		{
 			"name": "fat-identity-nestjs.service",

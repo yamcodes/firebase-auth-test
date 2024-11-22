@@ -1,19 +1,6 @@
 services:
-  - name: fat-identity-hono
-    region: europe-west3
-    environment: development
-    project_id: fat-core-dev
-    path: services/fat-identity-hono
-    sa_key_secret_name: GCP_SA_KEY_FAT_CORE_DEV
-    require_auth: true
-  - name: fat-identity-hono-gh
+  - name: fat-identity
     region: europe-west3
     project_id: fat-core-dev
-    path: services/fat-identity-hono
-    sa_key_secret_name: GCP_SA_KEY_FAT_CORE_DEV
-    require_auth: true
-  - name: fat-identity-hono-hybrid
-    region: europe-west3
-    project_id: fat-core-dev
-    path: services/fat-identity-hono
+    path: services/fat-identity
     sa_key_secret_name: GCP_SA_KEY_FAT_CORE_DEV

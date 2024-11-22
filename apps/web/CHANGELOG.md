@@ -12,7 +12,7 @@
 
 </small>
 
-- `@repo/fat-identity-hono@2.0.0`
+- `@repo/fat-identity@2.0.0`
 
 </details>
 
@@ -28,7 +28,7 @@
 
 </small>
 
-- `@repo/fat-identity-hono@1.1.2`
+- `@repo/fat-identity@1.1.2`
 
 </details>
 
@@ -44,7 +44,7 @@
 
 </small>
 
-- `@repo/fat-identity-hono@1.1.1`
+- `@repo/fat-identity@1.1.1`
 
 </details>
 
@@ -63,7 +63,7 @@
 </small>
 
 - `@repo/fat-ui@0.0.1`
-- `@repo/fat-identity@1.0.1`
-- `@repo/fat-identity-hono@1.1.0`
+- `@repo/fat-identity-fastify@1.0.1`
+- `@repo/fat-identity@1.1.0`
 
 </details>

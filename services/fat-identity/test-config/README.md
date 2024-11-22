@@ -10,4 +10,4 @@ This directory contains test configuration files for the project.
 - `vitest.config.ts`: Main Vitest configuration
 
 > [!NOTE]
-> You'll notice that `.env.test` is not here: that's in the root of the `fat-identity-hono` project.
+> You'll notice that `.env.test` is not here: that's in the root of the `fat-identity` project.

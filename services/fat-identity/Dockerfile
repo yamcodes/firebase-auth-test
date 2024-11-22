@@ -11,8 +11,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Putting the "--filter" before the command uses pnpm filtering, whilst putting it after the command uses turborepo filtering
 # Read about pnpm filtering here: https://pnpm.io/filtering
 # Read about turborepo filtering here: https://turbo.build/repo/docs/core-concepts/monorepos/filtering
-RUN pnpm --filter=@repo/fat-identity-hono build:server
-RUN pnpm deploy --filter=@repo/fat-identity-hono --prod /prod/app
+RUN pnpm --filter=@repo/fat-identity build:server
+RUN pnpm deploy --filter=@repo/fat-identity --prod /prod/app
 
 FROM base
 COPY --from=build /prod/app /prod/app

@@ -4,7 +4,7 @@ import {
 	useAuth,
 	useUser,
 } from "@repo/fat-auth/react";
-import { createClient } from "@repo/fat-identity-hono";
+import { createClient } from "@repo/fat-identity";
 import { useForm } from "@tanstack/react-form";
 import {
 	QueryClient,

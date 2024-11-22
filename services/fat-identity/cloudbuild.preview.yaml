@@ -6,7 +6,7 @@ steps:
       - $_IMAGE_URL
       - .
       - '-f'
-      - services/fat-identity-hono/Dockerfile
+      - services/fat-identity/Dockerfile
     env:
       # Enable Docker BuildKit for faster builds
       - DOCKER_BUILDKIT=1
@@ -65,7 +65,7 @@ options:
 substitutions:
   _TRIGGER_ID: ad037f34-04e2-45de-9b38-67ce0c0ab382
   _AR_HOSTNAME: europe-west3-docker.pkg.dev
-  _SERVICE_NAME: fat-identity-hono
+  _SERVICE_NAME: fat-identity
   _DEPLOY_REGION: europe-west3
   _GITHUB_ENVIRONMENT: preview
   _AR_REPO_NAME: cloud-run-preview
@@ -75,5 +75,5 @@ substitutions:
 tags:
   - gcp-cloud-build-deploy-cloud-run-preview
   - gcp-cloud-build-deploy-cloud-run-managed-preview
-  - fat-identity-hono-pr
-  - fat-identity-hono-pr-$_PR_NUMBER
+  - fat-identity-pr
+  - fat-identity-pr-$_PR_NUMBER

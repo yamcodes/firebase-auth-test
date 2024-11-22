@@ -1,4 +1,4 @@
-import type { AppRouter } from "@repo/fat-identity";
+import type { AppRouter } from "@repo/fat-identity-fastify";
 import type { AppRouter as NestAppRouter } from "@repo/fat-identity-nestjs";
 import { QueryClient } from "@tanstack/react-query";
 import {

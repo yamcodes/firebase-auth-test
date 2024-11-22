@@ -1,0 +1,12 @@
+{
+	"extends": "fastify-tsconfig",
+	"compilerOptions": {
+		"outDir": "dist",
+		"sourceMap": true,
+		"moduleResolution": "Bundler",
+		"module": "Preserve",
+		"target": "ES2022",
+		"esModuleInterop": true
+	},
+	"include": ["src/**/*.ts"]
+}

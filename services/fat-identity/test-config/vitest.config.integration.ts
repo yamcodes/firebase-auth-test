@@ -6,9 +6,11 @@ export default defineProject((configEnv) =>
 		sharedTestConfig(configEnv),
 		defineProject({
 			test: {
-				setupFiles: "./test-config/setup.e2e.ts",
-				include: ["../test/e2e/**/*.test.ts", "../src/**/*.e2e.test.ts"],
-				name: "fat-identity-hono.e2e",
+				include: [
+					"../test/integration/**/*.test.ts",
+					"../src/**/*.integration.test.ts",
+				],
+				name: "fat-identity.integration",
 			},
 		}),
 	),
