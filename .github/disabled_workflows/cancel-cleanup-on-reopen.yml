@@ -1,4 +1,4 @@
-name: Cancel Cleanup on PR Reopen
+name: Cancel cleanup on PR reopen
 
 on:
   pull_request:
@@ -6,11 +6,11 @@ on:
 
 jobs:
   cancel_cleanup:
-    name: Cancel Cleanup if Running
+    name: Cancel cleanup if running
     runs-on: ubuntu-latest
 
     steps:
-      - name: List Running Workflows
+      - name: List running workflows
         id: list_workflows
         uses: actions/github-script@v7
         with:
@@ -31,7 +31,7 @@ jobs:
             }
             return relatedRuns;
 
-      - name: Cancel Cleanup Workflows
+      - name: Cancel cleanup workflows
         if: steps.list_workflows.outputs.result != '[]'
         uses: actions/github-script@v7
         env:

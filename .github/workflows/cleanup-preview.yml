@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [closed]
 
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   determine_services:
     name: Determine affected services
@@ -44,7 +48,7 @@ jobs:
             fi
           done
           # Create JSON array output for matrix strategy
-          echo "[${SERVICES[@]}]" | jq -c '.' > services_matrix.json
+          echo "${SERVICES[@]}" | jq -c --slurp '.' > services_matrix.json
 
       - name: Set Matrix Output
         id: set_matrix
@@ -67,7 +71,7 @@ jobs:
       - name: Wait for deployments to complete
         id: wait_for_deployments
         env:
-          ENVIRONMENT: pr-${{ github.event.pull_request.number }}
+          ENVIRONMENT: preview---${{ matrix.service.name }}
           MAX_RETRIES: 10
           RETRY_DELAY: 180
         run: |
@@ -104,10 +108,13 @@ jobs:
               fi
             done
       
-            if [[ "$ANY_IN_PROGRESS" == "true" ]]; then
-              echo "($((COUNT+1))/$MAX_RETRIES) Some deployments are still in progress. Retrying in $RETRY_DELAY seconds..."
-              sleep $RETRY_DELAY
+            if [[ "$ANY_IN_PROGRESS" == "false" ]]; then
+              echo "All deployments completed."
+              break
             fi
+
+            echo "($((COUNT+1))/$MAX_RETRIES) Some deployments are still in progress. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
             COUNT=$((COUNT + 1))
           done
       

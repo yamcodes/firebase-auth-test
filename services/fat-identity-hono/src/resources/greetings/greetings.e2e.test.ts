@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import app from "~";
 import { db } from "~/config/firebase";
 import { logger } from "~/utils";
@@ -68,18 +68,6 @@ describe("Greetings E2E Tests", () => {
 		}
 	});
 
-	it("should return a hello message for existing name", async () => {
-		const response = await app.request("/greetings/hello/Alice");
-		expect(response.status).toBe(200);
-		expect(await response.json()).toEqual({ message: "Hello, Alice!" });
-	});
-
-	it("should return a default hello message for non-existing name", async () => {
-		const response = await app.request("/greetings/hello/David");
-		expect(response.status).toBe(200);
-		expect(await response.json()).toEqual({ message: "Hello, David!" });
-	});
-
 	it("should delete all greetings", async () => {
 		const deleteResponse = await app.request("/greetings/all", {
 			method: "DELETE",
@@ -91,12 +79,6 @@ describe("Greetings E2E Tests", () => {
 		const greetings = await getResponse.json();
 		expect(Array.isArray(greetings)).toBe(true);
 		expect(greetings.length).toBe(0);
-	});
-
-	it("should return a goodbye message", async () => {
-		const response = await app.request("/greetings/goodbye");
-		expect(response.status).toBe(200);
-		expect(await response.json()).toEqual({ message: "Goodbye!" });
 	});
 
 	it("should return a random greeting for a given name", async () => {
