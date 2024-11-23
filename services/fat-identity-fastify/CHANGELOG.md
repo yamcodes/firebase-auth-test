@@ -1,4 +1,4 @@
-# @repo/fat-identity
+# @repo/fat-identity-fastify
 
 ## 1.0.1
 

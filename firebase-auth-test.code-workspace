@@ -25,14 +25,6 @@
 			"path": "services/fat-identity"
 		},
 		{
-			"name": "fat-identity-fastify.service",
-			"path": "services/fat-identity-fastify"
-		},
-		{
-			"name": "fat-identity-nestjs.service",
-			"path": "services/fat-identity-nestjs"
-		},
-		{
 			"name": "fat-ui.package",
 			"path": "packages/fat-ui"
 		},
