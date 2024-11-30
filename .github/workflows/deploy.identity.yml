@@ -14,7 +14,6 @@ env:
   DOCKER_AUTH_URL: europe-west3-docker.pkg.dev
   ARTIFACT_REGISTRY_REPO_URL: europe-west3-docker.pkg.dev/fat-core-dev/cloud-run/firebase-auth-test/fat-identity
   TRIGGER_NAME: fat-identity
-  BRANCH_NAME: main
   TRIGGER_REGION: global
   POLLING_TIMEOUT_SECONDS: 300
   POLL_INTERVAL_SECONDS: 10
@@ -49,7 +48,7 @@ jobs:
       - name: Trigger Cloud Build
         id: trigger-build
         run: |
-          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
+          OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ github.ref_name }} --format=json)
           echo "Full output:"
           echo "$OUTPUT"
 
