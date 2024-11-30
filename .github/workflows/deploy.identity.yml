@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - ci/multi-env-deploy
 
 env:
   BUILD_PROJECT_ID: fat-core-dev
