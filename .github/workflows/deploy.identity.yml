@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: fat-core-dev
+  BUILD_PROJECT_ID: fat-core-dev
   REGION: europe-west3
   SERVICE_NAME: fat-identity
   DIR: services/fat-identity
@@ -18,34 +18,34 @@ env:
   POLLING_TIMEOUT_SECONDS: 300
   POLL_INTERVAL_SECONDS: 10
 
-jobs:
-  deploy-preview:
-    name: Deploy
-    runs-on: ubuntu-latest
-    environment:
-      name: development---fat-identity
-      url: ${{ steps.output-service-url.outputs.service_url }}
-    permissions:
-      contents: read
-      deployments: write
-      id-token: write
-      pull-requests: write
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+  pull-requests: write
 
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      build_id: ${{ steps.trigger-build.outputs.build_id }}
+      image_url: ${{ steps.trigger-build.outputs.image_url }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
-          project_id: ${{ env.PROJECT_ID }}
+          project_id: ${{ env.BUILD_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ env.PROJECT_ID }}
-        
-      - name: Trigger Cloud Build deployment
+          project_id: ${{ env.BUILD_PROJECT_ID }}
+
+      - name: Trigger Cloud Build
         id: trigger-build
         run: |
           OUTPUT=$(gcloud builds triggers run ${{ env.TRIGGER_NAME }} --region=${{ env.TRIGGER_REGION }} --branch=${{ env.BRANCH_NAME }} --format=json)
@@ -60,40 +60,46 @@ jobs:
           fi
           echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
 
-          # Extract Log URL
-          LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
-          if [ -z "$LOG_URL" ]; then
-            LOG_URL="(log URL not available)"
-          fi
-          echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
+          # Extract Image URL
+          IMAGE_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.images[0]')
+          echo "image_url=$IMAGE_URL" >> $GITHUB_OUTPUT
 
-      - name: Poll Cloud Build deployment status
-        id: poll-build-status
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        config:
+          - environment: fat-identity.fat-core-dev
+            project_id: fat-core-dev
+          - environment: fat-identity.fat-core-stg
+            project_id: fat-core-stg
+          - environment: fat-identity.fat-core-prod
+            project_id: fat-core-prod
+    environment: 
+      name: ${{ matrix.config.environment }}
+      url: ${{ steps.output-service-url.outputs.service_url }}
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{ matrix.config.project_id }}
+          credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ matrix.config.project_id }}
+
+      - name: Deploy to Cloud Run
         run: |
-          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
-          LOG_URL=${{ steps.trigger-build.outputs.log_url }}
-
-          echo "📋 Cloud Build logs"
-          echo $LOG_URL
-          echo ""
-
-          for i in $(seq 1 $MAX_RETRIES); do
-            STATUS=$(gcloud builds describe ${{ steps.trigger-build.outputs.build_id }} --project=${{ env.PROJECT_ID }} --format='value(status)')
-            echo "Build status: $STATUS"
-            if [[ "$STATUS" == "SUCCESS" ]]; then
-              echo "✅ Build succeeded!"
-              exit 0
-            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
-              echo "❌ Build failed or cancelled."
-              echo "Check the logs for more details: $LOG_URL"
-              exit 1
-            fi
-            sleep ${{ env.POLL_INTERVAL_SECONDS }}
-          done
-
-          echo "❌ Build did not complete within the expected time."
-          echo "Check the logs for more details: $LOG_URL"
-          exit 1
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image=${{ needs.build.outputs.image_url }} \
+            --region=${{ env.REGION }} \
+            --platform=managed \
+            --project=${{ matrix.config.project_id }} \
+            --labels=environment=${{ matrix.config.environment }}
 
       - name: Output service URL
         id: output-service-url
@@ -101,7 +107,8 @@ jobs:
           SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
             --platform=managed \
             --region=${{ env.REGION }} \
+            --project=${{ matrix.config.project_id }} \
             --format='value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-          echo "🚀 Service deployed"
+          echo "🚀 Service deployed to ${{ matrix.config.project_id }}"
           echo $SERVICE_URL
