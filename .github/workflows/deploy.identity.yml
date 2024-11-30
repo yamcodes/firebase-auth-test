@@ -29,7 +29,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     outputs:
-      build_id: ${{ steps.trigger-build.outputs.build_id }}
       image_url: ${{ steps.trigger-build.outputs.image_url }}
     steps:
       - uses: actions/checkout@v4
@@ -63,6 +62,27 @@ jobs:
           # Extract Image URL
           IMAGE_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.images[0]')
           echo "image_url=$IMAGE_URL" >> $GITHUB_OUTPUT
+
+      - name: Poll Cloud Build deployment status
+        run: |
+          MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
+          BUILD_ID=$(echo ${{ steps.trigger-build.outputs.build_id }})
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS=$(gcloud builds describe $BUILD_ID --project=${{ env.BUILD_PROJECT_ID }} --format='value(status)')
+            echo "Build status: $STATUS"
+            if [[ "$STATUS" == "SUCCESS" ]]; then
+              echo "✅ Build succeeded!"
+              exit 0
+            elif [[ "$STATUS" == "FAILURE" || "$STATUS" == "CANCELLED" ]]; then
+              echo "❌ Build failed or cancelled."
+              exit 1
+            fi
+            sleep ${{ env.POLL_INTERVAL_SECONDS }}
+          done
+
+          echo "❌ Build did not complete within the expected time."
+          exit 1
 
   deploy:
     name: Deploy

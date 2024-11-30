@@ -18,42 +18,42 @@ steps:
     waitFor: ['build']
     id: push
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    script: |
-      echo "RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)" > /workspace/random_suffix.env
-    id: generate-random-suffix
-    waitFor: ['-']
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  #   script: |
+  #     echo "RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 3 | head -n 1)" > /workspace/random_suffix.env
+  #   id: generate-random-suffix
+  #   waitFor: ['-']
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - |
-        source /workspace/random_suffix.env
-        REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
-        gcloud run deploy $_SERVICE_NAME \
-          --image=$_IMAGE_URL \
-          --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
-          --labels=commit-sha=$COMMIT_SHA \
-          --labels=gcb-build-id=$BUILD_ID \
-          --labels=gcb-trigger-id=$_TRIGGER_ID \
-          --labels=short-sha=$SHORT_SHA \
-          --revision-suffix=$$REVISION_SUFFIX
-    waitFor: ['push', 'generate-random-suffix']
-    id: deploy
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  #   entrypoint: /bin/bash
+  #   args:
+  #     - '-c'
+  #     - |
+  #       source /workspace/random_suffix.env
+  #       REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
+  #       gcloud run deploy $_SERVICE_NAME \
+  #         --image=$_IMAGE_URL \
+  #         --labels=managed-by=gcp-cloud-build-deploy-cloud-run \
+  #         --labels=commit-sha=$COMMIT_SHA \
+  #         --labels=gcb-build-id=$BUILD_ID \
+  #         --labels=gcb-trigger-id=$_TRIGGER_ID \
+  #         --labels=short-sha=$SHORT_SHA \
+  #         --revision-suffix=$$REVISION_SUFFIX
+  #   waitFor: ['push', 'generate-random-suffix']
+  #   id: deploy
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - |
-        source /workspace/random_suffix.env
-        REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
-        gcloud run services update-traffic $_SERVICE_NAME \
-          --platform=managed \
-          --to-revisions=$_SERVICE_NAME-$${REVISION_SUFFIX}=100
-    waitFor: ['deploy']
-    id: update-traffic
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  #   entrypoint: /bin/bash
+  #   args:
+  #     - '-c'
+  #     - |
+  #       source /workspace/random_suffix.env
+  #       REVISION_SUFFIX="commit-$SHORT_SHA-$${RANDOM_SUFFIX}"
+  #       gcloud run services update-traffic $_SERVICE_NAME \
+  #         --platform=managed \
+  #         --to-revisions=$_SERVICE_NAME-$${REVISION_SUFFIX}=100
+  #   waitFor: ['deploy']
+  #   id: update-traffic
 
 images: [$_IMAGE_URL]
 
