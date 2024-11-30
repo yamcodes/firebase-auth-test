@@ -99,7 +99,7 @@ jobs:
             --region=${{ env.REGION }} \
             --platform=managed \
             --project=${{ matrix.config.project_id }} \
-            --labels=environment=${{ matrix.config.environment }}
+            --labels=environment=$(echo ${{ matrix.config.environment }} | tr '.' '_')
 
       - name: Output service URL
         id: output-service-url
