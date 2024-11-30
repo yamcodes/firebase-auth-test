@@ -105,7 +105,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           project_id: ${{ matrix.config.project_id }}
-          credentials_json: ${{ secrets.GCP_SA_KEY_FAT_CORE_DEV }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
