@@ -64,6 +64,9 @@ jobs:
 
           # Extract Log URL
           LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
+          if [ -z "$LOG_URL" ]; then
+            LOG_URL="(log URL not available)"
+          fi
           echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
 
       - name: Poll Cloud Build deployment status
