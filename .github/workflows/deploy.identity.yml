@@ -62,6 +62,10 @@ jobs:
           IMAGE_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.images[0]')
           echo "image_url=$IMAGE_URL" >> $GITHUB_OUTPUT
 
+          # Extract Log URL
+          LOG_URL=$(echo "$OUTPUT" | jq -r '.metadata.build.logUrl')
+          echo "log_url=$LOG_URL" >> $GITHUB_OUTPUT
+
       - name: Poll Cloud Build deployment status
         run: |
           MAX_RETRIES=$(( ${{ env.POLLING_TIMEOUT_SECONDS }} / ${{ env.POLL_INTERVAL_SECONDS }} ))
