@@ -29,28 +29,27 @@ export class InMemoryDatabase<T extends z.ZodType>
 	}
 
 	async findOne(id: string): Promise<z.infer<T> | null> {
-		const data = this.storage[this.collectionId][id];
+		const data = this.storage[this.collectionId]?.[id];
 		if (!data) return null;
 		return this.schema.parse(data);
 	}
 
 	async findAll(): Promise<Array<z.infer<T> & { id: string }>> {
-		return Object.entries(this.storage[this.collectionId]).map(
-			([id, data]) => ({
-				id,
-				...this.schema.parse(data),
-			}),
-		);
+		const collectionData = this.storage[this.collectionId] || {};
+		return Object.entries(collectionData).map(([id, data]) => ({
+			id,
+			...this.schema.parse(data),
+		}));
 	}
 
 	async deleteAll(): Promise<number> {
-		const count = Object.keys(this.storage[this.collectionId]).length;
-		this.storage[this.collectionId] = {};
+		const count = Object.keys(this.storage[this.collectionId] || {}).length;
+		delete this.storage[this.collectionId];
 		return count;
 	}
 
 	async deleteOne(id: string): Promise<number> {
-		if (this.storage[this.collectionId][id]) {
+		if (this.storage[this.collectionId]?.[id]) {
 			delete this.storage[this.collectionId][id];
 			return 1;
 		}
