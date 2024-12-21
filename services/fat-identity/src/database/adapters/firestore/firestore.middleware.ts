@@ -1,4 +1,14 @@
 import { createDatabaseMiddleware } from "~/database/utils";
 import { FirestoreDatabase } from "./firestore.database";
+import type { z } from "zod";
 
-export const firestore = createDatabaseMiddleware(FirestoreDatabase);
+/**
+ * Factory function to create a Firestore middleware for a specific collection and schema
+ * @param collectionName - The name of the collection
+ * @param schema - The Zod schema for the collection
+ */
+export const createFirestoreRepositoryMiddleware = <T extends z.ZodType>(
+	collectionName: string,
+	schema: T,
+) =>
+	createDatabaseMiddleware(() => new FirestoreDatabase(collectionName, schema));
