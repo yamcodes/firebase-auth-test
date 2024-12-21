@@ -36,17 +36,12 @@ export class FirestoreDatabase<T extends z.ZodType>
 	}
 
 	async findAll(): Promise<Array<z.infer<T> & { id: string }>> {
-		try {
-			const snapshot = await this.db.collection(this.collectionName).get();
-			logger.debug({ snapshot }, "Snapshot");
-			return snapshot.docs.map((doc) => ({
-				id: doc.id,
-				...this.schema.parse(doc.data()),
-			}));
-		} catch (error) {
-			logger.error(error, "Error fetching all documents");
-			throw error;
-		}
+		const snapshot = await this.db.collection(this.collectionName).get();
+		logger.debug({ snapshot }, "Snapshot");
+		return snapshot.docs.map((doc) => ({
+			id: doc.id,
+			...this.schema.parse(doc.data()),
+		}));
 	}
 
 	async deleteAll(): Promise<number> {
