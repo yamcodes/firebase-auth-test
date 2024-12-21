@@ -1,8 +1,8 @@
 import { type OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import type { Env as HonoEnv } from "hono";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import type { EmptyObject } from "type-fest";
+import type { Env as HonoEnv } from "hono";
 import { type IDatabase, firestore } from "~/database";
 import { createApp } from "~/lib/hono";
 import { GreetingsRepository } from "./greetings.repository";
@@ -12,11 +12,15 @@ import {
 	GreetingId,
 	GreetingMessageResponse,
 } from "./greetings.schema";
-import { GreetingsService } from "./greetings.service";
+import type { GreetingsService } from "./greetings.service";
+import {
+	greetingsRepositoryMiddleware,
+	greetingsServiceMiddleware,
+} from "./greetings.middleware";
 
-type Env = HonoEnv & {
+export type Env = HonoEnv & {
 	Variables: {
-		db: IDatabase;
+		db: IDatabase<Greeting>;
 		service: GreetingsService;
 	};
 };
@@ -30,15 +34,8 @@ export class GreetingsController {
 	}
 
 	private setupMiddleware() {
-		this.greetings.use(firestore);
-		this.greetings.use(
-			createMiddleware<Env>(async ({ var: { db, logger }, set }, next) => {
-				const repo = new GreetingsRepository(db);
-				const service = new GreetingsService(repo, logger);
-				set("service", service);
-				await next();
-			}),
-		);
+		this.greetings.use(greetingsRepositoryMiddleware);
+		this.greetings.use(greetingsServiceMiddleware);
 	}
 
 	get routes() {
