@@ -10,33 +10,37 @@ export class FirestoreDatabase<T extends z.ZodType>
 {
 	private app: FirebaseApp;
 	private db: Firestore;
-	private collectionName: string;
-	private schema: T;
 
-	constructor(collectionName: string, schema: T) {
+	/**
+	 * @param collectionId - The collection ID is the name of the collection in the firestore database.
+	 * It is used to identify the collection in the database.
+	 * @param schema - The schema is the schema of the data in the collection.
+	 */
+	constructor(
+		private collectionId: string,
+		private schema: T,
+	) {
 		this.app = initializeFirebase();
 		this.db = getFirestore(this.app);
-		this.collectionName = collectionName;
-		this.schema = schema;
 	}
 
 	async create(data: z.infer<T>): Promise<string> {
 		const validatedData = this.schema.parse(data);
 		const docRef = await this.db
-			.collection(this.collectionName)
+			.collection(this.collectionId)
 			.add(validatedData);
 		return docRef.id;
 	}
 
 	async findOne(id: string): Promise<z.infer<T> | null> {
-		const doc = await this.db.collection(this.collectionName).doc(id).get();
+		const doc = await this.db.collection(this.collectionId).doc(id).get();
 		if (!doc.exists) return null;
 		const data = doc.data();
 		return this.schema.parse(data);
 	}
 
 	async findAll(): Promise<Array<z.infer<T> & { id: string }>> {
-		const snapshot = await this.db.collection(this.collectionName).get();
+		const snapshot = await this.db.collection(this.collectionId).get();
 		logger.debug({ snapshot }, "Snapshot");
 		return snapshot.docs.map((doc) => ({
 			id: doc.id,
@@ -45,7 +49,7 @@ export class FirestoreDatabase<T extends z.ZodType>
 	}
 
 	async deleteAll(): Promise<number> {
-		const snapshot = await this.db.collection(this.collectionName).get();
+		const snapshot = await this.db.collection(this.collectionId).get();
 		const batch = this.db.batch();
 		for (const doc of snapshot.docs) {
 			batch.delete(doc.ref);
@@ -55,7 +59,7 @@ export class FirestoreDatabase<T extends z.ZodType>
 	}
 
 	async deleteOne(id: string): Promise<number> {
-		const doc = await this.db.collection(this.collectionName).doc(id).get();
+		const doc = await this.db.collection(this.collectionId).doc(id).get();
 		if (!doc.exists) return 0;
 		await doc.ref.delete();
 		return 1;
