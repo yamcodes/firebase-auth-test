@@ -24,39 +24,41 @@
 		"changeset": "pnpm -w changeset"
 	},
 	"tsup": {
-		"entry": ["src/client.ts"],
+		"entry": [
+			"src/client.ts"
+		],
 		"dts": true
 	},
 	"dependencies": {
-		"@hono/node-server": "^1.13.1",
+		"@hono/node-server": "^1.13.7",
 		"@hono/swagger-ui": "^0.4.1",
-		"@hono/zod-openapi": "^0.17.0",
-		"@scalar/hono-api-reference": "^0.5.153",
-		"firebase-admin": "^12.0.0",
-		"hono": "^4.6.3",
-		"pino": "^9.4.0",
+		"@hono/zod-openapi": "^0.17.1",
+		"@scalar/hono-api-reference": "^0.5.165",
+		"firebase-admin": "^12.7.0",
+		"hono": "^4.6.14",
+		"pino": "^9.5.0",
 		"radashi": "12.2.0",
-		"ts-pattern": "^5.4.0",
-		"zod": "^3.23.4"
+		"ts-pattern": "^5.6.0",
+		"zod": "^3.24.1"
 	},
 	"devDependencies": {
-		"@asteasolutions/zod-to-openapi": "^7.2.0",
-		"@hono/vite-build": "^1.1.0",
+		"@asteasolutions/zod-to-openapi": "^7.3.0",
+		"@hono/vite-build": "^1.2.0",
 		"@hono/vite-dev-server": "^0.16.0",
-		"@hono/zod-validator": "^0.4.0",
-		"@julr/vite-plugin-validate-env": "^1.1.1",
-		"@types/node": "^22.0.0",
+		"@hono/zod-validator": "^0.4.2",
+		"@julr/vite-plugin-validate-env": "^1.2.0",
+		"@types/node": "^22.10.2",
 		"@vitest/ui": "2.1.4",
 		"browser-sync": "^3.0.3",
-		"dotenv": "^16.4.5",
-		"pino-pretty": "^12.0.0",
-		"tsup": "^8.3.0",
-		"tsx": "^4.7.1",
-		"type-fest": "^4.26.1",
-		"vite": "^5.4.8",
+		"dotenv": "^16.4.7",
+		"pino-pretty": "^12.1.0",
+		"tsup": "^8.3.5",
+		"tsx": "^4.19.2",
+		"type-fest": "^4.30.2",
+		"vite": "^5.4.11",
 		"vite-plugin-env-compatible": "^2.0.1",
-		"vite-tsconfig-paths": "^5.0.1",
-		"vitest": "^2.0.0"
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^2.1.8"
 	},
 	"exports": {
 		"types": "./dist/client.d.ts",
